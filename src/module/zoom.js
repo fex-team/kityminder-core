@@ -2,9 +2,7 @@ KityMinder.registerModule('Zoom', function() {
     var me = this;
 
     var timeline;
-
-    me.setDefaultOptions('zoom', [10, 20, 30, 50, 80, 100, 120, 150, 200]);
-
+    
     function setTextRendering() {
         var value = me._zoomValue >= 100 ? 'optimize-speed' : 'geometricPrecision';
         me.getRenderContainer().setAttr('text-rendering', value);
@@ -17,7 +15,7 @@ KityMinder.registerModule('Zoom', function() {
         node.setAttribute('transform', 'matrix(' + matrix.toString() + ')');
     }
 
-    kity.extendClass(Minder, {
+    kity.extendClass(KityMinder, {
         zoom: function(value) {
             var paper = this.getPaper();
             var viewport = paper.getViewPort();

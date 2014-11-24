@@ -40,7 +40,7 @@ Utils.extend(KityMinder, {
     }
 });
 
-kity.extendClass(Minder, {
+kity.extendClass(KityMinder, {
 
     /**
      * 切换脑图实例上的主题
@@ -67,7 +67,7 @@ kity.extendClass(Minder, {
      * @return {[type]} [description]
      */
     getTheme: function(node) {
-        return this._theme || this.getOptions('defaultTheme');
+        return this._theme || this.getOptions('defaultTheme') || 'fresh-blue';
     },
 
     getThemeItems: function(node) {
@@ -140,6 +140,6 @@ KityMinder.registerModule('Theme', {
     }
 });
 
-Minder.registerInit(function() {
+KityMinder.registerInit(function() {
     this.setTheme();
 });

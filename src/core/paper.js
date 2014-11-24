@@ -6,10 +6,10 @@
  * @author: techird
  * @copyright: Baidu FEX, 2014
  */
-Minder.registerInit(function() {
+KityMinder.registerInit(function() {
     this._initPaper();
 });
-kity.extendClass(Minder, {
+kity.extendClass(KityMinder, {
     
     _initPaper: function() {
 
@@ -22,7 +22,7 @@ kity.extendClass(Minder, {
 
         this._addRenderContainer();
 
-        this.setRoot(this.createNode(this.getLang().maintopic));
+        this.setRoot(this.createNode());
 
         if (this._options.renderTo) {
             this.renderTo(this._options.renderTo);
@@ -35,6 +35,9 @@ kity.extendClass(Minder, {
     },
 
     renderTo: function(target) {
+        if (typeof(target) == 'string') {
+            target = document.getElementById(target);
+        }
         this._paper.renderTo(this._renderTarget = target);
         this._bindEvents();
     },

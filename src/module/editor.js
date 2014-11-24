@@ -2,10 +2,10 @@
 
 KityMinder.registerModule('TextEditModule', function() {
     var km = this;
-    var sel = new Minder.Selection();
-    var range = new Minder.Range();
-    var receiver = new Minder.Receiver(this,sel,range);
-    var keyboarder = new Minder.keyboarder(receiver);
+    var sel = new KityMinder.Selection();
+    var range = new KityMinder.Range();
+    var receiver = new KityMinder.Receiver(this,sel,range);
+    var keyboarder = new KityMinder.keyboarder(receiver);
 
     this.receiver = receiver;
 
@@ -38,7 +38,7 @@ KityMinder.registerModule('TextEditModule', function() {
 
             receiver.updateContainerRangeBySel();
 
-            if(browser.ie ){
+            if(kity.Browser.ie ){
                 var timer = setInterval(function(){
                     var nativeRange = range.nativeSel.getRangeAt(0);
                     if(!nativeRange || nativeRange.collapsed){
@@ -189,7 +189,7 @@ KityMinder.registerModule('TextEditModule', function() {
                     sel.setColor(node.getStyle('text-selection-color'));
 
                     //必须再次focus，要不不能呼出键盘
-                    if(browser.ipad){
+                    if(kity.Browser.ipad){
                         receiver.focus();
                     }
                     clearTimeout(mouseupTimer);
@@ -225,7 +225,7 @@ KityMinder.registerModule('TextEditModule', function() {
             },
             'textedit.beforemousemove inputready.beforemousemove': function(e) {
 
-                if(browser.ipad){
+                if(kity.Browser.ipad){
                     return;
                 }
                 //ipad下不做框选

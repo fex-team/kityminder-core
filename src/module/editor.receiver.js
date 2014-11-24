@@ -1,5 +1,5 @@
 //接收者
-Minder.Receiver = kity.createClass('Receiver', {
+KityMinder.Receiver = kity.createClass('Receiver', {
     clear: function() {
         this.container.innerHTML = '';
         if (this.selection) {
@@ -114,7 +114,7 @@ Minder.Receiver = kity.createClass('Receiver', {
     },
     setContainerStyle: function() {
         var textGroupBox = this.getBaseOffset();
-        this.container.style.cssText = ';left:' + (browser.ipad ? '-' : '') +
+        this.container.style.cssText = ';left:' + (kity.Browser.ipad ? '-' : '') +
             textGroupBox.x + 'px;top:' + (textGroupBox.y + (/\?debug#?/.test(location.href)?this.textGroup.getItems().length * this.getlineHeight():0)) +
             'px;width:' + textGroupBox.width + 'px;height:' + textGroupBox.height + 'px;';
 
@@ -291,7 +291,7 @@ Minder.Receiver = kity.createClass('Receiver', {
         this.range.setStartOffset(this.selection.startOffset);
         this.range.setEndOffset(this.selection.endOffset);
 
-        if(browser.gecko){
+        if(kity.Browser.gecko){
             this.container.focus();
             setTimeout(function(){
                 me.range.select();

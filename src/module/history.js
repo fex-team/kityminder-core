@@ -15,7 +15,6 @@ KityMinder.registerModule("HistoryModule", function() {
         },
         equals: function(scene) {
             return this.getData().equals(scene.getData());
-
         },
         isInputStatus:function(){
             return this.inputStatus;

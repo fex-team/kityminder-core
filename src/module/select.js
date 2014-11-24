@@ -27,7 +27,7 @@ KityMinder.registerModule('Select', function() {
                     return this.selectEnd();
                 }
 
-                startPosition = g.snapToSharp(e.getPosition(rc));
+                startPosition = e.getPosition(rc).round();
             },
             selectMove: function(e) {
                 if (minder.getStatus() == 'textedit') {
@@ -41,7 +41,7 @@ KityMinder.registerModule('Select', function() {
                 // 检测是否要进入选区模式
                 if (!marqueeMode) {
                     // 距离没达到阈值，退出
-                    if (g.getDistance(p1, p2) < MARQUEE_MODE_THRESHOLD) {
+                    if (kity.Vector.fromPoints(p1, p2).length() < MARQUEE_MODE_THRESHOLD) {
                         return;
                     }
                     // 已经达到阈值，记录下来并且重置选区形状
@@ -52,7 +52,7 @@ KityMinder.registerModule('Select', function() {
                         .stroke(minder.getStyle('marquee-stroke')).setOpacity(0.8).getDrawer().clear();
                 }
 
-                var marquee = g.getBox(p1, p2),
+                var marquee = new kity.Box(p1.x, p1.y, p2.x - p1.x, p2.y - p1.y),
                     selectedNodes = [];
 
                 // 使其犀利
@@ -74,7 +74,7 @@ KityMinder.registerModule('Select', function() {
                 // 计算选中范围
                 minder.getRoot().traverse(function(node) {
                     var renderBox = node.getLayoutBox();
-                    if (g.getIntersectBox(renderBox, marquee)) {
+                    if (!renderBox.intersect(marquee).isEmpty()) {
                         selectedNodes.push(node);
                     }
                 });
@@ -158,7 +158,7 @@ KityMinder.registerModule('Select', function() {
             //全选操作
             'normal.keydown inputready.keydown':function(e){
 
-                if ( e.isShortcutKey('ctrl+a') ){
+                    if ( e.isShortcutKey('ctrl+a') ){
                     var selectedNodes = [];
 
                     this.getRoot().traverse(function(node){

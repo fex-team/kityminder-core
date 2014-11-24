@@ -10,9 +10,9 @@ KityMinder.registerModule('Resource', function() {
     var RESOURCE_COLOR_OVERFLOW = kity.Color.createHSL(0, 0, 95);
 
     /**
-     * 在 Minder 上拓展一些关于资源的支持接口
+     * 在 KityMinder 上拓展一些关于资源的支持接口
      */
-    kity.extendClass(Minder, {
+    kity.extendClass(KityMinder, {
 
         /**
          * 获取脑图中某个资源对应的颜色

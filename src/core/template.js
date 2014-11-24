@@ -8,8 +8,8 @@ utils.extend(KityMinder, {
     }
 });
 
-kity.extendClass(Minder, (function() {
-    var originGetTheme = Minder.prototype.getTheme;
+kity.extendClass(KityMinder, (function() {
+    var originGetTheme = KityMinder.prototype.getTheme;
     return {
         useTemplate: function(name, duration) {
             this.setTemplate(name);

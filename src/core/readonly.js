@@ -6,12 +6,12 @@
  * @author: techird
  * @copyright: Baidu FEX, 2014
  */
-Minder.registerInit(function(options) {
+KityMinder.registerInit(function(options) {
     if (options.readOnly) {
         this.setDisabled();
     }
 });
-kity.extendClass(Minder, {
+kity.extendClass(KityMinder, {
 
     disable: function() {
         var me = this;

@@ -226,11 +226,11 @@ kity.extendClass(MinderNode, {
     }
 });
 
-Minder.registerInit(function(options) {
+KityMinder.registerInit(function(options) {
     this.refresh();
 });
 
-kity.extendClass(Minder, {
+kity.extendClass(KityMinder, {
 
     layout: function(duration) {
 

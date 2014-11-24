@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>KityMinder Example</title>
+
+    <script type="text/javascript" src="lib/kity/dist/kity.js"></script>
+    <!--dev mode 引入-->
+    <script type="text/javascript" src="import.js"></script>
+
+    <!--dist mode 引入 -->
+    <!--<script type="text/javascript" src="../dist/kityminder.min.js">-->
+
+    <link href="favicon.ico" type="image/x-icon" rel="shortcut icon">
+    <style type="text/css">
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+
+        .km_receiver {
+            background: white;
+            border: 1px solid #999;
+        }
+
+        #minder-view {
+            position: absolute;
+            border: 1px solid #ccc;
+            left: 10px;
+            top: 10px;
+            bottom: 10px;
+            right: 210px;
+        }
+    </style>
+</head>
+<body>
+    <div id="minder-view"></div>
+</body>
+<script type="text/javascript">
+    window.km = new KityMinder({
+        renderTo: 'minder-view'
+    });
+</script>
+</html>

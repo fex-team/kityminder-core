@@ -1,3 +1,7 @@
+KityMinder.COMMAND_STATE_NORMAL = 0;
+KityMinder.COMMAND_STATE_DISABLED = -1;
+KityMinder.COMMAND_STATE_ACTIVED = 1;
+
 var Command = kity.createClass( "Command", {
 	constructor: function () {
 		this._isContentChange = true;
@@ -25,7 +29,7 @@ var Command = kity.createClass( "Command", {
 	},
 
 	queryState: function ( km ) {
-		return 0;
+		return KityMinder.COMMAND_STATE_NORMAL;
 	},
 
 	queryValue: function ( km ) {
@@ -36,7 +40,7 @@ var Command = kity.createClass( "Command", {
 	}
 } );
 
-kity.extendClass(Minder, {
+kity.extendClass(KityMinder, {
     _getCommand: function (name) {
         return this._commands[name.toLowerCase()];
     },

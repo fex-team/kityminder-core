@@ -7,11 +7,11 @@
  * @copyright: Baidu FEX, 2014
  */
 
-Minder.registerInit(function() {
+KityMinder.registerInit(function() {
     this._initStatus();
 });
 
-kity.extendClass(Minder, {
+kity.extendClass(KityMinder, {
 
     _initStatus: function() {
         this._status = 'normal';

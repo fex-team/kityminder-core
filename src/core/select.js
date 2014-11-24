@@ -1,10 +1,10 @@
 
-Minder.registerInit(function() {
+KityMinder.registerInit(function() {
     this._initSelection();
 });
 
 // 选区管理
-kity.extendClass(Minder, {
+kity.extendClass(KityMinder, {
     _initSelection: function() {
         this._selectedNodes = [];
     },

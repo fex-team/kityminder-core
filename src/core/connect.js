@@ -33,7 +33,7 @@ kity.extendClass(MinderNode, {
     }
 });
 
-kity.extendClass(Minder, {
+kity.extendClass(KityMinder, {
 
     getConnectContainer: function() {
         return this._connectContainer;

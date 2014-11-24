@@ -1,4 +1,4 @@
-Minder.Range = kity.createClass('Range',function(){
+KityMinder.Range = kity.createClass('Range',function(){
 
     function getOffset(rng,dir){
         var node = rng[dir + 'Container'],

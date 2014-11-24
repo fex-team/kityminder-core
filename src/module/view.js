@@ -230,20 +230,6 @@ KityMinder.registerModule('View', function() {
             'move': MoveCommand
         },
         events: {
-            keydown: function(e) {
-                var minder = this;
-
-                ['up', 'down', 'left', 'right'].forEach(function(name) {
-                    if (e.isShortcutKey('ctrl+' + name) && minder.getStatus() != 'textedit') {
-                        minder.removeAllSelectedNodes();
-                        minder.execCommand('move', name, 100);
-                        e.preventDefault();
-                    }
-                });
-                if (e.isShortcutKey('ctrl+enter')) {
-                    minder.execCommand('camera', minder.getRoot(), 100);
-                }
-            },
             statuschange: function(e) {
                 this._viewDragger.setEnabled(e.currentStatus == 'hand');
             },

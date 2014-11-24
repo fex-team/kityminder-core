@@ -13,12 +13,12 @@
     };
 } )();
 
-Minder.registerInit(function() {
+KityMinder.registerInit(function() {
     this._initModules();
 });
 
 // 模块声明周期维护
-kity.extendClass(Minder, {
+kity.extendClass(KityMinder, {
     _initModules: function() {
         var modulesPool = KityMinder.getModules();
         var modulesToLoad = this._options.modules || Utils.keys(modulesPool);
@@ -82,19 +82,6 @@ kity.extendClass(Minder, {
                 }
             }
 
-            if (moduleDeals.defaultOptions) {
-                this.setDefaultOptions(moduleDeals.defaultOptions);
-            }
-
-            //添加模块的快捷键
-            if (moduleDeals.commandShortcutKeys) {
-                this.addCommandShortcutKeys(moduleDeals.commandShortcutKeys);
-            }
-
-            //添加邮件菜单
-            if (moduleDeals.contextmenu) {
-                this.addContextMenu(moduleDeals.contextmenu);
-            }
         }
     },
 

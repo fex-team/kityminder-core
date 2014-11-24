@@ -1,5 +1,5 @@
 //模拟光标
-Minder.Selection = kity.createClass( 'Selection', {
+KityMinder.Selection = kity.createClass( 'Selection', {
     base: kity.Path,
     constructor: function ( height, color, width ) {
         this.callBase();

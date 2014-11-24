@@ -248,7 +248,7 @@ var MinderNode = KityMinder.MinderNode = kity.createClass('MinderNode', {
 
     clone: function() {
         function cloneNode(parent, isClonedNode) {
-            var cloned = new KM.MinderNode();
+            var cloned = new KityMinder.MinderNode();
 
             cloned.data = Utils.clonePlainObject(isClonedNode.getData());
             cloned.tmpData = Utils.clonePlainObject(isClonedNode.getTmpData());
@@ -374,7 +374,7 @@ MinderNode.getCommonAncestor = function(nodeA, nodeB) {
     }
 };
 
-kity.extendClass(Minder, {
+kity.extendClass(KityMinder, {
 
     getRoot: function() {
         return this._root;

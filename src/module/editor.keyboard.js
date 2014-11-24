@@ -1,5 +1,5 @@
 //接收者
-Minder.keyboarder = kity.createClass('keyboarder', function(){
+KityMinder.keyboarder = kity.createClass('keyboarder', function(){
 
 
     return {
@@ -17,7 +17,7 @@ Minder.keyboarder = kity.createClass('keyboarder', function(){
         //给接受容器绑定事件
         _initEvent: function(){
             var me = this;
-            if(browser.ipad) {
+            if(kity.Browser.ipad) {
                 utils.listen(this.container, 'keydown keypress keyup input', function(e) {
                     me._handleEvents.call(me, new MinderEvent(e.type == 'keyup' ? 'beforekeyup' : e.type, e));
                     if(e.type == 'keyup'){
@@ -79,7 +79,7 @@ Minder.keyboarder = kity.createClass('keyboarder', function(){
             var text = me.re.getTxtOfContainer();
 
 //            //#46 修复在ff下定位到文字后方空格光标不移动问题
-//            if (browser.gecko && /\s$/.test(text)) {
+//            if (kity.Browser.gecko && /\s$/.test(text)) {
 //                text += '\u200b';
 //            }
 
@@ -125,7 +125,7 @@ Minder.keyboarder = kity.createClass('keyboarder', function(){
         },
         _input:function(){
             var me = this;
-            if (browser.ipad) {
+            if (kity.Browser.ipad) {
                 setTimeout(function() {
                     me._setTextToContainer();
                 });
@@ -250,7 +250,7 @@ Minder.keyboarder = kity.createClass('keyboarder', function(){
                 case keymap.Tab:
                 case keymap.Insert:
                 case keymap.F2:
-                    if(browser.ipad){
+                    if(kity.Browser.ipad){
                         if(this.selection.isShow()){
                             this.re.clear();
                             this.km.setStatus('inputready');
@@ -263,7 +263,7 @@ Minder.keyboarder = kity.createClass('keyboarder', function(){
                         return;
                     }
 
-                    if (keymap.Enter == keyCode && (this.isTypeText || browser.mac && browser.gecko)) {
+                    if (keymap.Enter == keyCode && (this.isTypeText || kity.Browser.mac && kity.Browser.gecko)) {
                         me._setTextToContainer(keyCode,true);
                     }
                     if (this.re.keydownNode === this.re.minderNode) {
@@ -275,7 +275,7 @@ Minder.keyboarder = kity.createClass('keyboarder', function(){
                 case keymap.Del:
                 case keymap.Backspace:
                 case keymap.Spacebar:
-                    if(browser.ipad){
+                    if(kity.Browser.ipad){
                         if(this.selection.isHide()){
                             this.km.setStatus('normal');
                             return;
@@ -290,7 +290,7 @@ Minder.keyboarder = kity.createClass('keyboarder', function(){
                 me._setTextToContainer(keyCode,true);
                 return;
             }
-            if (browser.mac && browser.gecko){
+            if (kity.Browser.mac && kity.Browser.gecko){
                 me._setTextToContainer(keyCode,true);
                 return;
             }
@@ -323,7 +323,7 @@ Minder.keyboarder = kity.createClass('keyboarder', function(){
                         me.re.updateContainerRangeBySel();
                     });
 
-                    if(browser.ie ){
+                    if(kity.Browser.ie ){
                         timer = setInterval(function(){
                             var nativeRange = me.range.nativeSel.getRangeAt(0);
                             if(!nativeRange || nativeRange.collapsed){

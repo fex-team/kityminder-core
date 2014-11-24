@@ -11,12 +11,12 @@ var DEFAULT_TEXT = {
     'sub': 'topic'
 };
 
-Minder.registerInit(function() {
+KityMinder.registerInit(function() {
     this._initProtocols();
 });
 
 // 导入导出
-kity.extendClass(Minder, {
+kity.extendClass(KityMinder, {
 
     _initProtocols: function(options) {
         var protocols = this._protocols = {};

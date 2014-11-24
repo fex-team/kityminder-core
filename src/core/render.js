@@ -51,7 +51,7 @@ var Renderer = KityMinder.Renderer = kity.createClass('Renderer', {
     }
 });
 
-kity.extendClass(Minder, (function() {
+kity.extendClass(KityMinder, (function() {
 
     function createRendererForNode(node, registered) {
         var renderers = [];

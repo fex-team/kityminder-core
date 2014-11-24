@@ -61,12 +61,12 @@ var MinderEvent = kity.createClass('MindEvent', {
     }
 });
 
-Minder.registerInit(function() {
+KityMinder.registerInit(function() {
     this._initEvents();
 });
 
 // 事件机制
-kity.extendClass(Minder, {
+kity.extendClass(KityMinder, {
     _initEvents: function() {
         this._eventCallbacks = {};
     },
