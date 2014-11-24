@@ -66,7 +66,7 @@ module.exports = function(grunt) {
         // Metadata.
         pkg: grunt.file.readJSON('package.json'),
 
-        clean: ['dist', 'native-support/upload', 'native-support/src/tmp'],
+        clean: ['dist', 'native-support/upload/', 'native-support/src/tmp/'],
 
         concat: concatConfigs,
 
@@ -131,12 +131,21 @@ module.exports = function(grunt) {
                 }]
             },
 
-            noCache: {
+            pageNoCache: {
                 src: distPages,
                 overwrite: true,
                 replacements: [{
-                    from: /src=\"(.+?)\.js\"/ig,
-                    to: 'src="$1.js?_=' + (+new Date()) + '"'
+                    from: /(src|href)=\"(.+?)\.(js|css)\"/ig,
+                    to: '$1="$2.$3?_=' + (+new Date()) + '"'
+                }]
+            },
+
+            imageNoCache: {
+                src: 'dist/ui/theme/default/css/default.all.css',
+                overwrite: true,
+                replacements: [{
+                    from: /\.png/ig,
+                    to: '.png?_=' + (+new Date())
                 }]
             }
         },

@@ -6,7 +6,6 @@
 (function() {
     /* 可能的文件路径，已按照依赖关系排序 */
     var pathInfo = [
-
         /* 核心代码 */
         'src/core/kityminder.js',
         'src/core/utils.js',

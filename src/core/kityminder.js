@@ -36,7 +36,7 @@ var KityMinder = kity.createClass('KityMinder', {
     }
 });
 
-KityMinder.version = '1.3.2';
+KityMinder.version = '1.0.0';
 
 KityMinder.registerInit = function(fn) {
     _initFnQueue.push(fn);
@@ -56,4 +56,3 @@ if (typeof(module) != 'undefined') {
     window.KityMinder = KityMinder;
 }
 
-/* jshint +W079 */
