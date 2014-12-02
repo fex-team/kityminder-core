@@ -7,52 +7,57 @@
  * @copyright: Baidu FEX, 2014
  */
 
-KityMinder.registerConnectProvider('poly', function(node, parent, connection, width) {
+define(function(require, exports, module) {
+    var kity = require('core/kity');
+    var connect = require('core/connect');
 
-    // 连线起点和终点
-    var po = parent.getLayoutVertexOut(),
-        pi = node.getLayoutVertexIn();
+    connect.register('poly', function(node, parent, connection, width) {
 
-    // 连线矢量和方向
-    var v = parent.getLayoutVectorOut().normalize();
+        // 连线起点和终点
+        var po = parent.getLayoutVertexOut(),
+            pi = node.getLayoutVertexIn();
 
-    var r = Math.round;
-    var abs = Math.abs;
+        // 连线矢量和方向
+        var v = parent.getLayoutVectorOut().normalize();
 
-    var pathData = [];
-    pathData.push('M', r(po.x), r(po.y));
+        var r = Math.round;
+        var abs = Math.abs;
 
-    switch (true) {
-        case abs(v.x) > abs(v.y) && v.x < 0:
-            // left
-            pathData.push('h', -parent.getStyle('margin-left'));
-            pathData.push('v', pi.y - po.y);
-            pathData.push('H', pi.x);
-            break;
+        var pathData = [];
+        pathData.push('M', r(po.x), r(po.y));
 
-        case abs(v.x) > abs(v.y) && v.x >= 0:
-            // right
-            pathData.push('h', parent.getStyle('margin-right'));
-            pathData.push('v', pi.y - po.y);
-            pathData.push('H', pi.x);
-            break;
+        switch (true) {
+            case abs(v.x) > abs(v.y) && v.x < 0:
+                // left
+                pathData.push('h', -parent.getStyle('margin-left'));
+                pathData.push('v', pi.y - po.y);
+                pathData.push('H', pi.x);
+                break;
 
-        case abs(v.x) <= abs(v.y) && v.y < 0:
-            // top
-            pathData.push('v', -parent.getStyle('margin-top'));
-            pathData.push('h', pi.x - po.x);
-            pathData.push('V', pi.y);
-            break;
+            case abs(v.x) > abs(v.y) && v.x >= 0:
+                // right
+                pathData.push('h', parent.getStyle('margin-right'));
+                pathData.push('v', pi.y - po.y);
+                pathData.push('H', pi.x);
+                break;
 
-        case abs(v.x) <= abs(v.y) && v.y >= 0:
-            // bottom
-            pathData.push('v', parent.getStyle('margin-bottom'));
-            pathData.push('h', pi.x - po.x);
-            pathData.push('V', pi.y);
-            break;
+            case abs(v.x) <= abs(v.y) && v.y < 0:
+                // top
+                pathData.push('v', -parent.getStyle('margin-top'));
+                pathData.push('h', pi.x - po.x);
+                pathData.push('V', pi.y);
+                break;
 
-    }
+            case abs(v.x) <= abs(v.y) && v.y >= 0:
+                // bottom
+                pathData.push('v', parent.getStyle('margin-bottom'));
+                pathData.push('h', pi.x - po.x);
+                pathData.push('V', pi.y);
+                break;
 
-    connection.setMarker(null);
-    connection.setPathData(pathData);
+        }
+
+        connection.setMarker(null);
+        connection.setPathData(pathData);
+    });
 });

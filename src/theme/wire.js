@@ -1,30 +1,34 @@
-KityMinder.registerTheme('wire', {
-    'background': 'black',
+define(function(require, exports, module) {
+    var theme = require('core/theme');
 
-    'color': '#999',
-    'stroke': 'none',
-    'padding': 10,
-    'margin': 20,
-    'font-size': 14,
+    theme.register('wire', {
+        'background': 'black',
 
-    'connect-color': '#999',
-    'connect-width': 1,
+        'color': '#999',
+        'stroke': 'none',
+        'padding': 10,
+        'margin': 20,
+        'font-size': 14,
 
-    'selected-background': '#999',
-    'selected-color': 'black',
+        'connect-color': '#999',
+        'connect-width': 1,
 
-    'marquee-background': 'rgba(255,255,255,.3)',
-    'marquee-stroke': 'white',
+        'selected-background': '#999',
+        'selected-color': 'black',
 
-    'drop-hint-color': 'yellow',
-    'sub-drop-hint-width': 2,
-    'main-drop-hint-width': 4,
-    'root-drop-hint-width': 4,
+        'marquee-background': 'rgba(255,255,255,.3)',
+        'marquee-stroke': 'white',
 
-    'order-hint-area-color': 'rgba(0, 255, 0, .5)',
-    'order-hint-path-color': '#0f0',
-    'order-hint-path-width': 1,
+        'drop-hint-color': 'yellow',
+        'sub-drop-hint-width': 2,
+        'main-drop-hint-width': 4,
+        'root-drop-hint-width': 4,
 
-    'text-selection-color': 'rgb(27,171,255)',
-    'line-height':1.5
+        'order-hint-area-color': 'rgba(0, 255, 0, .5)',
+        'order-hint-path-color': '#0f0',
+        'order-hint-path-width': 1,
+
+        'text-selection-color': 'rgb(27,171,255)',
+        'line-height':1.5
+    });
 });

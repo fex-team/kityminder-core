@@ -1,4 +1,7 @@
-(function() {
+define(function(require, exports, module) {
+    var kity = require('core/kity');
+    var theme = require('core/theme');
+
     function hsl(h, s, l) {
         return kity.Color.createHSL(h, s, l);
     }
@@ -67,8 +70,8 @@
     };
     var name;
     for (name in plans) {
-        KityMinder.registerTheme('fresh-' + name, generate(plans[name]));
-        KityMinder.registerTheme('fresh-' + name + '-compat', generate(plans[name], true));
+        theme.register('fresh-' + name, generate(plans[name]));
+        theme.register('fresh-' + name + '-compat', generate(plans[name], true));
     }
 
-})();
+});

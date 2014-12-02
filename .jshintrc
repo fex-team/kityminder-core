@@ -10,23 +10,7 @@
     "browser": true,
     "boss": true,
     "predef" : [
-        "module",
-        "require",
-        "console",
-        "kity",
-        "KityMinder",
-        "KM",
-        "Minder",
-        "MinderNode",
-        "MinderEvent",
-        "Command",
-        "KITYMINDER_CONFIG",
-        "keymap",
-        "Utils",
-        "utils",
-        "$",
-        "KM",
-        "keymap",
-        "browser"
+        "define",
+        "Promise"
     ]
 }

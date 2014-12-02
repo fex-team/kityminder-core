@@ -7,23 +7,28 @@
  * @copyright: Baidu FEX, 2014
  */
 
-KityMinder.registerConnectProvider('l', function(node, parent, connection) {
+define(function(require, exports, module) {
+    var kity = require('core/kity');
+    var connect = require('core/connect');
 
-    var po = parent.getLayoutVertexOut();
-    var pi = node.getLayoutVertexIn();
-    var vo = parent.getLayoutVectorOut();
+    connect.register('l', function(node, parent, connection) {
 
-    var pathData = [];
-    var r = Math.round,
-        abs = Math.abs;
+        var po = parent.getLayoutVertexOut();
+        var pi = node.getLayoutVertexIn();
+        var vo = parent.getLayoutVectorOut();
 
-    pathData.push('M', po.round());
-    if (abs(vo.x) > abs(vo.y)) {
-        pathData.push('H', r(pi.x));
-    } else {
-        pathData.push('V', pi.y);
-    }
-    pathData.push('L', pi);
+        var pathData = [];
+        var r = Math.round,
+            abs = Math.abs;
 
-    connection.setPathData(pathData);
+        pathData.push('M', po.round());
+        if (abs(vo.x) > abs(vo.y)) {
+            pathData.push('H', r(pi.x));
+        } else {
+            pathData.push('V', pi.y);
+        }
+        pathData.push('L', pi);
+
+        connection.setPathData(pathData);
+    });
 });

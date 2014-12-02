@@ -1,9 +1,110 @@
-KityMinder.registerModule("HistoryModule", function() {
+define(function(require, exports, module) {
+    var kity = require('core/kity');
+    var utils = require('core/utils');
+
+    var Minder = require('core/minder');
+    var MinderNode = require('core/node');
+    var Command = require('core/command');
+    var Module = require('core/module');
+
+    function compareObject(source, target) {
+        var tmp;
+        if (isEmptyObject(source) !== isEmptyObject(target)) {
+            return false;
+        }
+        if (getObjectLength(source) != getObjectLength(target)) {
+            return false;
+        }
+        for (var p in source) {
+            if (source.hasOwnProperty(p)) {
+                tmp = source[p];
+                if (target[p] === undefined) {
+                    return false;
+                }
+                if (this.isObject(tmp) || this.isArray(tmp)) {
+                    if (this.isObject(target[p]) !== this.isObject(tmp)) {
+                        return false;
+                    }
+                    if (this.isArray(tmp) !== this.isArray(target[p])) {
+                        return false;
+                    }
+                    if (this.compareObject(tmp, target[p]) === false) {
+                        return false;
+                    }
+                } else {
+                    if (tmp != target[p]) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    function getObjectLength(obj) {
+        if (utils.isArray(obj) || utils.isString(obj)) return obj.length;
+        var count = 0;
+        for (var key in obj)
+            if (obj.hasOwnProperty(key)) count++;
+        return count;
+    }
+
+    function isEmptyObject(obj) {
+        if (obj === null || obj === undefined) return true;
+        if (utils.isArray(obj) || utils.isString(obj)) return obj.length === 0;
+        for (var key in obj)
+            if (obj.hasOwnProperty(key)) return false;
+        return true;
+    }
+
+    function getValueByIndex(data, index) {
+
+        var initIndex = 0,
+            result = 0;
+
+        data.forEach(function(arr, i) {
+            if (initIndex + arr.length >= index) {
+
+                if (index - initIndex == arr.length) {
+                    if (arr.length == 1 && arr[0].width === 0) {
+                        initIndex++;
+                        return;
+                    }
+                    result = {
+                        x: arr[arr.length - 1].x + arr[arr.length - 1].width,
+                        y: arr[arr.length - 1].y
+                    };
+                } else {
+                    result = arr[index - initIndex];
+                }
+
+                return false;
+            } else {
+                initIndex += arr.length + (arr.length == 1 && arr[0].width === 0 ? 0 : 1);
+            }
+        });
+        return result;
+    }
+
+    function getNodeIndex(node, ignoreTextNode) {
+        var preNode = node,
+            i = 0;
+        while (preNode = preNode.previousSibling) {
+            if (ignoreTextNode && preNode.nodeType == 3) {
+                if (preNode.nodeType != preNode.nextSibling.nodeType) {
+                    i++;
+                }
+                continue;
+            }
+            i++;
+        }
+        return i;
+    }
 
     var km = this;
 
     var Scene = kity.createClass('Scene', {
-        constructor: function(root,inputStatus) {
+        constructor: function(root, inputStatus) {
             this.data = root.clone();
             this.inputStatus = inputStatus;
         },
@@ -14,12 +115,12 @@ KityMinder.registerModule("HistoryModule", function() {
             return this.getData().clone();
         },
         equals: function(scene) {
-            return this.getData().equals(scene.getData());
+            return this.getData().compareTo(scene.getData());
         },
-        isInputStatus:function(){
+        isInputStatus: function() {
             return this.inputStatus;
         },
-        setInputStatus:function(status){
+        setInputStatus: function(status) {
             this.inputStatus = status;
         }
     });
@@ -35,13 +136,13 @@ KityMinder.registerModule("HistoryModule", function() {
             if (this.hasUndo) {
                 var currentScene = this.list[this.index];
                 //如果是输入文字时的保存，直接回复当前场景
-                if(currentScene && currentScene.isInputStatus()){
+                if (currentScene && currentScene.isInputStatus()) {
                     this.saveScene();
                     this.restore(--this.index);
                     currentScene.setInputStatus(false);
                     return;
                 }
-                if(this.list.length == 1){
+                if (this.list.length == 1) {
                     this.restore(0);
                     return;
                 }
@@ -71,14 +172,12 @@ KityMinder.registerModule("HistoryModule", function() {
         },
         partialRenewal: function(target) {
             var selectedNodes = [];
+
             function compareNode(source, target) {
                 if (source.getText() != target.getText()) {
                     return false;
                 }
-                if (utils.compareObject(source.getData(), target.getData()) === false) {
-                    return false;
-                }
-                if (utils.compareObject(source.getTmpData(), target.getTmpData()) === false) {
+                if (compareObject(source.getData(), target.getData()) === false) {
                     return false;
                 }
                 return true;
@@ -91,7 +190,7 @@ KityMinder.registerModule("HistoryModule", function() {
                 km.appendNode(child, parent);
                 child.render();
 
-                var children = utils.cloneArr(child.children);
+                var children = child.children.slice();
                 for (var i = 0, ci; ci = children[i++];) {
                     appendChildNode(child, ci);
                 }
@@ -121,10 +220,11 @@ KityMinder.registerModule("HistoryModule", function() {
                 }
             }
 
+            var km = this.km;
             traverseNode(km.getRoot(), target);
             km.layout(200);
 
-            km.select(selectedNodes,true);
+            km.select(selectedNodes, true);
 
             selectedNodes = [];
 
@@ -138,13 +238,13 @@ KityMinder.registerModule("HistoryModule", function() {
             this.km.fire('contentChange');
         },
         getScene: function(inputStatus) {
-            return new Scene(this.km.getRoot(),inputStatus);
+            return new Scene(this.km.getRoot(), inputStatus);
         },
         saveScene: function(inputStatus) {
             var currentScene = this.getScene(inputStatus);
             var lastScene = this.list[this.index];
             if (lastScene && lastScene.equals(currentScene)) {
-                if(inputStatus){
+                if (inputStatus) {
                     lastScene.setInputStatus(true);
                     this.update();
                 }
@@ -153,7 +253,7 @@ KityMinder.registerModule("HistoryModule", function() {
             this.list = this.list.slice(0, this.index + 1);
             this.list.push(currentScene);
             //如果大于最大数量了，就把最前的剔除
-            if (this.list.length > this.km.getOptions('maxUndoCount')) {
+            if (this.list.length > this.km.getOption('maxUndoCount')) {
                 this.list.shift();
             }
             this.index = this.list.length - 1;
@@ -165,7 +265,7 @@ KityMinder.registerModule("HistoryModule", function() {
             this.hasRedo = !!this.list[this.index + 1];
             this.hasUndo = !!this.list[this.index - 1];
             var currentScene = this.list[this.index];
-            if(currentScene && currentScene.isInputStatus()){
+            if (currentScene && currentScene.isInputStatus()) {
                 this.hasUndo = true;
             }
 
@@ -177,57 +277,61 @@ KityMinder.registerModule("HistoryModule", function() {
             this.hasRedo = false;
         }
     });
-    //为km实例添加history管理
-    this.historyManager = new HistoryManager(this);
 
+    Module.register('HistoryModule', function() {
 
-    return {
-        defaultOptions: {
-            maxUndoCount: 20,
-            maxInputCount: 20
-        },
-        "commands": {
-            "undo": kity.createClass("UndoCommand", {
-                base: Command,
+        //为km实例添加history管理
+        this.historyManager = new HistoryManager(this);
 
-                execute: function(km) {
-                    km.historyManager.undo();
-                },
-
-                queryState: function(km) {
-                    return km.historyManager.hasUndo ? 0 : -1;
-                },
-
-                isNeedUndo: function() {
-                    return false;
-                }
-            }),
-            "redo": kity.createClass("RedoCommand", {
-                base: Command,
-
-                execute: function(km) {
-                    km.historyManager.redo();
-                },
-
-                queryState: function(km) {
-                    return km.historyManager.hasRedo ? 0 : -1;
-                },
-                isNeedUndo: function() {
-                    return false;
-                }
-            })
-        },
-        commandShortcutKeys: {
-            "undo": "ctrl+z", //undo
-            "redo": "ctrl+y" //redo
-        },
-        "events": {
-            "saveScene": function(e) {
-                this.historyManager.saveScene(e.inputStatus);
+        return {
+            defaultOptions: {
+                maxUndoCount: 20,
+                maxInputCount: 20
             },
-            "import": function() {
-                this.historyManager.reset();
+            "commands": {
+                "undo": kity.createClass("UndoCommand", {
+                    base: Command,
+
+                    execute: function(km) {
+                        km.historyManager.undo();
+                    },
+
+                    queryState: function(km) {
+                        return km.historyManager.hasUndo ? 0 : -1;
+                    },
+
+                    isNeedUndo: function() {
+                        return false;
+                    }
+                }),
+                "redo": kity.createClass("RedoCommand", {
+                    base: Command,
+
+                    execute: function(km) {
+                        km.historyManager.redo();
+                    },
+
+                    queryState: function(km) {
+                        return km.historyManager.hasRedo ? 0 : -1;
+                    },
+                    isNeedUndo: function() {
+                        return false;
+                    }
+                })
+            },
+            commandShortcutKeys: {
+                "undo": "ctrl+z", //undo
+                "redo": "ctrl+y" //redo
+            },
+            "events": {
+                "saveScene": function(e) {
+                    this.historyManager.saveScene(e.inputStatus);
+                },
+                "import": function() {
+                    this.historyManager.reset();
+                }
             }
-        }
-    };
+        };
+    });
+
 });

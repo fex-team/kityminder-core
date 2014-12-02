@@ -6,51 +6,61 @@
  * @author: techird
  * @copyright: Baidu FEX, 2014
  */
-KityMinder.registerInit(function() {
-    this._initPaper();
-});
-kity.extendClass(KityMinder, {
-    
-    _initPaper: function() {
+define(function(require, exports, module) {
+    var kity = require('./kity');
+    var utils = require('./utils');
+    var Minder = require('./minder');
 
-        this._paper = new kity.Paper();
-        this._paper.getNode().setAttribute('contenteditable', true);
-        this._paper.getNode().ondragstart = function(e) {
-            e.preventDefault();
-        };
-        this._paper.shapeNode.setAttribute('transform', 'translate(0.5, 0.5)');
+    Minder.registerInitHook(function() {
+        this._initPaper();
+    });
 
-        this._addRenderContainer();
+    kity.extendClass(Minder, {
 
-        this.setRoot(this.createNode());
+        _initPaper: function() {
 
-        if (this._options.renderTo) {
-            this.renderTo(this._options.renderTo);
-        }
-    },
+            this._paper = new kity.Paper();
+            this._paper.getNode().ondragstart = function(e) {
+                e.preventDefault();
+            };
+            this._paper.shapeNode.setAttribute('transform', 'translate(0.5, 0.5)');
 
-    _addRenderContainer: function() {
-        this._rc = new kity.Group().setId(KityMinder.uuid('minder'));
-        this._paper.addShape(this._rc);
-    },
+            this._addRenderContainer();
 
-    renderTo: function(target) {
-        if (typeof(target) == 'string') {
-            target = document.getElementById(target);
-        }
-        this._paper.renderTo(this._renderTarget = target);
-        this._bindEvents();
-    },
+            this.setRoot(this.createNode());
 
-    getRenderContainer: function() {
-        return this._rc;
-    },
+            if (this._options.renderTo) {
+                this.renderTo(this._options.renderTo);
+            }
+        },
 
-    getPaper: function() {
-        return this._paper;
-    },
+        _addRenderContainer: function() {
+            this._rc = new kity.Group().setId(utils.uuid('minder'));
+            this._paper.addShape(this._rc);
+        },
 
-    getRenderTarget: function() {
-        return this._renderTarget;
-    },
+        renderTo: function(target) {
+            if (typeof(target) == 'string') {
+                target = document.getElementById(target);
+            }
+            if (target) {
+                this._paper.renderTo(this._renderTarget = target);
+                this._bindEvents();
+                this.fire('paperrender');
+            }
+            return this;
+        },
+
+        getRenderContainer: function() {
+            return this._rc;
+        },
+
+        getPaper: function() {
+            return this._paper;
+        },
+
+        getRenderTarget: function() {
+            return this._renderTarget;
+        },
+    });
 });
