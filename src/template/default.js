@@ -6,30 +6,33 @@
  * @author: techird
  * @copyright: Baidu FEX, 2014
  */
+define(function(require, exports, module) {
+    var template = require('core/template');
 
-KityMinder.registerTemplate('default', {
+    template.register('default', {
 
-    getLayout: function(node) {
+        getLayout: function(node) {
 
-        if (node.getData('layout')) return node.getData('layout');
+            if (node.getData('layout')) return node.getData('layout');
 
-        var level = node.getLevel();
+            var level = node.getLevel();
 
-        // 根节点
-        if (level === 0) {
-            return 'mind';
+            // 根节点
+            if (level === 0) {
+                return 'mind';
+            }
+
+            // 一级节点
+            if (level === 1) {
+                return node.getLayoutPointPreview().x > 0 ? 'right': 'left';
+            }
+
+            return node.parent.getLayout();
+        },
+
+        getConnect: function(node) {
+            if (node.getLevel() == 1) return 'arc';
+            return 'under';
         }
-
-        // 一级节点
-        if (level === 1) {
-            return node.getLayoutPointPreview().x > 0 ? 'right': 'left';
-        }
-
-        return node.parent.getLayout();
-    },
-
-    getConnect: function(node) {
-        if (node.getLevel() == 1) return 'arc';
-        return 'under';
-    }
+    });
 });

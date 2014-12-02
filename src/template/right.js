@@ -6,15 +6,18 @@
  * @author: techird
  * @copyright: Baidu FEX, 2014
  */
+define(function(require, exports, module) {
+    var template = require('core/template');
 
-KityMinder.registerTemplate('right', {
+    template.register('right', {
 
-    getLayout: function(node) {
-        return node.getData('layout') || 'right';
-    },
+        getLayout: function(node) {
+            return node.getData('layout') || 'right';
+        },
 
-    getConnect: function(node) {
-        if (node.getLevel() == 1) return 'arc';
-        return 'bezier';
-    }
+        getConnect: function(node) {
+            if (node.getLevel() == 1) return 'arc';
+            return 'bezier';
+        }
+    });
 });

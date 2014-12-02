@@ -7,62 +7,66 @@
  * @copyright: Baidu FEX, 2014
  */
 
-/* global Layout: true */
-KityMinder.registerLayout('fish-bone-slave', kity.createClass('FishBoneSlaveLayout', {
-    base: Layout,
+define(function(require, exports, module) {
+    var kity = require('core/kity');
+    var Layout = require('core/layout');
 
-    doLayout: function (parent, children, round) {
+    Layout.register('fish-bone-slave', kity.createClass('FishBoneSlaveLayout', {
+        base: Layout,
 
-        var layout = this;
-        var abs = Math.abs;
-        var GOLD_CUT = 1 - 0.618;
+        doLayout: function (parent, children, round) {
 
-        var pBox = parent.getContentBox();
-        var vi = parent.getLayoutVectorIn();
+            var layout = this;
+            var abs = Math.abs;
+            var GOLD_CUT = 1 - 0.618;
 
-        parent.setLayoutVectorOut(vi);
+            var pBox = parent.getContentBox();
+            var vi = parent.getLayoutVectorIn();
 
-        var goldX = pBox.left + pBox.width * GOLD_CUT;
-        var pout = new kity.Point(goldX, vi.y > 0 ? pBox.bottom : pBox.top);
-        parent.setVertexOut(pout);
+            parent.setLayoutVectorOut(vi);
 
-        var child = children[0];
-        if (!child) return;
+            var goldX = pBox.left + pBox.width * GOLD_CUT;
+            var pout = new kity.Point(goldX, vi.y > 0 ? pBox.bottom : pBox.top);
+            parent.setVertexOut(pout);
 
-        var cBox = child.getContentBox();
+            var child = children[0];
+            if (!child) return;
 
-        children.forEach(function(child, index) {
-            child.setLayoutTransform(new kity.Matrix());
-            child.setLayoutVectorIn(new kity.Vector(1, 0));
-            child.setVertexIn(new kity.Point(cBox.left, cBox.cy));
-        });
+            var cBox = child.getContentBox();
 
-        this.stack(children, 'y');
-        this.align(children, 'left');
-        var xAdjust = 0, yAdjust = 0;
-        
-        xAdjust += pout.x;
-
-        if (parent.getLayoutVectorOut().y < 0) {
-            yAdjust -= this.getTreeBox(children).bottom;
-            yAdjust += parent.getContentBox().top;
-            yAdjust -= parent.getStyle('margin-top');
-            yAdjust -= child.getStyle('margin-bottom');
-        } else {
-            yAdjust += parent.getContentBox().bottom;
-            yAdjust += parent.getStyle('margin-bottom');
-            yAdjust += child.getStyle('margin-top');
-        }
-
-        this.move(children, xAdjust, yAdjust);
-
-        if (round == 2) {
-            children.forEach(function(child) {
-                var m = child.getLayoutTransform();
-                var cbox = child.getContentBox();
-                var pin = m.transformPoint(new kity.Point(cbox.left, 0));
-                layout.move([child], abs(pin.y - pout.y), 0);
+            children.forEach(function(child, index) {
+                child.setLayoutTransform(new kity.Matrix());
+                child.setLayoutVectorIn(new kity.Vector(1, 0));
+                child.setVertexIn(new kity.Point(cBox.left, cBox.cy));
             });
+
+            this.stack(children, 'y');
+            this.align(children, 'left');
+
+            var xAdjust = 0, yAdjust = 0;
+            xAdjust += pout.x;
+
+            if (parent.getLayoutVectorOut().y < 0) {
+                yAdjust -= this.getTreeBox(children).bottom;
+                yAdjust += parent.getContentBox().top;
+                yAdjust -= parent.getStyle('margin-top');
+                yAdjust -= child.getStyle('margin-bottom');
+            } else {
+                yAdjust += parent.getContentBox().bottom;
+                yAdjust += parent.getStyle('margin-bottom');
+                yAdjust += child.getStyle('margin-top');
+            }
+
+            this.move(children, xAdjust, yAdjust);
+
+            if (round == 2) {
+                children.forEach(function(child) {
+                    var m = child.getLayoutTransform();
+                    var cbox = child.getContentBox();
+                    var pin = m.transformPoint(new kity.Point(cbox.left, 0));
+                    layout.move([child], abs(pin.y - pout.y), 0);
+                });
+            }
         }
-    }
-}));
+    }));
+});

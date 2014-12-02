@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>KityMinder Example</title>
+
+    <link href="favicon.ico" type="image/x-icon" rel="shortcut icon">
+    <style type="text/css">
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+
+        .km_receiver {
+            background: white;
+            border: 1px solid #999;
+        }
+
+        #minder-view {
+            position: absolute;
+            border: 1px solid #ccc;
+            left: 10px;
+            top: 10px;
+            bottom: 10px;
+            right: 210px;
+        }
+    </style>
+</head>
+<body>
+    <div id="minder-view"></div>
+</body>
+
+<!-- *************************** Module 形式加载引入 **************************** -->
+<script type="text/javascript" src="lib/seajs/dist/sea-debug.js"></script>
+<script type="text/javascript">
+/* global seajs */
+seajs.config({
+    base: './src'
+});
+define('start', function(require) {
+    var Minder = require('kityminder').Minder;
+
+    // 创建 km 实例
+    var km = window.km = new Minder({
+        renderTo: 'minder-view'
+    });
+});
+seajs.use('start');
+</script>
+
+<!-- *********************** 打包文件引入（需要先 grunt 发布） ************************* -->
+<!--
+
+<script type="text/javascript" src="../release/kityminder.all.min.js">
+<script type="text/javascript">
+// 创建 km 实例
+window.km = new kityminder.Minder('minder-view');
+</script>
+
+-->
+</html>

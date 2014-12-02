@@ -7,38 +7,43 @@
  * @copyright: Baidu FEX, 2014
  */
 
-var connectMarker = new kity.Marker().pipe(function() {
-    var r = 7;
-    var dot = new kity.Circle(r - 1);
-    this.addShape(dot);
-    this.setRef(r - 1, 0).setViewBox(-r, -r, r + r, r + r).setWidth(r).setHeight(r);
-    this.dot = dot;
-    this.node.setAttribute('markerUnits', 'userSpaceOnUse');
-});
+define(function(require, exports, module) {
+    var kity = require('core/kity');
+    var connect = require('core/connect');
 
-KityMinder.registerConnectProvider('arc', function(node, parent, connection, width, color) {
+    var connectMarker = new kity.Marker().pipe(function() {
+        var r = 7;
+        var dot = new kity.Circle(r - 1);
+        this.addShape(dot);
+        this.setRef(r - 1, 0).setViewBox(-r, -r, r + r, r + r).setWidth(r).setHeight(r);
+        this.dot = dot;
+        this.node.setAttribute('markerUnits', 'userSpaceOnUse');
+    });
 
-    var box = node.getLayoutBox(),
-        pBox = parent.getLayoutBox();
+    connect.register('arc', function(node, parent, connection, width, color) {
 
-    var start, end, vector;
-    var abs = Math.abs;
-    var pathData = [];
-    var side = box.x > pBox.x ? 'right' : 'left';
+        var box = node.getLayoutBox(),
+            pBox = parent.getLayoutBox();
 
-    node.getMinder().getPaper().addResource(connectMarker);
+        var start, end, vector;
+        var abs = Math.abs;
+        var pathData = [];
+        var side = box.x > pBox.x ? 'right' : 'left';
 
-    start = new kity.Point(pBox.cx, pBox.cy);
-    end = side == 'left' ?
-        new kity.Point(box.right + 2, box.cy) :
-        new kity.Point(box.left - 2, box.cy);
+        node.getMinder().getPaper().addResource(connectMarker);
 
-    vector = kity.Vector.fromPoints(start, end);
-    pathData.push('M', start);
-    pathData.push('A', abs(vector.x), abs(vector.y), 0, 0, (vector.x * vector.y > 0 ? 0 : 1), end);
+        start = new kity.Point(pBox.cx, pBox.cy);
+        end = side == 'left' ?
+            new kity.Point(box.right + 2, box.cy) :
+            new kity.Point(box.left - 2, box.cy);
 
-    connection.setMarker(connectMarker);
-    connectMarker.dot.fill(color);
+        vector = kity.Vector.fromPoints(start, end);
+        pathData.push('M', start);
+        pathData.push('A', abs(vector.x), abs(vector.y), 0, 0, (vector.x * vector.y > 0 ? 0 : 1), end);
 
-    connection.setPathData(pathData);
+        connection.setMarker(connectMarker);
+        connectMarker.dot.fill(color);
+
+        connection.setPathData(pathData);
+    });
 });

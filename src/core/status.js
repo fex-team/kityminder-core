@@ -7,23 +7,26 @@
  * @copyright: Baidu FEX, 2014
  */
 
-Minder.registerInit(function() {
-    this._initStatus();
-});
+define(function(require, exports, module) {
+    var kity = require('./kity');
+    var Minder = require('./minder');
 
-kity.extendClass(Minder, {
+    var sf = ~window.location.href.indexOf('status');
+    var tf = ~window.location.href.indexOf('trace');
 
-    _initStatus: function() {
-        this._status = 'normal';
-        this._rollbackStatus = 'normal';
-    },
+    Minder.registerInitHook(function() {
+        this._initStatus();
+    });
 
-    setStatus: (function() {
-        var sf = ~window.location.href.indexOf('status');
-        var tf = ~window.location.href.indexOf('trace');
+    kity.extendClass(Minder, {
 
-        // 在 readonly 模式下，只有 force 为 true 才能切换回来
-        return function(status, force) {
+        _initStatus: function() {
+            this._status = 'normal';
+            this._rollbackStatus = 'normal';
+        },
+
+        setStatus: function(status, force) {
+            // 在 readonly 模式下，只有 force 为 true 才能切换回来
             if (this._status == 'readonly' && !force) return this;
             if (status != this._status) {
                 this._rollbackStatus = this._status;
@@ -33,6 +36,7 @@ kity.extendClass(Minder, {
                     currentStatus: this._status
                 });
                 if (sf) {
+                    /* global console: true */
                     console.log(window.event.type, this._rollbackStatus, '->', this._status);
                     if (tf) {
                         console.trace();
@@ -40,16 +44,17 @@ kity.extendClass(Minder, {
                 }
             }
             return this;
-        };
-    })(),
+        },
 
-    rollbackStatus: function() {
-        this.setStatus(this._rollbackStatus);
-    },
-    getRollbackStatus:function(){
-        return this._rollbackStatus;
-    },
-    getStatus: function() {
-        return this._status;
-    }
+        rollbackStatus: function() {
+            this.setStatus(this._rollbackStatus);
+        },
+        getRollbackStatus:function(){
+            return this._rollbackStatus;
+        },
+        getStatus: function() {
+            return this._status;
+        }
+    });
+
 });

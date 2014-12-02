@@ -1,30 +1,40 @@
-/* jshint -W079 */
-var Minder = KityMinder.Minder = kity.createClass('KityMinder', {
-    constructor: function(options) {
-        this._options = Utils.extend(window.KITYMINDER_CONFIG || {}, options);
+/**
+ * @fileOverview
+ *
+ * KityMinder 类，暴露在 window 上的唯一变量
+ *
+ * @author: techird
+ * @copyright: Baidu FEX, 2014
+ */
+define(function(require, exports, module) {
+    var kity = require('./kity');
+    var utils = require('./utils');
 
-        var initQueue = Minder._initFnQueue.slice();
+    var _initHooks = [];
 
-        // @see option.js
-        // @see event.js
-        // @see status.js
-        // @see paper.js
-        // @see select.js
-        // @see key.js
-        // @see contextmenu.js
-        // @see module.js
-        // @see data.js         
-        // @see readonly.js
-        // @see layout.js
-        // @see theme.js
-        while (initQueue.length) initQueue.shift().call(this, options);
-        
-        this.fire('ready');
-    }
+    var Minder = kity.createClass('Minder', {
+        constructor: function(options) {
+            this._options = utils.extend({}, options);
+
+            var initHooks = _initHooks.slice();
+
+            var initHook;
+            while (initHooks.length) {
+                initHook = initHooks.shift();
+                if (typeof(initHook) == 'function') {
+                    initHook.call(this, this._options);
+                }
+            }
+
+            this.fire('ready');
+        }
+    });
+
+    Minder.version = '1.3.6';
+
+    Minder.registerInitHook = function(hook) {
+        _initHooks.push(hook);
+    };
+
+    module.exports = Minder;
 });
-/* jshint +W079 */
-
-Minder._initFnQueue = [];
-Minder.registerInit = function(fn) {
-    Minder._initFnQueue.push(fn);
-};

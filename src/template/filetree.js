@@ -6,20 +6,23 @@
  * @author: techird
  * @copyright: Baidu FEX, 2014
  */
+define(function(require, exports, module) {
+    var template = require('core/template');
 
-KityMinder.registerTemplate('filetree', {
+    template.register('filetree', {
 
-    getLayout: function(node) {
-        if (node.getData('layout')) return node.getData('layout');
-        if (node.isRoot()) return 'bottom';
+        getLayout: function(node) {
+            if (node.getData('layout')) return node.getData('layout');
+            if (node.isRoot()) return 'bottom';
 
-        return 'filetree-down';
-    },
+            return 'filetree-down';
+        },
 
-    getConnect: function(node) {
-        if (node.getLevel() == 1) {
-            return 'poly';
+        getConnect: function(node) {
+            if (node.getLevel() == 1) {
+                return 'poly';
+            }
+            return 'l';
         }
-        return 'l';
-    }
+    });
 });
