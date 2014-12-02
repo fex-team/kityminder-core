@@ -26,6 +26,8 @@ var minder = new kityminder.Minder({
 </script>
 ```
 
+更多详细的开发资料可以参考 [wiki](https://github.com/fex-team/kityminder-core/wiki)
+
 ## 兼容性
 
 KityMinder 基于 SVG 技术实现，支持绝大多数的 HTML5 浏览器，包括：
