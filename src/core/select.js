@@ -134,7 +134,8 @@ define(function(require, exports, module) {
 
     kity.extendClass(MinderNode, {
         isSelected: function() {
-            return this.getMinder().getSelectedNodes().indexOf(this) != -1;
+            var minder = this.getMinder();
+            return minder && minder.getSelectedNodes().indexOf(this) != -1;
         }
     });
 

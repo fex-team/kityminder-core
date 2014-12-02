@@ -22,7 +22,7 @@ define(function(require, exports, module) {
         // jscs:disable maximumLineLength
         var FRAME_PATH = 'M10,0C4.477,0,0,4.477,0,10c0,5.523,4.477,10,10,10s10-4.477,10-10C20,4.477,15.523,0,10,0zM10,18c-4.418,0-8-3.582-8-8s3.582-8,8-8s8,3.582,8,8S14.418,18,10,18z';
 
-        var FRAME_GRAD = new kity.LinearGradientBrush().pipe(function(g) {
+        var FRAME_GRAD = new kity.LinearGradient().pipe(function(g) {
             g.setStartPosition(0, 0);
             g.setEndPosition(0, 1);
             g.addStop(0, '#fff');
