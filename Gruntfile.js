@@ -8,6 +8,7 @@ module.exports = function(grunt) {
     // These plugins provide necessary tasks.
     /* [Build plugin & task ] ------------------------------------*/
     grunt.loadNpmTasks('grunt-module-dependence');
+    grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-uglify');
 
@@ -22,12 +23,19 @@ module.exports = function(grunt) {
         ' * ====================================================\n' +
         ' */\n\n';
 
+    var expose = '\nuse(\'kityminder\');\n';
+
     // Project configuration.
     grunt.initConfig({
 
         // Metadata.
         pkg: grunt.file.readJSON('package.json'),
 
+        clean: {
+            last: 'release'
+        },
+
+        // resolve dependence
         dependence: {
             options: {
                 base: 'src',
@@ -36,8 +44,32 @@ module.exports = function(grunt) {
             merge: {
                 files: [{
                     src: 'src/**/*.js',
-                    dest: 'release/kityminder.all.js'
+                    dest: 'release/kityminder.core.js'
                 }]
+            }
+        },
+
+        // concat
+        concat: {
+            closure: {
+                options: {
+                    banner: banner + '(function () {\n',
+                    footer: expose + '})();'
+                },
+                files: {
+                    'release/kityminder.core.js': ['release/kityminder.core.js']
+                }
+            }
+        },
+
+        uglify: {
+            options: {
+                banner: banner
+            },
+            minimize: {
+                files: {
+                    'release/kityminder.core.min.js': 'release/kityminder.core.js'
+                }
             }
         }
 
@@ -45,6 +77,6 @@ module.exports = function(grunt) {
 
 
     // Build task(s).
-    grunt.registerTask('default', ['dependence']);
+    grunt.registerTask('default', ['clean', 'dependence', 'concat', 'uglify']);
 
 };

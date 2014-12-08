@@ -8,13 +8,12 @@
  */
 
 
-define(function(require, exports, module) {
+define('kityminder', function(require, exports, module) {
     var kityminder = {
         version: require('core/minder').version
     };
 
     // 核心导出，大写的部分导出类，小写的部分简单 require 一下
-    require('core/kity');
     require('core/utils');
     kityminder.Minder = require('core/minder');
     kityminder.Command = require('core/command');
@@ -85,5 +84,5 @@ define(function(require, exports, module) {
     require('template/right');
     require('template/fish-bone');
 
-    module.exports = kityminder;
+    module.exports = window.kityminder = kityminder;
 });

@@ -26,6 +26,8 @@
             right: 210px;
         }
     </style>
+
+    <script type="text/javascript" src="lib/kity/dist/kity.min.js"></script>
 </head>
 <body>
     <div id="minder-view"></div>
@@ -51,12 +53,12 @@ seajs.use('start');
 
 <!-- *********************** 打包文件引入（需要先 grunt 发布） ************************* -->
 <!--
-
-<script type="text/javascript" src="../release/kityminder.all.min.js">
+<script type="text/javascript" src="../release/kityminder.core.min.js"></script>
 <script type="text/javascript">
 // 创建 km 实例
-window.km = new kityminder.Minder('minder-view');
+window.km = new kityminder.Minder({
+    renderTo: 'minder-view'
+});
 </script>
-
 -->
 </html>

@@ -7,5 +7,5 @@
  * @copyright: Baidu FEX, 2014
  */
 define(function(require, exports, module) {
-    module.exports = require('../../lib/kity/src/kity.js');
+    module.exports = window.kity;
 });

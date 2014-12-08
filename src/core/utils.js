@@ -1,5 +1,5 @@
 define(function(require, exports) {
-    var kity = require('../../lib/kity/src/kity.js');
+    var kity = require('./kity.js');
     var uuidMap = {};
 
     exports.extend = kity.Utils.extend.bind(kity.Utils);
