@@ -31,6 +31,14 @@ define(function(require, exports, module) {
             });
         }
 
+        /**
+         * @command Copy
+         * @description 复制当前选中的节点
+         * @shortcut Ctrl + C
+         * @state
+         *   0: 当前有选中的节点
+         *  -1: 当前没有选中的节点
+         */
         var CopyCommand = kity.createClass('CopyCommand', {
             base: Command,
 
@@ -40,6 +48,14 @@ define(function(require, exports, module) {
             }
         });
 
+        /**
+         * @command Cut
+         * @description 剪切当前选中的节点
+         * @shortcut Ctrl + X
+         * @state
+         *   0: 当前有选中的节点
+         *  -1: 当前没有选中的节点
+         */
         var CutCommand = kity.createClass('CutCommand', {
             base: Command,
 
@@ -60,6 +76,14 @@ define(function(require, exports, module) {
             }
         });
 
+        /**
+         * @command Paste
+         * @description 粘贴已复制的节点到每一个当前选中的节点上
+         * @shortcut Ctrl + V
+         * @state
+         *   0: 当前有选中的节点
+         *  -1: 当前没有选中的节点
+         */
         var PasteCommand = kity.createClass('PasteCommand', {
             base: Command,
 

@@ -135,6 +135,15 @@ define(function(require, exports, module) {
             defaultTheme: 'fresh-blue'
         },
         commands: {
+            /**
+             * @command Theme
+             * @description 设置当前脑图的主题
+             * @param {string} name 主题名称
+             *    允许使用的主题可以使用 `kityminder.Minder.getThemeList()` 查询
+             * @state
+             *   0: 始终可用
+             * @return 返回当前的主题名称
+             */
             'theme': kity.createClass('ThemeCommand', {
                 base: Command,
 

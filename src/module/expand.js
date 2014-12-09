@@ -49,6 +49,16 @@ define(function(require, exports, module) {
             }
         });
 
+        /**
+         * @command Expand
+         * @description 展开当前选中的节点，保证其可见
+         * @param {bool} justParents 是否只展开到父亲
+         *     * `false` - （默认）保证选中的节点以及其子树可见
+         *     * `true` - 只保证选中的节点可见，不展开其子树
+         * @state
+         *   0: 当前有选中的节点
+         *  -1: 当前没有选中的节点
+         */
         var ExpandCommand = kity.createClass('ExpandCommand', {
             base: Command,
 
@@ -58,7 +68,7 @@ define(function(require, exports, module) {
                 if (justParents) {
                     node = node.parent;
                 }
-                while(node.parent) {
+                while (node.parent) {
                     node.expand();
                     node = node.parent;
                 }
@@ -71,6 +81,13 @@ define(function(require, exports, module) {
             }
         });
 
+        /**
+         * @command ExpandToLevel
+         * @description 展开脑图到指定的层级
+         * @param {number} level 指定展开到的层级，最少值为 1。
+         * @state
+         *   0: 一直可用
+         */
         var ExpandToLevelCommand = kity.createClass('ExpandToLevelCommand', {
             base: Command,
             execute: function(km, level) {

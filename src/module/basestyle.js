@@ -33,6 +33,15 @@ define(function(require, exports, module) {
         });
         return {
             'commands': {
+                /**
+                 * @command Bold
+                 * @description 加粗选中的节点
+                 * @shortcut Ctrl + B
+                 * @state
+                 *   0: 当前有选中的节点
+                 *  -1: 当前没有选中的节点
+                 *   1: 当前已选中的节点已加粗
+                 */
                 'bold': kity.createClass('boldCommand', {
                     base: Command,
 
@@ -65,6 +74,15 @@ define(function(require, exports, module) {
                         return result;
                     }
                 }),
+                /**
+                 * @command Italic
+                 * @description 加斜选中的节点
+                 * @shortcut Ctrl + I
+                 * @state
+                 *   0: 当前有选中的节点
+                 *  -1: 当前没有选中的节点
+                 *   1: 当前已选中的节点已加斜
+                 */
                 'italic': kity.createClass('italicCommand', {
                     base: Command,
 

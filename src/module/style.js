@@ -21,6 +21,13 @@ define(function(require, exports, module) {
 
         return {
             'commands': {
+                /**
+                 * @command CopyStyle
+                 * @description 拷贝选中节点的当前样式，包括字体、字号、粗体、斜体、背景色、字体色
+                 * @state
+                 *   0: 当前有选中的节点
+                 *  -1: 当前没有选中的节点
+                 */
                 'copystyle': kity.createClass('CopyStyleCommand', {
                     base: Command,
 
@@ -45,6 +52,13 @@ define(function(require, exports, module) {
                     }
                 }),
 
+                /**
+                 * @command PasteStyle
+                 * @description 粘贴已拷贝的样式到选中的节点上，包括字体、字号、粗体、斜体、背景色、字体色
+                 * @state
+                 *   0: 当前有选中的节点，并且已经有复制的样式
+                 *  -1: 当前没有选中的节点，或者没有复制的样式
+                 */
                 'pastestyle': kity.createClass('PastStyleCommand', {
                     base: Command,
 
@@ -65,6 +79,13 @@ define(function(require, exports, module) {
                     }
                 }),
 
+                /**
+                 * @command ClearStyle
+                 * @description 移除选中节点的样式，包括字体、字号、粗体、斜体、背景色、字体色
+                 * @state
+                 *   0: 当前有选中的节点，并且至少有一个设置了至少一种样式
+                 *  -1: 其它情况
+                 */
                 'clearstyle': kity.createClass('ClearStyleCommand', {
                     base: Command,
                     execute: function(minder) {

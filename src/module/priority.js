@@ -82,7 +82,16 @@ define(function(require, exports, module) {
             }
         });
 
-        // 提供的命令
+        /**
+         * @command Priority
+         * @description 设置节点的优先级信息
+         * @param {number} value 要设置的优先级（添加一个优先级小图标）
+         *     取值为 0 移除优先级信息；
+         *     取值为 1 - 9 设置优先级，超过 9 的优先级不渲染
+         * @state
+         *    0: 当前有选中的节点
+         *   -1: 当前没有选中的节点
+         */
         var PriorityCommand = kity.createClass('SetPriorityCommand', {
             base: Command,
             execute: function(km, value) {

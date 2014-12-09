@@ -13,6 +13,17 @@ define(function(require, exports, module) {
 
     Module.register('hyperlink',{
         'commands': {
+
+            /**
+             * @command HyperLink
+             * @description 为选中的节点添加超链接
+             * @param {string} url 超链接的 URL，设置为 null 移除
+             * @param {string} title 超链接的说明
+             * @state
+             *   0: 当前有选中的节点
+             *  -1: 当前没有选中的节点
+             * @return 返回首个选中节点的超链接信息，JSON 对象： `{url: url, title: title}`
+             */
             'hyperlink': kity.createClass('hyperlink', {
                 base: Command,
 
@@ -20,7 +31,7 @@ define(function(require, exports, module) {
                     var nodes = km.getSelectedNodes();
                     nodes.forEach(function(n) {
                         n.setData('hyperlink', url);
-                        n.setData('hyperlinkTitle', title);
+                        n.setData('hyperlinkTitle', url && title);
                         n.render();
                     });
                     km.layout();
@@ -45,36 +56,6 @@ define(function(require, exports, module) {
                         url: node.getData('hyperlink'),
                         title: node.getData('hyperlinkTitle')
                     };
-                }
-            }),
-            'unhyperlink': kity.createClass('hyperlink', {
-                base: Command,
-
-                execute: function(km) {
-                    var nodes = km.getSelectedNodes();
-                    nodes.forEach(function(n) {
-                        n.setData('hyperlink');
-                        n.render();
-                    });
-                    km.layout();
-                },
-                queryState: function(km) {
-                    var nodes = km.getSelectedNodes();
-
-                    if (nodes.length === 0) {
-                        return -1;
-                    }
-                    var link = false;
-                    nodes.forEach(function(n) {
-                        if (n.getData('hyperlink')) {
-                            link = true;
-                            return false;
-                        }
-                    });
-                    if (link) {
-                        return 0;
-                    }
-                    return -1;
                 }
             })
         },

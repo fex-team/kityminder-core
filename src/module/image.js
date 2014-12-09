@@ -39,6 +39,16 @@ define(function(require, exports, module) {
             };
         }
 
+        /**
+         * @command Image
+         * @description 为选中的节点添加图片
+         * @param {string} url 图片的 URL，设置为 null 移除
+         * @param {string} title 图片的说明
+         * @state
+         *   0: 当前有选中的节点
+         *  -1: 当前没有选中的节点
+         * @return 返回首个选中节点的图片信息，JSON 对象： `{url: url, title: title}`
+         */
         var ImageCommand = kity.createClass('ImageCommand', {
             base: Command,
 
@@ -46,15 +56,14 @@ define(function(require, exports, module) {
                 var nodes = km.getSelectedNodes();
 
                 loadImageSize(url, function(width, height) {
-                    if (!width) return;
                     nodes.forEach(function(n) {
                         var size = fitImageSize(
                             width, height,
                             km.getOption('maxImageWidth'),
                             km.getOption('maxImageHeight'));
                         n.setData('image', url);
-                        n.setData('imageTitle', title);
-                        n.setData('imageSize', size);
+                        n.setData('imageTitle', url && title);
+                        n.setData('imageSize', url && size);
                         n.render();
                     });
                     km.fire('saveScene');
@@ -82,36 +91,6 @@ define(function(require, exports, module) {
                     url: node.getData('image'),
                     title: node.getData('imageTitle')
                 };
-            }
-        });
-
-        var RemoveImageCommand = kity.createClass('RemoveImageCommand', {
-            base: Command,
-
-            execute: function(km) {
-                var nodes = km.getSelectedNodes();
-                nodes.forEach(function(n) {
-                    n.setData('image').render();
-                });
-                km.layout(300);
-            },
-            queryState: function(km) {
-                var nodes = km.getSelectedNodes();
-
-                if (nodes.length === 0) {
-                    return -1;
-                }
-                var image = false;
-                nodes.forEach(function(n) {
-                    if (n.getData('image')) {
-                        image = true;
-                        return false;
-                    }
-                });
-                if (image) {
-                    return 0;
-                }
-                return -1;
             }
         });
 
@@ -158,8 +137,7 @@ define(function(require, exports, module) {
                 'maxImageHeight': 200
             },
             'commands': {
-                'image': ImageCommand,
-                'removeimage': RemoveImageCommand
+                'image': ImageCommand
             },
             'renderers': {
                 'top': ImageRenderer

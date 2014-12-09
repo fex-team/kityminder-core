@@ -30,6 +30,15 @@ define(function(require, exports, module) {
         return selected && selected.parent && selected.parent.children.length > 1;
     }
 
+
+    /**
+     * @command ArrangeUp
+     * @description 向上调整选中节点的位置
+     * @shortcut Alt + Up
+     * @state
+     *    0: 当前选中了具有相同父亲的节点
+     *   -1: 其它情况
+     */
     var ArrangeUpCommand = kity.createClass('ArrangeUpCommand', {
         base: Command,
 
@@ -51,6 +60,14 @@ define(function(require, exports, module) {
         }
     });
 
+    /**
+     * @command ArrangeDown
+     * @description 向下调整选中节点的位置
+     * @shortcut Alt + Down
+     * @state
+     *    0: 当前选中了具有相同父亲的节点
+     *   -1: 其它情况
+     */
     var ArrangeDownCommand = kity.createClass('ArrangeUpCommand', {
         base: Command,
 
@@ -72,11 +89,19 @@ define(function(require, exports, module) {
         }
     });
 
+    /**
+     * @command Arrange
+     * @description 调整选中节点的位置
+     * @param {number} index 调整后节点的新位置
+     * @state
+     *    0: 当前选中了具有相同父亲的节点
+     *   -1: 其它情况
+     */
     var ArrangeCommand = kity.createClass('ArrangeCommand', {
         base: Command,
 
-        execute: function(km, nodes, index) {
-            nodes = nodes && nodes.slice() || km.getSelectedNodes().slice();
+        execute: function(km, index) {
+            var nodes = km.getSelectedNodes().slice();
 
             if (!nodes.length) return;
 

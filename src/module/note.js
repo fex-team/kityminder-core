@@ -20,6 +20,15 @@ define(function(require, exports, module) {
 
         var NOTE_PATH = 'M9,9H3V8h6L9,9L9,9z M9,7H3V6h6V7z M9,5H3V4h6V5z M8.5,11H2V2h8v7.5 M9,12l2-2V1H1v11';
 
+
+        /**
+         * @command Note
+         * @description 设置节点的备注信息
+         * @param {string} note 要设置的备注信息，设置为 null 则移除备注信息
+         * @state
+         *    0: 当前有选中的节点
+         *   -1: 当前没有选中的节点
+         */
         var NoteCommand = kity.createClass('NoteCommand', {
             base: Command,
 

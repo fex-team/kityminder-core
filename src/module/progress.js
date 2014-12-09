@@ -86,6 +86,20 @@ define(function(require, exports, module) {
             }
         });
 
+        /**
+         * @command Progress
+         * @description 设置节点的进度信息（添加一个进度小图标）
+         * @param {number} value 要设置的进度
+         *     取值为 0 移除进度信息；
+         *     取值为 1 表示未开始；
+         *     取值为 2 表示完成 1/8；
+         *     取值为 3 表示完成 2/8；
+         *     取值为 4 表示完成 3/8；
+         *     其余类推，取值为 9 表示全部完成
+         * @state
+         *    0: 当前有选中的节点
+         *   -1: 当前没有选中的节点
+         */
         var ProgressCommand = kity.createClass('ProgressCommand', {
             base: Command,
             execute: function(km, value) {

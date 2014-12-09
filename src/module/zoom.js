@@ -76,6 +76,13 @@ define(function(require, exports, module) {
             });
         }
 
+        /**
+         * @command Zoom
+         * @description 缩放当前的视野到一定的比例（百分比）
+         * @param {number} value 设置的比例，取值 100 则为原尺寸
+         * @state
+         *   0: 始终可用
+         */
         var ZoomCommand = kity.createClass('Zoom', {
             base: Command,
             execute: zoomMinder,
@@ -84,6 +91,14 @@ define(function(require, exports, module) {
             }
         });
 
+        /**
+         * @command ZoomIn
+         * @description 放大当前的视野到下一个比例等级（百分比）
+         * @shortcut =
+         * @state
+         *   0: 如果当前脑图的配置中还有下一个比例等级
+         *  -1: 其它情况
+         */
         var ZoomInCommand = kity.createClass('ZoomInCommand', {
             base: Command,
             execute: function(minder) {
@@ -103,6 +118,14 @@ define(function(require, exports, module) {
             enableReadOnly: true
         });
 
+        /**
+         * @command ZoomOut
+         * @description 缩小当前的视野到上一个比例等级（百分比）
+         * @shortcut -
+         * @state
+         *   0: 如果当前脑图的配置中还有上一个比例等级
+         *  -1: 其它情况
+         */
         var ZoomOutCommand = kity.createClass('ZoomOutCommand', {
             base: Command,
             execute: function(minder) {
@@ -128,8 +151,8 @@ define(function(require, exports, module) {
                 setTextRendering();
             },
             commands: {
-                'zoom-in': ZoomInCommand,
-                'zoom-out': ZoomOutCommand,
+                'zoomin': ZoomInCommand,
+                'zoomout': ZoomOutCommand,
                 'zoom': ZoomCommand
             },
             events: {
@@ -165,8 +188,8 @@ define(function(require, exports, module) {
             },
 
             commandShortcutKeys: {
-                'zoom-in': 'ctrl+=',
-                'zoom-out': 'ctrl+-'
+                'zoomin': 'ctrl+=',
+                'zoomout': 'ctrl+-'
             }
         };
     });

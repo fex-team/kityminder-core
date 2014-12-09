@@ -107,10 +107,14 @@ define(function(require, exports, module) {
 
 
         /**
-         * @class 设置资源的命令
+         * @command Resource
+         * @description 设置节点的资源标签
+         * @param {Array<string>} resource 要设置的资源列表，设置为空清除节点的资源标签
+         * @return 返回当前选中节点中包含的资源（数组）
          *
          * @example
          *
+         * ```js
          * // 设置选中节点资源为 "张三"
          * minder.execCommand('resource', ['张三']);
          *
@@ -121,6 +125,7 @@ define(function(require, exports, module) {
          *
          * // 清除选中节点的资源
          * minder.execCommand('resource', null);
+         * ```
          */
         var ResourceCommand = kity.createClass('ResourceCommand', {
 

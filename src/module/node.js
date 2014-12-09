@@ -8,6 +8,14 @@ define(function(require, exports, module) {
     var Module = require('core/module');
     var Renderer = require('core/render');
 
+    /**
+     * @command AppendChildNode
+     * @description 添加子节点到选中的节点中
+     * @param {string|object} textOrData 要插入的节点的文本或数据
+     * @state
+     *    0: 当前有选中的节点
+     *   -1: 当前没有选中的节点
+     */
     var AppendChildCommand = kity.createClass('AppendChildCommand', {
         base: Command,
         execute: function(km, text) {
@@ -27,6 +35,14 @@ define(function(require, exports, module) {
         }
     });
 
+    /**
+     * @command AppendSiblingNode
+     * @description 添加选中的节点的兄弟节点
+     * @param {string|object} textOrData 要添加的节点的文本或数据
+     * @state
+     *    0: 当前有选中的节点
+     *   -1: 当前没有选中的节点
+     */
     var AppendSiblingCommand = kity.createClass('AppendSiblingCommand', {
         base: Command,
         execute: function(km, text) {
@@ -46,9 +62,16 @@ define(function(require, exports, module) {
         }
     });
 
+    /**
+     * @command RemoveNode
+     * @description 移除选中的节点
+     * @state
+     *    0: 当前有选中的节点
+     *   -1: 当前没有选中的节点
+     */
     var RemoveNodeCommand = kity.createClass('RemoverNodeCommand', {
         base: Command,
-        execute: function(km, text) {
+        execute: function(km) {
             var nodes = km.getSelectedNodes();
             var ancestor = MinderNode.getCommonAncestor.apply(null, nodes);
 
@@ -65,6 +88,13 @@ define(function(require, exports, module) {
         }
     });
 
+    /**
+     * @command EditNode
+     * @description 编辑选中的节点
+     * @state
+     *    0: 当前有选中的节点
+     *   -1: 当前没有选中的节点
+     */
     var EditNodeCommand = kity.createClass('EditNodeCommand', {
         base: Command,
         execute: function(km) {

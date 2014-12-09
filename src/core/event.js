@@ -68,7 +68,7 @@ define(function(require, exports, module) {
                 isRightMB = this.originEvent.button == 2;
             return isRightMB;
         },
-        getKeyCode: function(){
+        getKeyCode: function() {
             var evt = this.originEvent;
             return evt.keyCode || evt.which;
         }

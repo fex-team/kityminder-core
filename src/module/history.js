@@ -288,8 +288,16 @@ define(function(require, exports, module) {
                 maxUndoCount: 20,
                 maxInputCount: 20
             },
-            "commands": {
-                "undo": kity.createClass("UndoCommand", {
+            'commands': {
+
+                /**
+                 * @command Undo
+                 * @description 回退上一步操作
+                 * @state
+                 *   0: 当前有可回退的内容
+                 *  -1: 当前没有可回退的内容
+                 */
+                'undo': kity.createClass('UndoCommand', {
                     base: Command,
 
                     execute: function(km) {
@@ -304,7 +312,14 @@ define(function(require, exports, module) {
                         return false;
                     }
                 }),
-                "redo": kity.createClass("RedoCommand", {
+                /**
+                 * @command Redo
+                 * @description 重做下一步已回退的操作
+                 * @state
+                 *   0: 当前有可重做的内容
+                 *  -1: 当前没有可重做的内容
+                 */
+                'redo': kity.createClass('RedoCommand', {
                     base: Command,
 
                     execute: function(km) {
@@ -320,14 +335,14 @@ define(function(require, exports, module) {
                 })
             },
             commandShortcutKeys: {
-                "undo": "ctrl+z", //undo
-                "redo": "ctrl+y" //redo
+                'undo': 'ctrl+z', //undo
+                'redo': 'ctrl+y' //redo
             },
-            "events": {
-                "saveScene": function(e) {
+            'events': {
+                'saveScene': function(e) {
                     this.historyManager.saveScene(e.inputStatus);
                 },
-                "import": function() {
+                'import': function() {
                     this.historyManager.reset();
                 }
             }

@@ -12,6 +12,16 @@ define(function(require, exports, module) {
     var Command = require('../core/command');
     var Module = require('../core/module');
 
+    /**
+     * @command Layout
+     * @description 设置选中节点的布局
+     *     允许使用的布局可以使用 `kityminder.Minder.getLayoutList()` 查询
+     * @param {string} name 布局的名称，设置为 null 则使用继承或默认的布局
+     * @state
+     *   0: 当前有选中的节点
+     *  -1: 当前没有选中的节点
+     * @return 返回首个选中节点的布局名称
+     */
     var LayoutCommand = kity.createClass('LayoutCommand', {
         base: Command,
 
@@ -34,10 +44,17 @@ define(function(require, exports, module) {
         }
     });
 
+    /**
+     * @command ResetLayout
+     * @description 重设选中节点的布局，如果当前没有选中的节点，重设整个脑图的布局
+     * @state
+     *   0: 始终可用
+     * @return 返回首个选中节点的布局名称
+     */
     var ResetLayoutCommand = kity.createClass('ResetLayoutCommand', {
         base: Command,
 
-        execute: function(minder, name) {
+        execute: function(minder) {
             var nodes = minder.getSelectedNodes();
 
             if (!nodes.length) nodes = [minder.getRoot()];

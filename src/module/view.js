@@ -172,6 +172,13 @@ define(function(require, exports, module) {
 
         var km = this;
 
+        /**
+         * @command Hand
+         * @description 切换抓手状态，抓手状态下，鼠标拖动将拖动视野，而不是创建选区
+         * @state
+         *   0: 当前不是抓手状态
+         *   1: 当前是抓手状态
+         */
         var ToggleHandCommand = kity.createClass('ToggleHandCommand', {
             base: Command,
             execute: function(minder) {
@@ -190,6 +197,14 @@ define(function(require, exports, module) {
             enableReadOnly: true
         });
 
+        /**
+         * @command Camera
+         * @description 设置当前视野的中心位置到某个节点上
+         * @param {kityminder.MinderNode} focusNode 要定位的节点
+         * @param {number} duration 设置视野移动的动画时长（单位 ms），设置为 0 不使用动画
+         * @state
+         *   0: 始终可用
+         */
         var CameraCommand = kity.createClass('CameraCommand', {
             base: Command,
             execute: function(km, focusNode, duration) {
@@ -207,6 +222,18 @@ define(function(require, exports, module) {
             enableReadOnly: true
         });
 
+        /**
+         * @command Move
+         * @description 指定方向移动当前视野
+         * @param {string} dir 移动方向
+         *    取值为 'left'，视野向左移动一半
+         *    取值为 'right'，视野向右移动一半
+         *    取值为 'up'，视野向上移动一半
+         *    取值为 'down'，视野向下移动一半
+         * @param {number} duration 视野移动的动画时长（单位 ms），设置为 0 不使用动画
+         * @state
+         *   0: 始终可用
+         */
         var MoveCommand = kity.createClass('MoveCommand', {
             base: Command,
 

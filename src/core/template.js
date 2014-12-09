@@ -65,6 +65,15 @@ define(function(require, exports, module) {
     })());
 
     Module.register('TemplateModule', {
+        /**
+         * @command Template
+         * @description 设置当前脑图的模板
+         * @param {string} name 模板名称
+         *    允许使用的模板可以使用 `kityminder.Minder.getTemplateList()` 查询
+         * @state
+         *   0: 始终可用
+         * @return 返回当前的模板名称
+         */
         commands: {
             'template': kity.createClass('TemplateCommand', {
                 base: Command,
