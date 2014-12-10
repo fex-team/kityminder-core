@@ -114,7 +114,7 @@ define(function(require, exports, module) {
                 this._dragSources[i].setLayoutOffset(this._dragSources[i].getLayoutOffset().offset(movement));
                 minder.applyLayoutResult(this._dragSources[i]);
             }
-            
+
             if (!this._dropTest()) {
                 this._orderTest();
             } else {
@@ -137,7 +137,7 @@ define(function(require, exports, module) {
                 this._dragSources.forEach(function(source) {
                     source.setLayoutOffset(null);
                 });
-                
+
                 this._minder.layout(-1);
 
                 this._minder.execCommand('movetoparent', this._dragSources, this._dropSucceedTarget);
@@ -364,11 +364,11 @@ define(function(require, exports, module) {
                     // 单选中根节点也不触发拖拽
                     if (e.originEvent.button) return;
                     if (e.getTargetNode() && e.getTargetNode() != this.getRoot()) {
-                        dragger.dragStart(e.getPosition(this.getRenderContainer()));
+                        dragger.dragStart(e.getPosition());
                     }
                 },
                 'normal.mousemove dragtree.mousemove': function(e) {
-                    dragger.dragMove(e.getPosition(this.getRenderContainer()));
+                    dragger.dragMove(e.getPosition());
                 },
                 'normal.mouseup dragtree.beforemouseup': function(e) {
                     dragger.dragEnd();

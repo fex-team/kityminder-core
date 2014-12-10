@@ -118,7 +118,7 @@ define(function(require, exports, module) {
         },
 
         getData: function(key) {
-            return this.data[key];
+            return key ? this.data[key] : this.data;
         },
 
         setData: function(key, value) {

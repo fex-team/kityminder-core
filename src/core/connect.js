@@ -20,6 +20,14 @@ define(function(require, exports, module) {
     });
 
     kity.extendClass(MinderNode, {
+        /**
+         * @private
+         * @method getConnect()
+         * @for MinderNode
+         * @description 获取当前节点的连线类型
+         *
+         * @grammar getConnect() => {string}
+         */
         getConnect: function() {
             return this.data.connect || 'default';
         },
@@ -28,6 +36,14 @@ define(function(require, exports, module) {
             return _connectProviders[this.getConnect()] || _connectProviders['default'];
         },
 
+        /**
+         * @private
+         * @method getConnection()
+         * @for MinderNode
+         * @description 获取当前节点的连线对象
+         *
+         * @grammar getConnection() => {kity.Path}
+         */
         getConnection: function() {
             return this._connection || null;
         }

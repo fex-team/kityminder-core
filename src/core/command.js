@@ -10,8 +10,6 @@ define(function(require, exports, module) {
     var COMMAND_STATE_ACTIVED = 1;
 
     /**
-     * @class Command
-     *
      * 表示一个命令，包含命令的查询及执行
      */
     var Command = kity.createClass('Command', {
@@ -72,14 +70,51 @@ define(function(require, exports, module) {
             return 0;
         },
 
+        /**
+         * @method queryCommandState()
+         * @for Minder
+         * @description 查询指定命令的状态
+         *
+         * @grammar queryCommandName(name) => {number}
+         *
+         * @param {string} name 要查询的命令名称
+         *
+         * @return {number}
+         *   -1: 命令不存在或命令当前不可用
+         *    0: 命令可用
+         *    1: 命令当前可用并且已经执行过
+         */
         queryCommandState: function(name) {
             return this._queryCommand(name, 'State', [].slice.call(arguments, 1));
         },
 
+        /**
+         * @method queryCommandValue()
+         * @for Minder
+         * @description 查询指定命令当前的执行值
+         *
+         * @grammar queryCommandValue(name) => {any}
+         *
+         * @param {string} name 要查询的命令名称
+         *
+         * @return {any}
+         *    如果命令不存在，返回 undefined
+         *    不同命令具有不同返回值，具体请查看 [Command](command) 章节
+         */
         queryCommandValue: function(name) {
             return this._queryCommand(name, 'Value', [].slice.call(arguments, 1));
         },
 
+        /**
+         * @method execCommand()
+         * @for Minder
+         * @description 执行指定的命令。
+         *
+         * @grammar execCommand(name, args...)
+         *
+         * @param {string} name 要执行的命令名称
+         * @param {argument} args 要传递给命令的其它参数
+         */
         execCommand: function(name) {
             name = name.toLowerCase();
 
@@ -99,12 +134,12 @@ define(function(require, exports, module) {
 
             if (!this._hasEnterExecCommand && cmd.isNeedUndo()) {
                 this._hasEnterExecCommand = true;
+
                 stoped = this._fire(new MinderEvent('beforeExecCommand', eventParams, true));
 
                 if (!stoped) {
                     //保存场景
                     this._fire(new MinderEvent('saveScene'));
-
                     this._fire(new MinderEvent('preExecCommand', eventParams, false));
 
                     result = cmd.execute.apply(cmd, [me].concat(cmdArgs));

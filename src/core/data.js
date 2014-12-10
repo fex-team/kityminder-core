@@ -9,6 +9,13 @@ define(function(require, exports, module) {
     // 导入导出
     kity.extendClass(Minder, {
 
+        /**
+         * @method exportJson()
+         * @for Minder
+         * @description
+         *     导出当前脑图数据为 JSON 对象，导出的数据格式请参考 [Data](data) 章节。
+         * @grammar exportJson() => {plain}
+         */
         exportJson: function() {
             /* 导出 node 上整棵树的数据为 JSON */
             function exportNode(node) {
@@ -33,7 +40,16 @@ define(function(require, exports, module) {
             return json;
         },
 
-        importJson: function(json, params) {
+        /**
+         * @method importJson()
+         * @for Minder
+         * @description 导入脑图数据，数据格式为 JSON，具体的数据字段形式请参考 [Data](data) 章节。
+         *
+         * @grammar importJson(json) => {this}
+         *
+         * @param {plain} json 要导入的数据
+         */
+        importJson: function(json) {
 
             function importNode(node, json, km) {
                 var data = json.data;
@@ -54,7 +70,12 @@ define(function(require, exports, module) {
 
             if (!json) return;
 
-            this._fire(new MinderEvent('preimport', params, false));
+            /**
+             * @event preimport
+             * @for Minder
+             * @when 导入数据之前
+             */
+            this._fire(new MinderEvent('preimport', null, false));
 
             // 删除当前所有节点
             while (this._root.getChildren().length) {
@@ -69,12 +90,20 @@ define(function(require, exports, module) {
             this.setTheme(json.theme || null);
             this.refresh();
 
-            this.fire('import', params);
+            /**
+             * @event import,contentchange,interactchange
+             * @for Minder
+             * @when 导入数据之后
+             */
+            this.fire('import');
 
             this._firePharse({
                 type: 'contentchange'
             });
+
             this._interactChange();
+
+            return this;
         }
     });
 });

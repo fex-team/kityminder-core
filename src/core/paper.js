@@ -20,6 +20,7 @@ define(function(require, exports, module) {
         _initPaper: function() {
 
             this._paper = new kity.Paper();
+            this._paper._minder = this;
             this._paper.getNode().ondragstart = function(e) {
                 e.preventDefault();
             };

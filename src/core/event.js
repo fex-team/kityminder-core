@@ -11,22 +11,75 @@ define(function(require, exports, module) {
         });
     }
 
+    /**
+     * @class MinderEvent
+     * @description 表示一个脑图中发生的事件
+     */
     var MinderEvent = kity.createClass('MindEvent', {
         constructor: function(type, params, canstop) {
             params = params || {};
             if (params.getType && params.getType() == 'ShapeEvent') {
+
+                /**
+                 * @property kityEvent
+                 * @for MinderEvent
+                 * @description 如果事件是从一个 kity 的事件派生的，会有 kityEvent 属性指向原来的 kity 事件
+                 * @type {KityEvent}
+                 */
                 this.kityEvent = params;
+
+                /**
+                 * @property originEvent
+                 * @for MinderEvent
+                 * @description 如果事件是从原声 Dom 事件派生的（如 click、mousemove 等），会有 originEvent 指向原来的 Dom 事件
+                 * @type {DomEvent}
+                 */
                 this.originEvent = params.originEvent;
-                this.getPosition = params.getPosition.bind(params);
+
             } else if (params.target && params.preventDefault) {
                 this.originEvent = params;
             } else {
                 kity.Utils.extend(this, params);
             }
+
+            /**
+             * @property type
+             * @for MinderEvent
+             * @description 事件的类型，如 `click`、`contentchange` 等
+             * @type {string}
+             */
             this.type = type;
             this._canstop = canstop || false;
         },
 
+        /**
+         * @method getPosition()
+         * @for MinderEvent
+         * @description 如果事件是从一个 kity 事件派生的，会有 `getPosition()` 获取事件发生的坐标
+         *
+         * @grammar getPosition(refer) => {kity.Point}
+         *
+         * @param {string|kity.Shape} refer
+         *     参照的坐标系，
+         *     `"screen"` - 以浏览器屏幕为参照坐标系
+         *     `"minder"` - （默认）以脑图画布为参照坐标系
+         *     `{kity.Shape}` - 指定以某个 kity 图形为参照坐标系
+         */
+        getPosition: function(refer) {
+            if (!this.kityEvent) return;
+            if (!refer || refer == 'minder') {
+                return this.kityEvent.getPosition(this.minder.getRenderContainer());
+            }
+            return this.kityEvent.getPosition.call(this.kityEvent, refer);
+        },
+
+        /**
+         * @method getTargetNode()
+         * @for MinderEvent
+         * @description 当发生的事件是鼠标事件时，获取事件位置命中的脑图节点
+         *
+         * @grammar getTargetNode() => {MinderNode}
+         */
         getTargetNode: function() {
             var findShape = this.kityEvent && this.kityEvent.targetShape;
             if (!findShape) return null;
@@ -38,6 +91,13 @@ define(function(require, exports, module) {
             return node || null;
         },
 
+        /**
+         * @method stopPropagation()
+         * @for MinderEvent
+         * @description 当发生的事件是鼠标事件时，获取事件位置命中的脑图节点
+         *
+         * @grammar getTargetNode() => {MinderNode}
+         */
         stopPropagation: function() {
             this._stoped = true;
         },
@@ -111,10 +171,6 @@ define(function(require, exports, module) {
         },
 
         _firePharse: function(e) {
-            //        //只读模式下强了所有的事件操作
-            //        if(this.readOnly === true){
-            //            return false;
-            //        }
             var beforeEvent, preEvent, executeEvent;
 
             if (e.type == 'DOMMouseScroll') {
@@ -152,6 +208,14 @@ define(function(require, exports, module) {
         },
 
         _fire: function(e) {
+            /**
+             * @property minder
+             * @description 产生事件的 Minder 对象
+             * @for MinderShape
+             * @type {Minder}
+             */
+            e.minder = this;
+
             var status = this.getStatus();
             var callbacks = this._eventCallbacks[e.type.toLowerCase()] || [];
 

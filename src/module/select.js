@@ -147,7 +147,7 @@ define(function(require, exports, module) {
                     //     不能马上变为单选，因为可能是需要拖动选中的多个节点
                     else if (!this.isSingleSelect()) {
                         lastDownNode = downNode;
-                        lastDownPosition = e.getPosition(this.getRenderContainer());
+                        lastDownPosition = e.getPosition();
                     }
                 },
                 'mousemove': marqueeActivator.selectMove,
@@ -156,7 +156,7 @@ define(function(require, exports, module) {
 
                     // 如果 mouseup 发生在 lastDownNode 外，是无需理会的
                     if (upNode && upNode == lastDownNode) {
-                        var upPosition = e.getPosition(this.getRenderContainer());
+                        var upPosition = e.getPosition();
                         var movement = kity.Vector.fromPoints(lastDownPosition, upPosition);
                         if (movement.length() < 1) this.select(lastDownNode, true);
                         lastDownNode = null;
