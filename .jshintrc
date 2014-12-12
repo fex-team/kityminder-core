@@ -10,7 +10,6 @@
     "browser": true,
     "boss": true,
     "predef" : [
-        "define",
-        "Promise"
+        "define"
     ]
 }

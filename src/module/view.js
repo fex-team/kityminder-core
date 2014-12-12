@@ -17,6 +17,7 @@ define(function(require, exports, module) {
             this._minder.getViewDragger = function() {
                 return me;
             };
+            this.setEnabled(false);
         },
 
         isEnabled: function() {
@@ -300,7 +301,7 @@ define(function(require, exports, module) {
                         this.execCommand('camera', this.getRoot(), 800);
                     }
                 },
-                ready: function() {
+                'paperrender': function() {
                     this.execCommand('camera', null, 0);
                     this._lastClientSize = {
                         width: this.getRenderTarget().clientWidth,

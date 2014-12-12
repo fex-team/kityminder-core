@@ -60,24 +60,24 @@ define(function(require, exports, module) {
                 hint.push({
                     type: 'up',
                     node: node,
-                    area: {
+                    area: new kity.Box({
                         x: box.x,
                         y: box.top - node.getStyle('margin-top') - offset,
                         width: box.width,
                         height: node.getStyle('margin-top')
-                    },
+                    }),
                     path: ['M', box.x, box.top - offset, 'L', box.right, box.top - offset]
                 });
 
                 hint.push({
                     type: 'down',
                     node: node,
-                    area: {
+                    area: new kity.Box({
                         x: box.x,
                         y: box.bottom + offset,
                         width: box.width,
                         height: node.getStyle('margin-bottom')
-                    },
+                    }),
                     path: ['M', box.x, box.bottom + offset, 'L', box.right, box.bottom + offset]
                 });
                 return hint;

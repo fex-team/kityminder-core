@@ -5,16 +5,13 @@
     <title>KityMinder Example</title>
 
     <link href="favicon.ico" type="image/x-icon" rel="shortcut icon">
+    <link rel="stylesheet" href="src/kityminder.css" rel="stylesheet">
+
     <style type="text/css">
         body {
             margin: 0;
             padding: 0;
             height: 100%;
-        }
-
-        .km_receiver {
-            background: white;
-            border: 1px solid #999;
         }
 
         #minder-view {
@@ -30,7 +27,29 @@
     <script type="text/javascript" src="lib/kity/dist/kity.min.js"></script>
 </head>
 <body>
-    <div id="minder-view"></div>
+    <script id="minder-view" type="application/kityminder" minder-data-type="json">
+    {
+        "root": {
+            "data": {
+                "text": "百度产品",
+                "image": "https://ss0.bdstatic.com/5a21bjqh_Q23odCf/static/superplus/img/logo_white.png?v=md5",
+                "imageSize": { "width": 270, "height": 129 }
+            },
+            "children": [
+                { "data": { "text": "新闻" } },
+                { "data": { "text": "网页", "priority": 1 } },
+                { "data": { "text": "贴吧", "priority": 2 } },
+                { "data": { "text": "知道", "priority": 2 } },
+                { "data": { "text": "音乐", "priority": 3 } },
+                { "data": { "text": "图片", "priority": 3 } },
+                { "data": { "text": "视频", "priority": 3 } },
+                { "data": { "text": "地图", "priority": 3 } },
+                { "data": { "text": "百科", "priority": 3 } },
+                { "data": { "text": "更多", "hyperlink": "http://www.baidu.com/more" } }
+            ]
+        }
+    }
+    </script>
 </body>
 
 <!-- *************************** Module 形式加载引入 **************************** -->
@@ -44,21 +63,20 @@ define('start', function(require) {
     var Minder = require('kityminder').Minder;
 
     // 创建 km 实例
-    var km = window.km = new Minder({
-        renderTo: 'minder-view'
-    });
+    var km = window.km = new Minder();
+    km.setup('#minder-view');
 });
 seajs.use('start');
 </script>
 
 <!-- *********************** 打包文件引入（需要先 grunt 发布） ************************* -->
-<!--
-<script type="text/javascript" src="../release/kityminder.core.min.js"></script>
+
+<!-- <script type="text/javascript" src="release/kityminder.core.js"></script>
 <script type="text/javascript">
 // 创建 km 实例
-window.km = new kityminder.Minder({
-    renderTo: 'minder-view'
-});
+/* global kityminder */
+var km = window.km = new kityminder.Minder();
+km.setup('#minder-view');
 </script>
--->
+ -->
 </html>

@@ -46,6 +46,10 @@ define(function(require, exports, module) {
 
                 if (!moduleDeals) continue;
 
+                if (moduleDeals.defaultOptions) {
+                    me.addDefaultOption(moduleDeals.defaultOptions);
+                }
+
                 if (moduleDeals.init) {
                     moduleDeals.init.call(me, this._options);
                 }

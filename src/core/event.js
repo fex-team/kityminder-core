@@ -159,15 +159,64 @@ define(function(require, exports, module) {
             this._paper.on('click dblclick mousedown contextmenu mouseup mousemove mouseover mousewheel DOMMouseScroll touchstart touchmove touchend dragenter dragleave drop', this._firePharse.bind(this));
             if (window) {
                 window.addEventListener('resize', this._firePharse.bind(this));
-                window.addEventListener('blur', this._firePharse.bind(this));
             }
         },
 
         _bindKeyboardEvents: function() {
-            if ((navigator.userAgent.indexOf('iPhone') == -1) && (navigator.userAgent.indexOf('iPod') == -1) && (navigator.userAgent.indexOf('iPad') == -1)) {
-                //只能在这里做，要不无法触发
-                listen(document.body, 'keydown keyup keypress paste', this._firePharse.bind(this));
-            }
+            if (this._keyboardReceiver) return;
+
+            var receiver = this._keyboardReceiver = document.createElement('input');
+            receiver.classList.add('km-receiver');
+
+            var renderTarget = this._renderTarget;
+            renderTarget.appendChild(receiver);
+
+            var minder = this;
+
+            listen(receiver, 'keydown keyup keypress copy paste blur focus input', function(e) {
+                switch (e.type) {
+                    case 'blur':
+                        minder.blur();
+                        break;
+                    case 'focus':
+                        minder.focus();
+                        break;
+                    case 'input':
+                        receiver.value = null;
+                        break;
+                }
+                minder._firePharse(e);
+                e.preventDefault();
+            });
+
+            this.on('beforemousedown', function(e) {
+                this.focus();
+                e.preventDefault();
+            });
+
+            this.focus = function() {
+                if (!this.isFocused()) {
+                    renderTarget.classList.add('focus');
+                    receiver.select();
+                    receiver.focus();
+                    this.renderNodeBatch(this.getSelectedNodes());
+                }
+                return this;
+            };
+            this.blur = function() {
+                if (this.isFocused()) {
+                    renderTarget.classList.remove('focus');
+                    receiver.blur();
+                    this.renderNodeBatch(this.getSelectedNodes());
+                }
+                return this;
+            };
+            this.focus();
+        },
+
+        isFocused: function() {
+            var renderTarget = this._renderTarget;
+            return renderTarget && renderTarget.classList.contains('focus');
         },
 
         _firePharse: function(e) {

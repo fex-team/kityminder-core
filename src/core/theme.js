@@ -64,8 +64,16 @@ define(function(require, exports, module) {
         },
 
         setTheme: function(name) {
+            var lastTheme = this._theme;
             this._theme = name || null;
-            this.getRenderTarget().style.background = this.getStyle('background');
+            var container = this.getRenderTarget();
+            if (container) {
+                container.classList.remove('km-theme-' + lastTheme);
+                if (name) {
+                    container.classList.add('km-theme-' + name);
+                }
+                container.style.background = this.getStyle('background');
+            }
             this.fire('themechange', {
                 theme: name
             });

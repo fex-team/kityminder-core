@@ -37,9 +37,10 @@ define(function(require, exports, module) {
             var height = (lineHeight * fontSize) * textArr.length - (lineHeight - 1) * fontSize;
             var yStart = -height / 2;
 
-            var adjust = FONT_ADJUST[fontFamily] || 0;
-
-            textGroup.setTranslate(0, adjust * fontSize);
+            if (kity.Browser.ie) {
+                var adjust = FONT_ADJUST[fontFamily] || 0;
+                textGroup.setTranslate(0, adjust * fontSize);
+            }
 
             var rBox = new kity.Box(),
                 r = Math.round;

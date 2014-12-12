@@ -45,6 +45,15 @@ define(function(require, exports, module) {
                 target = document.getElementById(target);
             }
             if (target) {
+                if (target.tagName.toLowerCase() == 'script') {
+                    var newTarget = document.createElement('div');
+                    newTarget.id = target.id;
+                    newTarget.class = target.class;
+                    target.parentNode.insertBefore(newTarget, target);
+                    target.parentNode.removeChild(target);
+                    target = newTarget;
+                }
+                target.classList.add('km-view');
                 this._paper.renderTo(this._renderTarget = target);
                 this._bindEvents();
                 this.fire('paperrender');

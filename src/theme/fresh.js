@@ -44,6 +44,7 @@ define(function(require, exports, module) {
 
             'selected-stroke': hsl(h, 26, 30),
             'selected-stroke-width': '3',
+            'blur-selected-stroke': hsl(h, 10, 60),
 
             'marquee-background': hsl(h, 100, 80).set('a', 0.1),
             'marquee-stroke': hsl(h, 37, 60),

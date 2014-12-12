@@ -8,9 +8,12 @@ module.exports = function(grunt) {
     // These plugins provide necessary tasks.
     /* [Build plugin & task ] ------------------------------------*/
     grunt.loadNpmTasks('grunt-module-dependence');
+    grunt.loadNpmTasks('grunt-replace');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-uglify');
+
+    var pkg = grunt.file.readJSON('package.json');
 
     var banner = '/*!\n' +
         ' * ====================================================\n' +
@@ -29,7 +32,7 @@ module.exports = function(grunt) {
     grunt.initConfig({
 
         // Metadata.
-        pkg: grunt.file.readJSON('package.json'),
+        pkg: pkg,
 
         clean: {
             last: 'release'

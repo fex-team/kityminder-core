@@ -8,14 +8,23 @@
  */
 define(function(require, exports, module) {
     var kity = require('./kity');
+    var utils = require('./utils');
     var Minder = require('./minder');
 
+    Minder.registerInitHook(function(options) {
+        this._defaultOptions = {};
+    });
+
     kity.extendClass(Minder, {
+        addDefaultOption: function(options) {
+            utils.extend(this._defaultOptions, options);
+            return this;
+        },
         getOption: function(key) {
             if (key) {
-                return this._options[key];
+                return this._options[key] || this._defaultOptions[key];
             } else {
-                return this._options;
+                return utils.extend({}, this._defaultOptions, this._options);
             }
         }
     });

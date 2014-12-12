@@ -35,8 +35,7 @@ define(function(require, exports, module) {
                 height: box.height + paddingTop + paddingBottom
             };
 
-            var prefix = node.isSelected() ? 'selected-' : '';
-
+            var prefix = node.isSelected() ? (node.getMinder().isFocused() ? 'selected-' : 'blur-selected-') : '';
             outline
                 .setPosition(outlineBox.x, outlineBox.y)
                 .setSize(outlineBox.width, outlineBox.height)

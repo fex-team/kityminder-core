@@ -3,7 +3,7 @@ define(function(require, exports, module) {
 
     function compatibility(json) {
 
-        var version = json.version || '1.1.3';
+        var version = json.version || (json.root ? '1.4.0' : '1.1.3');
 
         switch (version) {
             case '1.1.3':
@@ -13,6 +13,14 @@ define(function(require, exports, module) {
             case '1.2.1':
                 c_120_130(json);
                 /* falls through */
+            case '1.3.0':
+            case '1.3.1':
+            case '1.3.2':
+            case '1.3.3':
+            case '1.3.4':
+            case '1.3.5':
+                /* falls through */
+                c_130_140(json);
         }
         return json;
     }
@@ -71,5 +79,14 @@ define(function(require, exports, module) {
         });
     }
 
-    module.exports = compatibility;
+    function c_130_140(json) {
+        json.root = {
+            data: json.data,
+            children: json.children
+        };
+        delete json.data;
+        delete json.children;
+    }
+
+    return compatibility;
 });

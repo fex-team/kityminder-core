@@ -14,26 +14,28 @@ define('kityminder', function(require, exports, module) {
     };
 
     // 核心导出，大写的部分导出类，小写的部分简单 require 一下
+    // 这里顺序是有讲究的，调整前先弄清楚依赖关系。
     require('core/utils');
     kityminder.Minder = require('core/minder');
     kityminder.Command = require('core/command');
     kityminder.Node = require('core/node');
     require('core/option');
     kityminder.Event = require('core/event');
+    kityminder.data = require('core/data');
+    require('core/compatibility');
     kityminder.KeyMap = require('core/keymap');
     require('core/key');
     require('core/status');
     require('core/paper');
     require('core/select');
     kityminder.Module = require('core/module');
-    kityminder.Data = require('core/data');
-    require('core/compatibility');
     require('core/readonly');
     kityminder.Render = require('core/render');
     kityminder.Connect = require('core/connect');
     kityminder.Layout = require('core/layout');
     kityminder.Theme = require('core/theme');
     kityminder.Template = require('core/template');
+    kityminder.Promise = require('core/promise');
 
     // 模块依赖
     require('module/arrange');
@@ -58,6 +60,12 @@ define('kityminder', function(require, exports, module) {
     require('module/text');
     require('module/view');
     require('module/zoom');
+
+    require('protocol/json');
+    require('protocol/text');
+    require('protocol/markdown');
+    require('protocol/svg');
+    require('protocol/png');
 
     require('layout/mind');
     require('layout/btree');

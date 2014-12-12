@@ -21,14 +21,14 @@ define(function(require, exports, module) {
                 if (target[p] === undefined) {
                     return false;
                 }
-                if (this.isObject(tmp) || this.isArray(tmp)) {
-                    if (this.isObject(target[p]) !== this.isObject(tmp)) {
+                if (utils.isObject(tmp) || utils.isArray(tmp)) {
+                    if (utils.isObject(target[p]) !== utils.isObject(tmp)) {
                         return false;
                     }
-                    if (this.isArray(tmp) !== this.isArray(target[p])) {
+                    if (utils.isArray(tmp) !== utils.isArray(target[p])) {
                         return false;
                     }
-                    if (this.compareObject(tmp, target[p]) === false) {
+                    if (compareObject(tmp, target[p]) === false) {
                         return false;
                     }
                 } else {

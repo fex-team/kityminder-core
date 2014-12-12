@@ -53,11 +53,11 @@ define(function(require, exports, module) {
                 mask = new kity.Path().setPathData(MASK_PATH).setOpacity(0.8).setTranslate(0.5, 0.5);
 
                 number = new kity.Text()
-                    .setX(this.width / 2 - 0.5).setY(this.height / 2 - 1.5)
+                    .setX(this.width / 2 - 0.5).setY(this.height / 2)
                     .setTextAnchor('middle')
                     .setVerticalAlign('middle')
                     .setFontItalic(true)
-                    .setFontSize(14)
+                    .setFontSize(12)
                     .fill('white');
 
                 this.addShapes([back, mask, number]);

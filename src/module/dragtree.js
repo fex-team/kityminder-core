@@ -6,7 +6,6 @@ define(function(require, exports, module) {
     var Module = require('core/module');
 
     // 矩形的变形动画定义
-
     var MoveToParentCommand = kity.createClass('MoveToParentCommand', {
         base: Command,
         execute: function(minder, nodes, parent) {
@@ -161,7 +160,7 @@ define(function(require, exports, module) {
 
                 hint.node.setLayoutOffset(null);
 
-                this._minder.execCommand('arrange', this._dragSources, index);
+                this._minder.execCommand('arrange', index);
                 this._renderOrderHint(null);
             } else {
                 this._minder.fire('savescene');
@@ -290,7 +289,7 @@ define(function(require, exports, module) {
             var i, j, target, sourceBox, targetBox;
 
             judge = judge || function(intersectBox, sourceBox, targetBox) {
-                return intersectBox;
+                return intersectBox && !intersectBox.isEmpty();
             };
 
             for (i = 0; i < targets.length; i++) {
