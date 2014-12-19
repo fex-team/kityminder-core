@@ -8,7 +8,7 @@
  */
 
 
-define('kityminder', function(require, exports, module) {
+define(function(require, exports, module) {
     var kityminder = {
         version: require('./core/minder').version
     };
@@ -92,5 +92,5 @@ define('kityminder', function(require, exports, module) {
     require('./template/right');
     require('./template/fish-bone');
 
-    module.exports = window.kityminder = kityminder;
+    module.exports = kityminder;
 });
