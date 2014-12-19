@@ -1,5 +1,5 @@
 define(function(require, exports, module) {
-    var theme = require('core/theme');
+    var theme = require('../core/theme');
 
     theme.register('fish', {
         'background': '#3A4144 url(ui/theme/default/images/grid.png) repeat',

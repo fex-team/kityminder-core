@@ -7,7 +7,7 @@
  * @copyright: Baidu FEX, 2014
  */
 define(function(require, exports, module) {
-    var template = require('core/template');
+    var template = require('../core/template');
 
     template.register('structure', {
 

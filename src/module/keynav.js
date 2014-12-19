@@ -1,13 +1,13 @@
 define(function(require, exports, module) {
-    var kity = require('core/kity');
-    var utils = require('core/utils');
-    var keymap = require('core/keymap');
+    var kity = require('../core/kity');
+    var utils = require('../core/utils');
+    var keymap = require('../core/keymap');
 
-    var Minder = require('core/minder');
-    var MinderNode = require('core/node');
-    var Command = require('core/command');
-    var Module = require('core/module');
-    var Renderer = require('core/render');
+    var Minder = require('../core/minder');
+    var MinderNode = require('../core/node');
+    var Command = require('../core/command');
+    var Module = require('../core/module');
+    var Renderer = require('../core/render');
 
     Module.register('KeyboardModule', function() {
         var min = Math.min,

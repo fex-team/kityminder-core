@@ -1,7 +1,7 @@
 define(function(require, exports, module) {
-    var kity = require('core/kity');
-    var Layout = require('core/layout');
-    var Minder = require('core/minder');
+    var kity = require('../core/kity');
+    var Layout = require('../core/layout');
+    var Minder = require('../core/minder');
 
     Layout.register('mind', kity.createClass({
         base: Layout,

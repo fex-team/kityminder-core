@@ -1,12 +1,12 @@
 define(function(require, exports, module) {
-    var kity = require('core/kity');
-    var utils = require('core/utils');
+    var kity = require('../core/kity');
+    var utils = require('../core/utils');
 
-    var Minder = require('core/minder');
-    var MinderNode = require('core/node');
-    var Command = require('core/command');
-    var Module = require('core/module');
-    var Renderer = require('core/render');
+    var Minder = require('../core/minder');
+    var MinderNode = require('../core/node');
+    var Command = require('../core/command');
+    var Module = require('../core/module');
+    var Renderer = require('../core/render');
     var FONT_ADJUST = {
         '微软雅黑,Microsoft YaHei': -0.15,
         'arial black,avant garde': -0.17,

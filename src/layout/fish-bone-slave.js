@@ -1,15 +1,15 @@
 /**
  * @fileOverview
  *
- * 
+ *
  *
  * @author: techird
  * @copyright: Baidu FEX, 2014
  */
 
 define(function(require, exports, module) {
-    var kity = require('core/kity');
-    var Layout = require('core/layout');
+    var kity = require('../core/kity');
+    var Layout = require('../core/layout');
 
     Layout.register('fish-bone-slave', kity.createClass('FishBoneSlaveLayout', {
         base: Layout,

@@ -8,8 +8,8 @@
  */
 
 define(function(require, exports, module) {
-    var kity = require('core/kity');
-    var connect = require('core/connect');
+    var kity = require('../core/kity');
+    var connect = require('../core/connect');
 
     connect.register('l', function(node, parent, connection) {
 

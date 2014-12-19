@@ -1,9 +1,9 @@
 define(function(require, exports, module) {
-    var kity = require('core/kity');
-    var utils = require('core/utils');
-    var MinderNode = require('core/node');
-    var Command = require('core/command');
-    var Module = require('core/module');
+    var kity = require('../core/kity');
+    var utils = require('../core/utils');
+    var MinderNode = require('../core/node');
+    var Command = require('../core/command');
+    var Module = require('../core/module');
 
     // 矩形的变形动画定义
     var MoveToParentCommand = kity.createClass('MoveToParentCommand', {

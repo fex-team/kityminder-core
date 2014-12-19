@@ -1,5 +1,5 @@
 define(function(require, exports, module) {
-    var theme = require('core/theme');
+    var theme = require('../core/theme');
 
     ['classic', 'classic-compact'].forEach(function(name) {
         var compact = name == 'classic-compact';

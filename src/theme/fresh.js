@@ -1,6 +1,6 @@
 define(function(require, exports, module) {
-    var kity = require('core/kity');
-    var theme = require('core/theme');
+    var kity = require('../core/kity');
+    var theme = require('../core/theme');
 
     function hsl(h, s, l) {
         return kity.Color.createHSL(h, s, l);

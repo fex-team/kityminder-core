@@ -8,8 +8,8 @@
  */
 
 define(function(require, exports, module) {
-    var kity = require('core/kity');
-    var Layout = require('core/layout');
+    var kity = require('../core/kity');
+    var Layout = require('../core/layout');
 
     Layout.register('fish-bone-master', kity.createClass('FishBoneMasterLayout', {
         base: Layout,

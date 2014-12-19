@@ -8,8 +8,8 @@
  */
 
 define(function(require, exports, module) {
-    var kity = require('core/kity');
-    var connect = require('core/connect');
+    var kity = require('../core/kity');
+    var connect = require('../core/connect');
 
     var connectMarker = new kity.Marker().pipe(function() {
         var r = 7;

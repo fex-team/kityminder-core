@@ -1,11 +1,11 @@
 define(function(require, exports, module) {
-    var kity = require('core/kity');
-    var utils = require('core/utils');
-    var keymap = require('core/keymap');
-    var MinderNode = require('core/node');
-    var Command = require('core/command');
-    var Module = require('core/module');
-    var Renderer = require('core/render');
+    var kity = require('../core/kity');
+    var utils = require('../core/utils');
+    var keymap = require('../core/keymap');
+    var MinderNode = require('../core/node');
+    var Command = require('../core/command');
+    var Module = require('../core/module');
+    var Renderer = require('../core/render');
 
     Module.register('Expand', function() {
         var minder = this;

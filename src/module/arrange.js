@@ -1,9 +1,9 @@
 
 define(function(require, exports, module) {
-    var kity = require('core/kity');
-    var MinderNode = require('core/node');
-    var Command = require('core/command');
-    var Module = require('core/module');
+    var kity = require('../core/kity');
+    var MinderNode = require('../core/node');
+    var Command = require('../core/command');
+    var Module = require('../core/module');
 
     kity.extendClass(MinderNode, {
         arrange: function(index) {

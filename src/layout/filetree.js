@@ -1,6 +1,6 @@
 define(function(require, exports, module) {
-    var kity = require('core/kity');
-    var Layout = require('core/layout');
+    var kity = require('../core/kity');
+    var Layout = require('../core/layout');
 
     [-1, 1].forEach(registerLayoutForDir);
 
