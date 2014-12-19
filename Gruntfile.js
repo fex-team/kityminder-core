@@ -74,7 +74,14 @@ module.exports = function(grunt) {
                     'release/kityminder.core.min.js': 'release/kityminder.core.js'
                 }
             }
-        }
+        },
+
+        watch: {
+            less: {
+                files: ['ui/theme/**/*.less'],
+                tasks: ['less:compile', 'autoprefixer']
+            }
+        },
 
     });
 
