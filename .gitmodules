@@ -1,6 +1,3 @@
 [submodule "lib/kity"]
 	path = lib/kity
 	url = https://github.com/fex-team/kity
-[submodule "lib/promise"]
-	path = lib/promise
-	url = https://github.com/jakearchibald/es6-promise
