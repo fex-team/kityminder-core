@@ -42,7 +42,7 @@ define(function(require, exports, module) {
 
         renderTo: function(target) {
             if (typeof(target) == 'string') {
-                target = document.getElementById(target);
+                target = document.querySelector(target);
             }
             if (target) {
                 if (target.tagName.toLowerCase() == 'script') {
