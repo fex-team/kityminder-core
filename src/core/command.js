@@ -116,6 +116,8 @@ define(function(require, exports, module) {
          * @param {argument} args 要传递给命令的其它参数
          */
         execCommand: function(name) {
+            if (!name) return null;
+
             name = name.toLowerCase();
 
             var cmdArgs = [].slice.call(arguments, 1),

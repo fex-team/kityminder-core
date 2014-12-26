@@ -52,6 +52,7 @@ define(function(require, exports, module) {
                 return km.execCommand('AppendChildNode', text);
             }
             var node = km.createNode(text, parent, sibling.getIndex() + 1);
+            node.setGlobalLayoutTransform(sibling.getGlobalLayoutTransform());
             km.select(node, true);
             node.render();
             km.layout(600);
@@ -74,12 +75,17 @@ define(function(require, exports, module) {
         execute: function(km) {
             var nodes = km.getSelectedNodes();
             var ancestor = MinderNode.getCommonAncestor.apply(null, nodes);
+            var index = nodes[0].getIndex();
 
             nodes.forEach(function(node) {
                 if (!node.isRoot()) km.removeNode(node);
             });
-
-            km.select(ancestor || km.getRoot(), true);
+            if (nodes.length == 1) {
+                var selectBack = ancestor.children[index - 1] || ancestor.children[index];
+                km.select(selectBack || ancestor || km.getRoot(), true);
+            } else {
+                km.select(ancestor || km.getRoot(), true);
+            }
             km.layout(600);
         },
         queryState: function(km) {

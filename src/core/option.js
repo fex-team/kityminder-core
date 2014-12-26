@@ -22,7 +22,7 @@ define(function(require, exports, module) {
         },
         getOption: function(key) {
             if (key) {
-                return this._options[key] || this._defaultOptions[key];
+                return key in this._options ? this._options[key] : this._defaultOptions[key];
             } else {
                 return utils.extend({}, this._defaultOptions, this._options);
             }

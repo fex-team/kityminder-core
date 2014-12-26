@@ -75,7 +75,7 @@ define(function(require, exports, module) {
             nodes = utils.isArray(nodes) ? nodes : [nodes];
             nodes.forEach(function(node) {
                 if (me._selectedNodes.indexOf(node) !== -1) return;
-                me._selectedNodes.push(node);
+                me._selectedNodes.unshift(node);
             });
             this.renderChangedSelection(lastSelect);
             return this;

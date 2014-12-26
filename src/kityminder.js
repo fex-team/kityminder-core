@@ -24,10 +24,12 @@ define(function(require, exports, module) {
     kityminder.data = require('./core/data');
     require('./core/compatibility');
     kityminder.KeyMap = require('./core/keymap');
-    require('./core/key');
+    require('./core/shortcut');
     require('./core/status');
     require('./core/paper');
     require('./core/select');
+    require('./core/focus');
+    require('./core/keyreceiver');
     kityminder.Module = require('./core/module');
     require('./core/readonly');
     kityminder.Render = require('./core/render');

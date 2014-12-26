@@ -3,14 +3,6 @@ define(function(require, exports, module) {
     var utils = require('./utils');
     var Minder = require('./minder');
 
-    function listen(element, type, handler) {
-        var types = utils.isArray(type) ? type : utils.trim(type).split(' '),
-            k = types.length;
-        types.forEach(function(name) {
-            element.addEventListener(name, handler, false);
-        });
-    }
-
     /**
      * @class MinderEvent
      * @description 表示一个脑图中发生的事件
@@ -134,7 +126,7 @@ define(function(require, exports, module) {
         }
     });
 
-    Minder.registerInitHook(function() {
+    Minder.registerInitHook(function(option) {
         this._initEvents();
     });
 
@@ -144,17 +136,12 @@ define(function(require, exports, module) {
             this._eventCallbacks = {};
         },
 
-        _bindEvents: function() {
-            this._bindPaperEvents();
-            this._bindKeyboardEvents();
-        },
-
         _resetEvents: function() {
             this._initEvents();
             this._bindEvents();
         },
 
-        _bindPaperEvents: function() {
+        _bindEvents: function() {
             /* jscs:disable maximumLineLength */
             this._paper.on('click dblclick mousedown contextmenu mouseup mousemove mouseover mousewheel DOMMouseScroll touchstart touchmove touchend dragenter dragleave drop', this._firePharse.bind(this));
             if (window) {
@@ -162,61 +149,15 @@ define(function(require, exports, module) {
             }
         },
 
-        _bindKeyboardEvents: function() {
-            if (this._keyboardReceiver) return;
-
-            var receiver = this._keyboardReceiver = document.createElement('input');
-            receiver.classList.add('km-receiver');
-
-            var renderTarget = this._renderTarget;
-            renderTarget.appendChild(receiver);
-
-            var minder = this;
-
-            listen(receiver, 'keydown keyup keypress copy paste blur focus input', function(e) {
-                switch (e.type) {
-                    case 'blur':
-                        minder.blur();
-                        break;
-                    case 'focus':
-                        minder.focus();
-                        break;
-                    case 'input':
-                        receiver.value = null;
-                        break;
-                }
-                minder._firePharse(e);
-                e.preventDefault();
-            });
-
-            this.on('beforemousedown', function(e) {
-                this.focus();
-                e.preventDefault();
-            });
-
-            this.focus = function() {
-                if (!this.isFocused()) {
-                    renderTarget.classList.add('focus');
-                    receiver.select();
-                    receiver.focus();
-                    this.renderNodeBatch(this.getSelectedNodes());
-                }
-                return this;
-            };
-            this.blur = function() {
-                if (this.isFocused()) {
-                    renderTarget.classList.remove('focus');
-                    receiver.blur();
-                    this.renderNodeBatch(this.getSelectedNodes());
-                }
-                return this;
-            };
-            this.focus();
-        },
-
-        isFocused: function() {
-            var renderTarget = this._renderTarget;
-            return renderTarget && renderTarget.classList.contains('focus');
+        /**
+         * @method dispatchKeyEvent
+         * @description 派发键盘（相关）事件到脑图实例上，让实例的模块处理
+         * @grammar dispatchKeyEvent(e) => {this}
+         * @param  {Event} e 原生的 Dom 事件对象
+         */
+        dispatchKeyEvent: function(e) {
+            this._firePharse(e);
+            e.preventDefault();
         },
 
         _firePharse: function(e) {
