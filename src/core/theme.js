@@ -77,6 +77,7 @@ define(function(require, exports, module) {
             this.fire('themechange', {
                 theme: name
             });
+            return this;
         },
 
         /**
