@@ -94,62 +94,53 @@ define(function(require, exports, module) {
         }
     });
 
-    /**
-     * @command EditNode
-     * @description 编辑选中的节点
-     * @state
-     *    0: 当前有选中的节点
-     *   -1: 当前没有选中的节点
-     */
-    var EditNodeCommand = kity.createClass('EditNodeCommand', {
+    var AppendParentCommand = kity.createClass('AppendParentCommand', {
         base: Command,
-        execute: function(km) {
-            var selectedNode = km.getSelectedNode();
-            if (!selectedNode) {
-                return null;
+        execute: function(km, text) {
+            var nodes = km.getSelectedNodes();
+            if (!nodes.length) return;
+            var parent = nodes[0].parent;
+
+            for (var i = 1; i < nodes.length; i++) {
+                if (nodes[i].parent != parent) return -1;
             }
-            km.select(selectedNode, true);
-            km.textEditNode(selectedNode);
+            nodes.sort(function(a, b) {
+                return a.getIndex() - b.getIndex();
+            });
+
+            var newParent = km.createNode(text, parent, nodes[0].getIndex());
+            nodes.forEach(function(node) {
+                newParent.appendChild(node);
+            });
+            newParent.setGlobalLayoutTransform(nodes[nodes.length >> 1].getGlobalLayoutTransform());
+
+            km.select(newParent, true);
+            km.layout(600);
         },
         queryState: function(km) {
-            var selectedNode = km.getSelectedNode();
-            if (!selectedNode) {
-                return -1;
-            } else {
-                return 0;
+            var nodes = km.getSelectedNodes();
+            if (!nodes.length) return;
+            var parent = nodes[0].parent;
+            for (var i = 1; i < nodes.length; i++) {
+                if (nodes[i].parent != parent) return -1;
             }
-        },
-        isNeedUndo: function() {
-            return false;
+            return 0;
         }
     });
 
     Module.register('NodeModule', function() {
         return {
-
             commands: {
                 'AppendChildNode': AppendChildCommand,
                 'AppendSiblingNode': AppendSiblingCommand,
                 'RemoveNode': RemoveNodeCommand,
-                'EditNode': EditNodeCommand
+                'AppendParentNode': AppendParentCommand
             },
-
-            'contextmenu': [{
-                command: 'appendsiblingnode'
-            }, {
-                command: 'appendchildnode'
-            }, {
-                command: 'editnode'
-            }, {
-                command: 'removenode'
-            }, {
-                divider: 1
-            }],
 
             'commandShortcutKeys': {
                 'appendsiblingnode': 'normal::Enter',
                 'appendchildnode': 'normal::Insert|Tab',
-                'editnode': 'normal::F2',
+                'appendparentnode': 'normal::Shift+Tab|normal::Shift+Insert',
                 'removenode': 'normal::Del|Backspace'
             }
         };
