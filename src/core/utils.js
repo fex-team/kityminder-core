@@ -6,7 +6,8 @@ define(function(require, exports) {
     exports.each = kity.Utils.each.bind(kity.Utils);
 
     exports.uuid = function(group) {
-        return uuidMap[group] = uuidMap[group] ? uuidMap[group] + 1 : 1;
+        uuidMap[group] = uuidMap[group] ? uuidMap[group] + 1 : 1;
+        return group + uuidMap[group];
     };
 
     exports.guid = function() {
