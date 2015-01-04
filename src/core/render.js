@@ -124,6 +124,7 @@ define(function(require, exports, module) {
                         // 合并盒子
                         if (lastBoxes[j]) {
                             node._contentBox = node._contentBox.merge(lastBoxes[j]);
+                            renderer.contentBox = lastBoxes[j];
                         }
 
                         // 判断当前上下文是否应该渲染
@@ -201,6 +202,7 @@ define(function(require, exports, module) {
                         // 合并渲染区域
                         if (latestBox) {
                             node._contentBox = node._contentBox.merge(latestBox);
+                            renderer.contentBox = latestBox;
                         }
                     }
 
@@ -245,6 +247,11 @@ define(function(require, exports, module) {
         getContentBox: function() {
             //if (!this._contentBox) this.render();
             return this.parent && this.parent.isCollapsed() ? new kity.Box() : (this._contentBox || new kity.Box());
+        },
+        getRenderBox: function(rendererType, refer) {
+            var contentBox = rendererType ? this.getRenderer(rendererType).contentBox : this.getContentBox();
+            var ctm = kity.Matrix.getCTM(this.getRenderContainer(), refer || 'paper');
+            return ctm.transformBox(contentBox);
         }
     });
 
