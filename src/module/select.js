@@ -166,7 +166,7 @@ define(function(require, exports, module) {
                     marqueeActivator.selectEnd(e);
                 },
                 //全选操作
-                'normal.keydown inputready.keydown': function(e) {
+                'normal.keydown': function(e) {
 
                     if (e.isShortcutKey('ctrl+a')) {
                         var selectedNodes = [];
