@@ -140,33 +140,9 @@ define(function(require, exports, module) {
             }
         }
 
-        var NavigateToParentCommand = kity.createClass({
-            base: Command,
-
-            execute: function(km) {
-                var node = km.getSelectedNode();
-                if (node && node.parent) {
-                    km.select(node.parent, true);
-                }
-                this.setContentChanged(false);
-            },
-
-            queryState: function(km) {
-                return km.getSelectedNode() ? 0 : -1;
-            },
-
-            enableReadOnly: true
-        });
-
         // 稀释用
         var lastFrame;
         return {
-            'commands': {
-                'navparent': NavigateToParentCommand
-            },
-            'commandShortcutKeys': {
-                'navparent': 'shift+tab'
-            },
             'events': {
                 'layoutallfinish': function() {
                     var root = this.getRoot();
@@ -179,33 +155,6 @@ define(function(require, exports, module) {
                             navigateTo(minder, key == 'up' ? 'top' : key);
                         }
                     });
-                },
-                'normal.keyup': function(e) {
-                    if (kity.Browser.ipad) {
-                        var keys = keymap;
-                        var node = e.getTargetNode();
-
-                        if (this.receiver) this.receiver.keydownNode = node;
-
-                        var keyEvent = e.originEvent;
-
-                        if (keyEvent.altKey || keyEvent.ctrlKey || keyEvent.metaKey || keyEvent.shiftKey) return;
-
-                        switch (keyEvent.keyCode) {
-                            case keys.Enter:
-                                this.execCommand('AppendSiblingNode');
-                                e.preventDefault();
-                                break;
-
-                            case keys.Backspace:
-                            case keys.Del:
-                                e.preventDefault();
-                                this.execCommand('RemoveNode');
-                                break;
-
-                        }
-                    }
-
                 }
             }
         };
