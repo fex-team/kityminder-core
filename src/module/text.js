@@ -22,17 +22,17 @@ define(function(require, exports, module) {
 
         update: function(textGroup, node) {
 
-            function s(name) {
+            function getDataOrStyle(name) {
                 return node.getData(name) || node.getStyle(name);
             }
 
-            var nodeText = node.getText() || '';
-            var textArr = nodeText.split('\n');
+            var nodeText = node.getText();
+            var textArr = nodeText ? nodeText.split('\n') : [' '];
 
             var lineHeight = node.getStyle('line-height');
 
-            var fontSize = s('font-size');
-            var fontFamily = s('font-family') || 'default';
+            var fontSize = getDataOrStyle('font-size');
+            var fontFamily = getDataOrStyle('font-family') || 'default';
 
             var height = (lineHeight * fontSize) * textArr.length - (lineHeight - 1) * fontSize;
             var yStart = -height / 2;
@@ -58,8 +58,8 @@ define(function(require, exports, module) {
                     textGroup.removeItem(i);
                 }
             } else if (textLength > textGroupLength) {
-                var length = textLength - textGroupLength;
-                for (i = 0; i < length; i++) {
+                var growth = textLength - textGroupLength;
+                while (growth--) {
                     textShape = new kity.Text()
                         .setAttr('text-rendering', 'inherit');
                     if (kity.Browser.ie) {
@@ -71,16 +71,15 @@ define(function(require, exports, module) {
                 }
             }
 
-
             for (i = 0, text, textShape;
                 (text = textArr[i], textShape = textGroup.getItem(i)); i++) {
-                textShape.setContent(text);
+                textShape.node.innerHTML = text.replace('<', '&lt;').replace('>', '&gt;');
             }
 
             this.setTextStyle(node, textGroup);
 
             var textHash = node.getText() +
-                [s('font-size'), s('font-name'), s('font-weight'), s('font-style')].join('/');
+                ['font-size', 'font-name', 'font-weight', 'font-style'].map(getDataOrStyle).join('/');
 
             if (node._currentTextHash == textHash && node._currentTextGroupBox) return node._currentTextGroupBox;
 
@@ -91,8 +90,8 @@ define(function(require, exports, module) {
                     var y = yStart + i * fontSize * lineHeight;
 
                     textShape.setY(y);
-
-                    rBox = rBox.merge(new kity.Box(0, y, textShape.getBoundaryBox().width || 1, fontSize));
+                    var bbox = textShape.getBoundaryBox();
+                    rBox = rBox.merge(new kity.Box(0, y, bbox.height && bbox.width || 1, fontSize));
                 });
 
                 var nBox = new kity.Box(r(rBox.x), r(rBox.y), r(rBox.width), r(rBox.height));
@@ -111,6 +110,25 @@ define(function(require, exports, module) {
         }
     });
 
+    var TextCommand = kity.createClass({
+        base: Command,
+        execute: function(minder, text) {
+            var node = minder.getSelectedNode();
+            if (node) {
+                node.setText(text);
+                node.render();
+                minder.layout();
+            }
+        },
+        queryState: function(minder) {
+            return minder.getSelectedNodes().length == 1 ? 0 : -1;
+        },
+        queryValue: function(minder) {
+            var node = minder.getSelectedNode();
+            return node ? node.getText() : null;
+        }
+    });
+
     utils.extend(TextRenderer, {
         _styleHooks: [],
 
@@ -126,6 +144,9 @@ define(function(require, exports, module) {
     });
 
     Module.register('text', {
+        'commands': {
+            'text': TextCommand
+        },
         'renderers': {
             center: TextRenderer
         }
