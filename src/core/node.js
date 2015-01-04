@@ -138,7 +138,7 @@ define(function(require, exports, module) {
          * @return {String}
          */
         getText: function() {
-            return this.data.text || '';
+            return this.data.text || null;
         },
 
         /**
