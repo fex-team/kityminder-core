@@ -157,7 +157,6 @@ define(function(require, exports, module) {
          */
         dispatchKeyEvent: function(e) {
             this._firePharse(e);
-            e.preventDefault();
         },
 
         _firePharse: function(e) {
