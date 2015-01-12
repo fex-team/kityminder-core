@@ -239,6 +239,7 @@ define(function(require, exports, module) {
         },
         getRenderer: function(type) {
             var rs = this._renderers;
+            if (!rs) return null;
             for (var i = 0; i < rs.length; i++) {
                 if (rs[i].getType() == type) return rs[i];
             }
@@ -249,7 +250,8 @@ define(function(require, exports, module) {
             return this.parent && this.parent.isCollapsed() ? new kity.Box() : (this._contentBox || new kity.Box());
         },
         getRenderBox: function(rendererType, refer) {
-            var contentBox = rendererType ? this.getRenderer(rendererType).contentBox : this.getContentBox();
+            var renderer = rendererType && this.getRenderer(rendererType);
+            var contentBox = renderer ? renderer.contentBox : this.getContentBox();
             var ctm = kity.Matrix.getCTM(this.getRenderContainer(), refer || 'paper');
             return ctm.transformBox(contentBox);
         }

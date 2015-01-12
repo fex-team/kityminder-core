@@ -26,6 +26,9 @@ define(function(require, exports, module) {
 
         function sendToClipboard(nodes) {
             if (!nodes.length) return;
+            nodes.sort(function(a, b) {
+                return b.getIndex() - a.getIndex();
+            });
             _clipboardNodes = nodes.map(function(node) {
                 return node.clone();
             });

@@ -326,20 +326,21 @@ define(function(require, exports, module) {
                     var dragger = this._viewDragger;
                     var view = dragger.getView();
                     var focus = selected.getLayoutBox();
-                    var space = 50;
+                    var space = 150;
+                    var tolerance = 150;
                     var dx = 0,
                         dy = 0;
 
-                    if (focus.right > view.right) {
+                    if (focus.right > view.right - tolerance) {
                         dx += view.right - focus.right - space;
-                    } else if (focus.left < view.left) {
+                    } else if (focus.left < view.left + tolerance) {
                         dx += view.left - focus.left + space;
                     }
 
-                    if (focus.bottom > view.bottom) {
+                    if (focus.bottom > view.bottom - tolerance) {
                         dy += view.bottom - focus.bottom - space;
                     }
-                    if (focus.top < view.top) {
+                    if (focus.top < view.top + tolerance) {
                         dy += view.top - focus.top + space;
                     }
 
