@@ -20,6 +20,7 @@ define(function(require, exports, module) {
     kityminder.Command = require('./core/command');
     kityminder.Node = require('./core/node');
     require('./core/option');
+    require('./core/animate');
     kityminder.Event = require('./core/event');
     kityminder.data = require('./core/data');
     require('./core/compatibility');

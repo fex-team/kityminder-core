@@ -16,7 +16,7 @@ define(function(require, exports, module) {
     });
 
     kity.extendClass(Minder, {
-        addDefaultOption: function(options) {
+        setDefaultOptions: function(options) {
             utils.extend(this._defaultOptions, options);
             return this;
         },
@@ -26,6 +26,9 @@ define(function(require, exports, module) {
             } else {
                 return utils.extend({}, this._defaultOptions, this._options);
             }
+        },
+        setOption: function(key, value) {
+            this._options[key] = value;
         }
     });
 });

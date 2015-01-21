@@ -1,3 +1,3 @@
-define('expose', function(require, exports, module) {
+define('expose-kityminder', function(require, exports, module) {
     module.exports = window.kityminder = require('./kityminder');
 });

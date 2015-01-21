@@ -10,7 +10,7 @@ define(function(require, exports, module) {
     }
 
     Minder.registerInitHook(function(option) {
-        this.addDefaultOption({
+        this.setDefaultOptions({
             enableKeyReceiver: true
         });
         if (this.getOption('enableKeyReceiver')) {

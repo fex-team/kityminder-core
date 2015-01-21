@@ -17,7 +17,9 @@ define(function(require, exports, module) {
             km.appendNode(child, parent);
             child.render();
             child.setLayoutOffset(null);
-            var children = utils.cloneArr(child.children);
+            var children = child.children.map(function(node) {
+                return node.clone();
+            });
             for (var i = 0, ci;
                 (ci = children[i]); i++) {
                 appendChildNode(child, ci);

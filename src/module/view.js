@@ -72,7 +72,7 @@ define(function(require, exports, module) {
 
         getView: function() {
             var minder = this._minder;
-            var c = {
+            var c = minder._lastClientSize || {
                 width: minder.getRenderTarget().clientWidth,
                 height: minder.getRenderTarget().clientHeight
             };
@@ -208,7 +208,7 @@ define(function(require, exports, module) {
          */
         var CameraCommand = kity.createClass('CameraCommand', {
             base: Command,
-            execute: function(km, focusNode, duration) {
+            execute: function(km, focusNode) {
 
                 focusNode = focusNode || km.getRoot();
                 var viewport = km.getPaper().getViewPort();
@@ -217,6 +217,7 @@ define(function(require, exports, module) {
                     dy = viewport.center.y - offset.y;
                 var dragger = km._viewDragger;
 
+                var duration = km.getOption('viewAnimationDuration');
                 dragger.move(new kity.Point(dx, dy), duration);
                 this.setContentChanged(false);
             },
@@ -238,9 +239,10 @@ define(function(require, exports, module) {
         var MoveCommand = kity.createClass('MoveCommand', {
             base: Command,
 
-            execute: function(km, dir, duration) {
+            execute: function(km, dir) {
                 var dragger = km._viewDragger;
                 var size = km._lastClientSize;
+                var duration = km.getOption('viewAnimationDuration');
                 switch (dir) {
                     case 'up':
                         dragger.move(new kity.Point(0, size.height / 2), duration);
@@ -345,7 +347,7 @@ define(function(require, exports, module) {
                     }
 
                     if (dx || dy) {
-                        dragger.move(new kity.Point(dx, dy), 100);
+                        dragger.move(new kity.Point(dx, dy));
                     }
                 }
             }

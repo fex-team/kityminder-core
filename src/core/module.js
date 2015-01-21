@@ -47,7 +47,7 @@ define(function(require, exports, module) {
                 if (!moduleDeals) continue;
 
                 if (moduleDeals.defaultOptions) {
-                    me.addDefaultOption(moduleDeals.defaultOptions);
+                    me.setDefaultOptions(moduleDeals.defaultOptions);
                 }
 
                 if (moduleDeals.init) {

@@ -26,7 +26,7 @@ module.exports = function(grunt) {
         ' * ====================================================\n' +
         ' */\n\n';
 
-    var expose = '\nuse(\'expose\');\n';
+    var expose = '\nuse(\'expose-kityminder\');\n';
 
     // Project configuration.
     grunt.initConfig({
@@ -42,7 +42,7 @@ module.exports = function(grunt) {
         dependence: {
             options: {
                 base: 'src',
-                entrance: 'expose'
+                entrance: 'expose-kityminder'
             },
             merge: {
                 files: [{

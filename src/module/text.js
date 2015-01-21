@@ -73,7 +73,7 @@ define(function(require, exports, module) {
 
             for (i = 0, text, textShape;
                 (text = textArr[i], textShape = textGroup.getItem(i)); i++) {
-                textShape.node.innerHTML = text.replace('<', '&lt;').replace('>', '&gt;');
+                textShape.setContent(text);
             }
 
             this.setTextStyle(node, textGroup);

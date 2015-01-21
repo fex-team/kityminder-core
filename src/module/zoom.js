@@ -50,7 +50,8 @@ define(function(require, exports, module) {
 
             setTextRendering();
 
-            if (minder.getRoot().getComplex() > 200) {
+            var duration = minder.getOption('zoomAnimationDuration');
+            if (minder.getRoot().getComplex() > 200 || !duration) {
                 minder._zoomValue = value;
                 minder.zoom(value);
                 minder.fire('viewchange');
@@ -66,7 +67,7 @@ define(function(require, exports, module) {
                 if (timeline) {
                     timeline.pause();
                 }
-                timeline = animator.start(minder, 300, 'easeInOutSine');
+                timeline = animator.start(minder, duration, 'easeInOutSine');
                 timeline.on('finish', function() {
                     minder.fire('viewchange');
                 });
@@ -148,7 +149,7 @@ define(function(require, exports, module) {
         return {
             init: function() {
                 this._zoomValue = 100;
-                this.addDefaultOption({
+                this.setDefaultOptions({
                     zoom: [10, 20, 50, 100, 200]
                 });
                 setTextRendering();

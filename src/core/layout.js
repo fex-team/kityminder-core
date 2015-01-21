@@ -219,9 +219,9 @@ define(function(require, exports, module) {
             return this;
         },
 
-        layout: function(name, duration) {
+        layout: function(name) {
 
-            this.setLayout(name).getMinder().layout(duration);
+            this.setLayout(name).getMinder().layout();
 
             return this;
         },
@@ -398,7 +398,9 @@ define(function(require, exports, module) {
      */
     kity.extendClass(Minder, {
 
-        layout: function(duration) {
+        layout: function() {
+
+            var duration = this.getOption('layoutAnimationDuration');
 
             this.getRoot().traverse(function(node) {
                 // clear last results
@@ -428,8 +430,6 @@ define(function(require, exports, module) {
             // 第二轮布局
             layoutNode(this.getRoot(), 2);
 
-            duration = duration ? 300 : 0;
-
             var minder = this;
             this.applyLayoutResult(this.getRoot(), duration, function() {
                 minder.fire('layoutallfinish');
@@ -438,9 +438,9 @@ define(function(require, exports, module) {
             return this.fire('layout');
         },
 
-        refresh: function(duration) {
+        refresh: function() {
             this.getRoot().renderTree();
-            this.layout(duration).fire('contentchange')._interactChange();
+            this.layout().fire('contentchange')._interactChange();
             return this;
         },
 
