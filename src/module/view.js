@@ -104,6 +104,8 @@ define(function(require, exports, module) {
                 }
                 var paper = dragger._minder.getPaper();
                 paper.setStyle('cursor', dragger._minder.getStatus() == 'hand' ? '-webkit-grab' : 'default');
+
+                dragger._minder.fire('viewchanged');
             }
 
             this._minder.on('normal.mousedown normal.touchstart ' +
@@ -295,6 +297,12 @@ define(function(require, exports, module) {
                         x: dx / 2.5,
                         y: dy / 2.5
                     });
+
+                    var me = this;
+                    clearTimeout(this._mousewheeltimer);
+                    this._mousewheeltimer = setTimeout(function() {
+                        me.fire('viewchanged');
+                    }, 100);
 
                     e.preventDefault();
                 },

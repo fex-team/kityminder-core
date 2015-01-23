@@ -74,6 +74,9 @@ define(function(require, exports, module) {
             for (i = 0, text, textShape;
                 (text = textArr[i], textShape = textGroup.getItem(i)); i++) {
                 textShape.setContent(text);
+                if (kity.Browser.ie) {
+                    textShape.fixPosition();
+                }
             }
 
             this.setTextStyle(node, textGroup);

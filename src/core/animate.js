@@ -10,6 +10,7 @@ define(function(require, exports, module) {
     var Minder = require('./minder');
 
     var animateDefaultOptions = {
+        enableAnimation: true,
         layoutAnimationDuration: 300,
         viewAnimationDuration: 100,
         zoomAnimationDuration: 300
@@ -18,6 +19,9 @@ define(function(require, exports, module) {
 
     Minder.registerInitHook(function() {
         this.setDefaultOptions(animateDefaultOptions);
+        if (!this.getOption('enableAnimation')) {
+            this.disableAnimation();
+        }
     });
 
     Minder.prototype.enableAnimation = function() {

@@ -98,15 +98,11 @@ define(function(require, exports, module) {
         base: Command,
         execute: function(km, text) {
             var nodes = km.getSelectedNodes();
-            if (!nodes.length) return;
-            var parent = nodes[0].parent;
-
-            for (var i = 1; i < nodes.length; i++) {
-                if (nodes[i].parent != parent) return -1;
-            }
+            
             nodes.sort(function(a, b) {
                 return a.getIndex() - b.getIndex();
             });
+            var parent = nodes[0].parent;
 
             var newParent = km.createNode(text, parent, nodes[0].getIndex());
             nodes.forEach(function(node) {
@@ -121,6 +117,7 @@ define(function(require, exports, module) {
             var nodes = km.getSelectedNodes();
             if (!nodes.length) return;
             var parent = nodes[0].parent;
+            if (!parent) return -1;
             for (var i = 1; i < nodes.length; i++) {
                 if (nodes[i].parent != parent) return -1;
             }
