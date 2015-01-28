@@ -59,6 +59,12 @@ npm install
 grunt
 ```
 
+想偷懒？可以用下面这个一行安装脚本：
+
+```bash
+https://gist.githubusercontent.com/techird/72b420c7ea05154ce821/raw/6416f2709ce82a3a0d86a50763de1ce3ca7f3ca2/setup-km-core
+```
+
 ## 联系我们
 
 问题和建议反馈：[Github Issues](https://github.com/fex-team/kityminder-core/issues)
