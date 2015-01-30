@@ -153,6 +153,7 @@ define(function(require, exports, module) {
                     ['left', 'right', 'up', 'down'].forEach(function(key) {
                         if (e.isShortcutKey(key)) {
                             navigateTo(minder, key == 'up' ? 'top' : key);
+                            e.preventDefault();
                         }
                     });
                 }

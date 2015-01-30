@@ -90,7 +90,7 @@ define(function(require, exports, module) {
         },
         queryState: function(km) {
             var selectedNode = km.getSelectedNode();
-            return selectedNode ? 0 : -1;
+            return selectedNode && !selectedNode.isRoot() ? 0 : -1;
         }
     });
 
@@ -98,7 +98,7 @@ define(function(require, exports, module) {
         base: Command,
         execute: function(km, text) {
             var nodes = km.getSelectedNodes();
-            
+
             nodes.sort(function(a, b) {
                 return a.getIndex() - b.getIndex();
             });
