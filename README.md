@@ -9,12 +9,12 @@ KityMinder 是一款强大的脑图可视化/编辑工具，由百度 FEX 团队
 
 * 包括脑图数据的可视化展示（Json 格式）
 * 包括简单的编辑功能（节点创建、编辑、删除）。更加强大编辑功能的 KityMinder 编辑器请移步 [kityminder-editor](https://github.com/fex-team/kityminder-editor)
-* 不包含第三方格式（FreeMind、XMind、MindManager、纯文本、Markdown 等）的支持，可以加载 [kityminder-protocol](https://github.com/fex-team/kityminder-protocol) 来扩展第三方格式支持。
+* 不包含第三方格式（FreeMind、XMind、MindManager）的支持，可以加载 [kityminder-protocol](https://github.com/fex-team/kityminder-third-party-protocol) 来扩展第三方格式支持。
 * 不包含文件存储的支持，需要自行实现存储。可参照[百度脑图](https://github.com/fex-team/naotu.baidu.com)中的开源的 fio + 百度网盘方案进行实现。
 
 ## 使用
 
-可以参考 [example.html](example.html) 进行使用，代码类似：
+可以参考 [example.html](example.html) 进行使用。
 
 ```js
 <div id="minder-container"></div>

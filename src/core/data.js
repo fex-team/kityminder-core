@@ -140,7 +140,7 @@ define(function(require, exports, module) {
          *
          * @param {string} protocol 指定的数据协议（默认内置五种数据协议 `json`、`text`、`markdown`、`svg` 和 `png`）
          */
-        exportData: function(protocolName) {
+        exportData: function(protocolName, option) {
             var json, protocol;
 
             json = this.exportJson();
@@ -161,7 +161,7 @@ define(function(require, exports, module) {
                 protocol: protocol
             }));
 
-            return Promise.resolve(protocol.encode(json, this));
+            return Promise.resolve(protocol.encode(json, this, option));
         },
 
         /**
@@ -174,7 +174,7 @@ define(function(require, exports, module) {
          * @param {string} protocol 指定的用于解析数据的数据协议（默认内置三种数据协议 `json`、`text` 和 `markdown` 的支持）
          * @param {any} data 要导入的数据
          */
-        importData: function(protocolName, data) {
+        importData: function(protocolName, data, option) {
             var json, protocol;
             var minder = this;
 
@@ -196,7 +196,7 @@ define(function(require, exports, module) {
             // 导入前抛事件
             this._fire(new MinderEvent('beforeimport', params));
 
-            return Promise.resolve(protocol.decode(data, this)).then(function(json) {
+            return Promise.resolve(protocol.decode(data, this, option)).then(function(json) {
                 minder.importJson(json);
                 return json;
             });
