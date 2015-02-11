@@ -23,10 +23,15 @@ define(function(require, exports, module) {
             if (!parent) {
                 return null;
             }
-            parent.expand();
             var node = km.createNode(text, parent);
             km.select(node, true);
-            node.render();
+            if (parent.isExpanded()) {
+                node.render();
+            }
+            else {
+                parent.expand();
+                parent.renderTree();
+            }
             km.layout(600);
         },
         queryState: function(km) {
@@ -115,7 +120,7 @@ define(function(require, exports, module) {
         },
         queryState: function(km) {
             var nodes = km.getSelectedNodes();
-            if (!nodes.length) return;
+            if (!nodes.length) return -1;
             var parent = nodes[0].parent;
             if (!parent) return -1;
             for (var i = 1; i < nodes.length; i++) {

@@ -134,22 +134,17 @@ define(function(require, exports, module) {
                 return false;
             }
 
-            if (!this._hasEnterExecCommand && cmd.isNeedUndo()) {
+            if (!this._hasEnterExecCommand) {
                 this._hasEnterExecCommand = true;
 
                 stoped = this._fire(new MinderEvent('beforeExecCommand', eventParams, true));
 
                 if (!stoped) {
-                    //保存场景
-                    this._fire(new MinderEvent('saveScene'));
                     this._fire(new MinderEvent('preExecCommand', eventParams, false));
 
                     result = cmd.execute.apply(cmd, [me].concat(cmdArgs));
 
                     this._fire(new MinderEvent('execCommand', eventParams, false));
-
-                    //保存场景
-                    this._fire(new MinderEvent('saveScene'));
 
                     if (cmd.isContentChanged()) {
                         this._firePharse(new MinderEvent('contentchange'));

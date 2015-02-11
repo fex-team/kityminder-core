@@ -46,11 +46,9 @@ define(function(require, exports, module) {
                 var exported = {};
                 exported.data = node.getData();
                 var childNodes = node.getChildren();
-                if (childNodes.length) {
-                    exported.children = [];
-                    for (var i = 0; i < childNodes.length; i++) {
-                        exported.children.push(exportNode(childNodes[i]));
-                    }
+                exported.children = [];
+                for (var i = 0; i < childNodes.length; i++) {
+                    exported.children.push(exportNode(childNodes[i]));
                 }
                 return exported;
             }
@@ -63,7 +61,7 @@ define(function(require, exports, module) {
             json.theme = this.getTheme();
             json.version = Minder.version;
 
-            return json;
+            return JSON.parse(JSON.stringify(json));
         },
 
         /**

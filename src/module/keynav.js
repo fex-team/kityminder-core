@@ -31,8 +31,7 @@ define(function(require, exports, module) {
                         bottom: p.y + p.height,
                         width: p.width,
                         height: p.height,
-                        node: node,
-                        text: node.getText()
+                        node: node
                     });
                 }
             });
@@ -57,10 +56,19 @@ define(function(require, exports, module) {
             else if (yDist < 0) dist = xDist;
             else dist = sqrt(xDist * xDist + yDist * yDist);
 
-            return {
-                cx: dist,
-                cy: dist
-            };
+            var node1 = box1.node;
+            var node2 = box2.node;
+
+            // sibling
+            if (node1.parent == node2.parent) {
+                dist /= 10;
+            }
+            // parent
+            if (node2.parent == node1) {
+                dist /= 5;
+            }
+
+            return dist;
         }
 
         function findClosestPointsFor(pointIndexes, iFind) {
@@ -78,9 +86,9 @@ define(function(require, exports, module) {
 
                 // left check
                 if (current.right < find.left) {
-                    if (!most.left || dist.cx < most.left.dist) {
+                    if (!most.left || dist < most.left.dist) {
                         most.left = {
-                            dist: dist.cx,
+                            dist: dist,
                             node: current.node
                         };
                     }
@@ -88,9 +96,9 @@ define(function(require, exports, module) {
 
                 // right check
                 if (current.left > find.right) {
-                    if (!most.right || dist.cx < most.right.dist) {
+                    if (!most.right || dist < most.right.dist) {
                         most.right = {
-                            dist: dist.cx,
+                            dist: dist,
                             node: current.node
                         };
                     }
@@ -98,9 +106,9 @@ define(function(require, exports, module) {
 
                 // top check
                 if (current.bottom < find.top) {
-                    if (!most.top || dist.cy < most.top.dist) {
+                    if (!most.top || dist < most.top.dist) {
                         most.top = {
-                            dist: dist.cy,
+                            dist: dist,
                             node: current.node
                         };
                     }
@@ -108,9 +116,9 @@ define(function(require, exports, module) {
 
                 // bottom check
                 if (current.top > find.bottom) {
-                    if (!most.down || dist.cy < most.down.dist) {
+                    if (!most.down || dist < most.down.dist) {
                         most.down = {
-                            dist: dist.cy,
+                            dist: dist,
                             node: current.node
                         };
                     }

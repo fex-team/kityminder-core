@@ -64,6 +64,7 @@ define(function(require, exports, module) {
         },
 
         setTheme: function(name) {
+            if (name && !_themes[name]) throw new Error('Theme ' + name + ' not exists!');
             var lastTheme = this._theme;
             this._theme = name || null;
             var container = this.getRenderTarget();
