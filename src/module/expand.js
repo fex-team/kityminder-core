@@ -77,7 +77,8 @@ define(function(require, exports, module) {
             },
 
             queryState: function(km) {
-                return km.getSelectedNode() ? 0 : -1;
+                var node = km.getSelectedNode();
+                return node && !node.isRoot() && !node.isExpanded() ? 0 : -1;
             }
         });
 
