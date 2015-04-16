@@ -26,6 +26,7 @@ define(function(require, exports, module) {
         path.shift();
 
         var changed = path.shift();
+        var node;
 
         if (changed == 'root') {
 
@@ -33,12 +34,12 @@ define(function(require, exports, module) {
             if (dataIndex > -1) {
                 changed = 'data';
                 var dataPath = path.splice(dataIndex + 1);
-                patch.field = dataPath.shift();
+                patch.dataPath = dataPath;
             } else {
                 changed = 'node';
             }
 
-            var node = minder.getRoot();
+            node = minder.getRoot();
             var segment, index;
             while (segment = path.shift()) {
                 if (segment == 'children') continue;
@@ -49,7 +50,7 @@ define(function(require, exports, module) {
             patch.node = node;
         }
 
-        var express = [changed, patch.op].join('.');
+        var express = patch.express = [changed, patch.op].join('.');
 
         switch (express) {
             case 'theme.replace':
@@ -69,9 +70,30 @@ define(function(require, exports, module) {
             case 'data.add':
             case 'data.replace':
             case 'data.remove':
-                patch.node.setData(patch.field, patch.value).renderTree();
+                var data = patch.node.data;
+                var field;
+                path = patch.dataPath.slice();
+                while (data && path.length > 1) {
+                    field = path.shift();
+                    if (field in data) {
+                        data = data[field];
+                    } else if (patch.op != 'remove') {
+                        data = data[field] = {};
+                    }
+                }
+                if (data) {
+                    field = path.shift();
+                    data[field] = patch.value;
+                }
+                if (field == 'expandState') {
+                    node.renderTree();
+                } else {
+                    node.render();
+                }
                 minder.layout();
         }
+
+        minder.fire('patch', { 'patch' : patch } );
     }
 
     kity.extendClass(Minder, {
