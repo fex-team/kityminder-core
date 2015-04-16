@@ -77,7 +77,8 @@ define(function(require, exports, module) {
             },
 
             queryState: function(km) {
-                return km.getSelectedNode() ? 0 : -1;
+                var node = km.getSelectedNode();
+                return node && !node.isRoot() && !node.isExpanded() ? 0 : -1;
             }
         });
 
@@ -98,6 +99,31 @@ define(function(require, exports, module) {
                 km.refresh(100);
             },
             enableReadOnly: true
+        });
+
+        /**
+         * @command Collapse
+         * @description 收起当前节点的子树
+         * @state
+         *   0: 当前有选中的节点
+         *  -1: 当前没有选中的节点
+         */
+        var CollapseCommand = kity.createClass('CollapseCommand', {
+            base: Command,
+
+            execute: function(km) {
+                var node = km.getSelectedNode();
+                if (!node) return;
+
+                node.collapse();
+                node.renderTree();
+                km.layout();
+            },
+
+            queryState: function(km) {
+                var node = km.getSelectedNode();
+                return node && !node.isRoot() && node.isExpanded() ? 0 : -1;
+            }
         });
 
         var Expander = kity.createClass('Expander', {
@@ -175,10 +201,12 @@ define(function(require, exports, module) {
                 this.expander.setTranslate(position);
             }
         });
+
         return {
             commands: {
                 'expand': ExpandCommand,
-                'expandtolevel': ExpandToLevelCommand
+                'expandtolevel': ExpandToLevelCommand,
+                'collapse': CollapseCommand
             },
             events: {
                 'layoutapply': function(e) {
