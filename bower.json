@@ -13,7 +13,7 @@
         "seajs": "~2.3.0"
     },
     "dependencies": {
-        "kity": "~2.0.0"
+        "kity": "~2.0.0",
         "json-diff": "*"
     },
     "licenses": [{
