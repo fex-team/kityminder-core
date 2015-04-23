@@ -117,7 +117,7 @@ define(function(require, exports, module) {
         });
         return {
             'commands': {
-                'priority': PriorityCommand,
+                'priority': PriorityCommand
             },
             'renderers': {
                 left: kity.createClass('PriorityRenderer', {

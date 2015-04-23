@@ -132,7 +132,7 @@ define(function(require, exports, module) {
 
                     // 点中了节点，并且按了 shift 键：
                     //     被点中的节点切换选中状态
-                    else if (e.originEvent.shiftKey) {
+                    else if (e.isShortcutKey('Ctrl')) {
                         this.toggleSelect(downNode);
                     }
 

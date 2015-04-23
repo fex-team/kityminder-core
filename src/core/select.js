@@ -80,7 +80,11 @@ define(function(require, exports, module) {
             this.renderChangedSelection(lastSelect);
             return this;
         },
-
+        selectById: function(ids, isSingleSelect) {
+            ids = utils.isArray(ids) ? ids : [ids];
+            var nodes = this.getNodesById(ids);
+            return this.select(nodes, isSingleSelect);
+        },
         //当前选区中的节点在给定的节点范围内的保留选中状态，
         //没在给定范围的取消选中，给定范围中的但没在当前选中范围的也做选中效果
         toggleSelect: function(node) {

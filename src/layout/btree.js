@@ -112,7 +112,7 @@ define(function(require, exports, module) {
                 this.stack(children, oppsite[axis]);
 
                 var bbox = this.getBranchBox(children);
-                var xAdjust, yAdjust;
+                var xAdjust = 0, yAdjust = 0;
 
                 if (axis == 'x') {
                     xAdjust = pbox[name];

@@ -39,6 +39,8 @@ define(function(require, exports, module) {
     kityminder.Theme = require('./core/theme');
     kityminder.Template = require('./core/template');
     kityminder.Promise = require('./core/promise');
+    require('./core/_boxv');
+    require('./core/patch');
 
     // 模块依赖
     require('./module/arrange');
@@ -47,7 +49,6 @@ define(function(require, exports, module) {
     require('./module/dragtree');
     require('./module/expand');
     require('./module/font');
-    require('./module/history');
     require('./module/hyperlink');
     require('./module/image');
     require('./module/keynav');
@@ -81,6 +82,7 @@ define(function(require, exports, module) {
     require('./theme/fresh');
     require('./theme/fish');
     require('./theme/snow');
+    require('./theme/wire');
 
     require('./connect/arc');
     require('./connect/bezier');

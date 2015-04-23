@@ -72,6 +72,16 @@ define(function(require, exports, module) {
             return this.parent;
         },
 
+        getSiblings: function() {
+            var children = this.parent.children;
+            var siblings = [];
+            var self = this;
+            children.forEach(function(child) {
+                if (child != self) siblings.push(child);
+            });
+            return siblings;
+        },
+
         /**
          * 获得节点的深度
          */
@@ -122,7 +132,16 @@ define(function(require, exports, module) {
         },
 
         setData: function(key, value) {
-            this.data[key] = value;
+            if (typeof key == 'object') {
+                var data = key;
+                for (key in data) if (data.hasOwnProperty(key)) {
+                    this.data[key] = data[key];
+                }
+            }
+            else {
+                this.data[key] = value;
+            }
+            return this;
         },
 
         /**
@@ -303,6 +322,29 @@ define(function(require, exports, module) {
         setRoot: function(root) {
             this._root = root;
             root.minder = this;
+        },
+
+        getAllNode: function() {
+            var nodes = [];
+            this.getRoot().traverse(function(node) {
+                nodes.push(node);
+            });
+            return nodes;
+        },
+
+        getNodeById: function(id) {
+            return this.getNodesById([id])[0];
+        },
+
+        getNodesById: function(ids) {
+            var nodes = this.getAllNode();
+            var result = [];
+            nodes.forEach(function(node) {
+                if (ids.indexOf(node.getData('id')) != -1) {
+                    result.push(node);
+                }
+            });
+            return result;
         },
 
         createNode: function(textOrData, parent, index) {

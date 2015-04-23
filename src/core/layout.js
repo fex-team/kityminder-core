@@ -34,7 +34,7 @@ define(function(require, exports, module) {
          *     children[i].setLayoutTransform(new kity.Matrix().translate(x, y));
          * }
          */
-        doLayout: function(node) {
+        doLayout: function(parent, children) {
             throw new Error('Not Implement: Layout.doLayout()');
         },
 
@@ -234,10 +234,6 @@ define(function(require, exports, module) {
             return this.parent.getLayoutInstance().getOrderHint(this);
         },
 
-        getExpandPosition: function() {
-            return this.getLayoutInstance().getExpandPosition();
-        },
-
         /**
          * 获取当前节点相对于父节点的布局变换
          */
@@ -255,7 +251,7 @@ define(function(require, exports, module) {
             var matrix = this.getLayoutTransform();
             var offset = this.getLayoutOffset();
             if (offset) {
-                matrix.translate(offset.x, offset.y);
+                matrix = matrix.clone().translate(offset.x, offset.y);
             }
             return pMatrix.merge(matrix);
         },
@@ -359,16 +355,10 @@ define(function(require, exports, module) {
         setLayoutOffset: function(p) {
             if (!this.parent) return this;
 
-            if (p && !this.hasLayoutOffset()) {
-                var m = this.getLayoutTransform().m;
-                p = p.offset(m.e, m.f);
-                this.setLayoutTransform(null);
-            }
-
             this.setData('layout_' + this.parent.getLayout() + '_offset', p ? {
                 x: p.x,
                 y: p.y
-            } : null);
+            } : undefined);
 
             return this;
         },
@@ -421,7 +411,7 @@ define(function(require, exports, module) {
                 var childrenInFlow = node.getChildren().filter(function(child) {
                     return !child.hasLayoutOffset();
                 });
-                layout.doLayout(node, childrenInFlow, round);
+                layout.doLayout(node, node.getChildren(), round);
             }
 
             // 第一轮布局
@@ -471,7 +461,7 @@ define(function(require, exports, module) {
             }
 
             function apply(node, pMatrix) {
-                var matrix = node.getLayoutTransform().merge(pMatrix);
+                var matrix = node.getLayoutTransform().merge(pMatrix.clone());
                 var lastMatrix = node.getGlobalLayoutTransform() || new kity.Matrix();
 
                 var offset = node.getLayoutOffset();
@@ -479,7 +469,6 @@ define(function(require, exports, module) {
 
                 matrix.m.e = Math.round(matrix.m.e);
                 matrix.m.f = Math.round(matrix.m.f);
-
 
                 // 如果当前有动画，停止动画
                 if (node._layoutTimeline) {
@@ -518,10 +507,9 @@ define(function(require, exports, module) {
                     apply(node.children[i], matrix);
                 }
             }
-
             apply(root, root.parent ? root.parent.getGlobalLayoutTransform() : new kity.Matrix());
             return this;
-        },
+        }
     });
 
     module.exports = Layout;
