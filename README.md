@@ -39,7 +39,7 @@ KityMinder 基于 SVG 技术实现，支持绝大多数的 HTML5 浏览器，包
 
 ## 依赖说明
 
-kityminder-core 依赖 Kity、库。需要二次开发 kityminder-core，需要初始化并更新子模块：
+kityminder-core 依赖 [Kity](https://github.com/fex-team/kity)库。需要二次开发 kityminder-core，需要初始化并更新子模块：
 
 ```bash
 git submodule init

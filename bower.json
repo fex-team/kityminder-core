@@ -2,12 +2,18 @@
     "name": "kityminder-core",
     "title": "Kity Minder Core",
     "description": "Powerful online mind graphic visualization and editor (command based)",
-    "version": "1.3.6",
-    "main": "src/kityminder.js",
+    "version": "1.4.0",
+    "main": [
+        "release/kityminder.core.min.js",
+        "release/kityminder.core.css"
+    ],
     "keywords": ["kityminder", "kity", "svg"],
     "homepage": "https://github.com/fex-team/kityminder-core",
     "devDependencies": {
         "seajs": "~2.3.0"
+    },
+    "dependencies": {
+        "kity": "~2.0.0"
     },
     "licenses": [{
         "type": "BSD",

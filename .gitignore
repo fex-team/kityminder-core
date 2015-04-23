@@ -2,7 +2,6 @@
 .DS_Store
 *.sublime-project
 *.sublime-workspace
-dist/
-release/
 node_modules/
 _drafts/
+bower_components

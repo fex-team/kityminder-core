@@ -10,6 +10,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-module-dependence');
     grunt.loadNpmTasks('grunt-replace');
     grunt.loadNpmTasks('grunt-contrib-clean');
+    grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-uglify');
 
@@ -35,7 +36,7 @@ module.exports = function(grunt) {
         pkg: pkg,
 
         clean: {
-            last: 'release'
+            last: 'dist'
         },
 
         // resolve dependence
@@ -47,20 +48,20 @@ module.exports = function(grunt) {
             merge: {
                 files: [{
                     src: 'src/**/*.js',
-                    dest: 'release/kityminder.core.js'
+                    dest: 'dist/kityminder.core.js'
                 }]
             }
         },
 
-        // concat
+        // concat, just add closure
         concat: {
-            closure: {
-                options: {
-                    banner: banner + '(function () {\n',
-                    footer: expose + '})();'
-                },
+            options: {
+                banner: banner + '(function () {\n',
+                footer: expose + '})();'
+            },
+            build: {
                 files: {
-                    'release/kityminder.core.js': ['release/kityminder.core.js']
+                    'dist/kityminder.core.js': ['dist/kityminder.core.js']
                 }
             }
         },
@@ -70,23 +71,22 @@ module.exports = function(grunt) {
                 banner: banner
             },
             minimize: {
-                files: {
-                    'release/kityminder.core.min.js': 'release/kityminder.core.js'
-                }
+                src: 'dist/kityminder.core.js',
+                dest: 'dist/kityminder.core.min.js'
             }
         },
 
-        watch: {
-            less: {
-                files: ['ui/theme/**/*.less'],
-                tasks: ['less:compile', 'autoprefixer']
+        copy: {
+            dist: {
+                src: 'src/kityminder.css',
+                dest: "dist/kityminder.core.css"
             }
-        },
+        }
 
     });
 
 
     // Build task(s).
-    grunt.registerTask('default', ['clean', 'dependence', 'concat', 'uglify']);
+    grunt.registerTask('build', ['clean', 'dependence', 'concat:build', 'uglify:minimize', 'copy']);
 
 };
