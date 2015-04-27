@@ -83,7 +83,21 @@ define(function(require, exports, module) {
                 }
                 if (data) {
                     field = path.shift();
-                    data[field] = patch.value;
+                    if (data instanceof Array) {
+                        switch (patch.op) {
+                            case 'remove':
+                                data.splice(+field, 1);
+                                break;
+                            case 'add':
+                                data.splice(+field, 0, patch.value);
+                                break;
+                            case 'replace':
+                                data.splice(+field, 1, patch.value);
+                                break;
+                        }
+                    } else {
+                        data[field] = patch.value;
+                    }
                 }
                 if (field == 'expandState') {
                     node.renderTree();
@@ -103,6 +117,7 @@ define(function(require, exports, module) {
             }
 
             this.fire('contentchange');
+            this.fire('interactchange');
             return this;
         }
     });
