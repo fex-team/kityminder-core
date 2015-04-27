@@ -1,6 +1,6 @@
 /*!
  * ====================================================
- * kityminder - v1.4.1 - 2015-04-23
+ * kityminder - v1.4.2 - 2015-04-27
  * https://github.com/fex-team/kityminder-core
  * GitHub: https://github.com/fex-team/kityminder-core.git 
  * Copyright (c) 2015 Baidu FEX; Licensed MIT
@@ -1762,7 +1762,6 @@ _p[18] = {
                 this.fire("ready");
             }
         });
-        Minder.version = "1.4.1";
         Minder.registerInitHook = function(hook) {
             _initHooks.push(hook);
         };
@@ -2403,7 +2402,23 @@ _p[23] = {
                 }
                 if (data) {
                     field = path.shift();
-                    data[field] = patch.value;
+                    if (data instanceof Array) {
+                        switch (patch.op) {
+                          case "remove":
+                            data.splice(+field, 1);
+                            break;
+
+                          case "add":
+                            data.splice(+field, 0, patch.value);
+                            break;
+
+                          case "replace":
+                            data.splice(+field, 1, patch.value);
+                            break;
+                        }
+                    } else {
+                        data[field] = patch.value;
+                    }
                 }
                 if (field == "expandState") {
                     node.renderTree();
@@ -2422,6 +2437,7 @@ _p[23] = {
                     applyPatch(this, patches[i]);
                 }
                 this.fire("contentchange");
+                this.fire("interactchange");
                 return this;
             }
         });
@@ -3508,12 +3524,13 @@ _p[33] = {
 _p[34] = {
     value: function(require, exports, module) {
         var kityminder = {
-            version: _p.r(18).version
+            version: "1.4.2"
         };
         // 核心导出，大写的部分导出类，小写的部分简单 require 一下
         // 这里顺序是有讲究的，调整前先弄清楚依赖关系。
         _p.r(32);
         kityminder.Minder = _p.r(18);
+        kityminder.Minder.version = kityminder.version;
         kityminder.Command = _p.r(8);
         kityminder.Node = _p.r(20);
         _p.r(21);

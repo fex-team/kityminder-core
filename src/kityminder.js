@@ -10,13 +10,15 @@
 
 define(function(require, exports, module) {
     var kityminder = {
-        version: require('./core/minder').version
+        version: '1.4.2'
     };
 
     // 核心导出，大写的部分导出类，小写的部分简单 require 一下
     // 这里顺序是有讲究的，调整前先弄清楚依赖关系。
     require('./core/utils');
     kityminder.Minder = require('./core/minder');
+    kityminder.Minder.version = kityminder.version;
+    
     kityminder.Command = require('./core/command');
     kityminder.Node = require('./core/node');
     require('./core/option');
