@@ -138,6 +138,9 @@ define(function(require, exports, module) {
                     this.data[key] = data[key];
                 }
             }
+            else if (value === undefined) {
+	            delete this.data[key];
+            }
             else {
                 this.data[key] = value;
             }
