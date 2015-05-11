@@ -1,6 +1,6 @@
 /*!
  * ====================================================
- * kityminder - v1.4.3 - 2015-05-08
+ * kityminder - v1.4.3 - 2015-05-11
  * https://github.com/fex-team/kityminder-core
  * GitHub: https://github.com/fex-team/kityminder-core.git 
  * Copyright (c) 2015 Baidu FEX; Licensed MIT
@@ -1992,6 +1992,8 @@ _p[20] = {
                     for (key in data) if (data.hasOwnProperty(key)) {
                         this.data[key] = data[key];
                     }
+                } else if (value === undefined) {
+                    delete this.data[key];
                 } else {
                     this.data[key] = value;
                 }
