@@ -148,7 +148,7 @@ define(function(require, exports, module) {
         dataType: 'markdown',
 
         encode: function(json) {
-            return encode(json);
+            return encode(json.root);
         },
 
         decode: function(markdown) {

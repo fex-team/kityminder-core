@@ -83,7 +83,7 @@ define(function(require, exports, module) {
         mineType: 'text/plain',
 
         encode: function(json) {
-            return encode(json, 0);
+            return encode(json.root, 0);
         },
 
         decode: function(local) {
