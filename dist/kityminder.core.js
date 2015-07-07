@@ -1,6 +1,6 @@
 /*!
  * ====================================================
- * kityminder - v1.4.1 - 2015-04-23
+ * kityminder - v1.4.1 - 2015-07-07
  * https://github.com/fex-team/kityminder-core
  * GitHub: https://github.com/fex-team/kityminder-core.git 
  * Copyright (c) 2015 Baidu FEX; Licensed MIT
@@ -7332,7 +7332,7 @@ _p[62] = {
             mineType: "text/markdown",
             dataType: "markdown",
             encode: function(json) {
-                return encode(json);
+                return encode(json.root);
             },
             decode: function(markdown) {
                 return decode(markdown);
@@ -7558,7 +7558,7 @@ _p[65] = {
             dataType: "text",
             mineType: "text/plain",
             encode: function(json) {
-                return encode(json, 0);
+                return encode(json.root, 0);
             },
             decode: function(local) {
                 return decode(local);
