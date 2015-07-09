@@ -194,7 +194,7 @@ define(function(require, exports, module) {
             // 导入前抛事件
             this._fire(new MinderEvent('beforeimport', params));
 
-            return Promise.resolve(protocol.decode(data, this, option)).then(function(json) {
+            return protocol.decode(data, this, option).then(function(json) {
                 minder.importJson(json);
                 return json;
             });
