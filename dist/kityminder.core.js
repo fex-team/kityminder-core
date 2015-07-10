@@ -690,6 +690,12 @@ _p[11] = {
         var protocols = {};
         function registerProtocol(name, protocol) {
             protocols[name] = protocol;
+            for (var pname in protocols) {
+                if (protocols.hasOwnProperty(pname)) {
+                    protocols[pname] = protocols[pname];
+                    protocols[pname].name = pname;
+                }
+            }
         }
         function getRegisterProtocol(name) {
             return name === undefined ? protocols : protocols[name] || null;
@@ -7202,7 +7208,7 @@ _p[61] = {
         data.registerProtocol("json", module.exports = {
             fileDescription: "KityMinder 格式",
             fileExtension: ".km",
-            dataType: "json",
+            dataType: "text",
             mineType: "application/json",
             encode: function(json) {
                 return JSON.stringify(json);
@@ -7334,7 +7340,7 @@ _p[62] = {
             fileDescription: "Markdown/GFM 格式",
             fileExtension: ".md",
             mineType: "text/markdown",
-            dataType: "markdown",
+            dataType: "text",
             encode: function(json) {
                 return encode(json.root);
             },
@@ -7453,7 +7459,7 @@ _p[63] = {
             fileDescription: "PNG 图片",
             fileExtension: ".png",
             mineType: "image/png",
-            dataType: "png",
+            dataType: "base64",
             encode: encode
         });
     }
@@ -7467,7 +7473,7 @@ _p[64] = {
             fileDescription: "SVG 矢量图",
             fileExtension: ".svg",
             mineType: "image/svg+xml",
-            dataType: "svg",
+            dataType: "text",
             encode: function(json, minder) {
                 var paper = minder.getPaper(), paperTransform = paper.shapeNode.getAttribute("transform"), svgXml, svgContainer, svgDom, renderContainer = minder.getRenderContainer(), renderBox = renderContainer.getRenderBox(), transform = renderContainer.getTransform(), width = renderBox.width, height = renderBox.height, padding = 20;
                 paper.shapeNode.setAttribute("transform", "translate(0.5, 0.5)");

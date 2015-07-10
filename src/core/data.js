@@ -11,6 +11,13 @@ define(function(require, exports, module) {
 
     function registerProtocol(name, protocol) {
         protocols[name] = protocol;
+
+        for (var pname in protocols) {
+            if (protocols.hasOwnProperty(pname)) {
+                protocols[pname] = protocols[pname];
+                protocols[pname].name = pname;
+            }
+        }
     }
 
     function getRegisterProtocol(name) {

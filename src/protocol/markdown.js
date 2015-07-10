@@ -145,7 +145,7 @@ define(function(require, exports, module) {
         fileDescription: 'Markdown/GFM 格式',
         fileExtension: '.md',
         mineType: 'text/markdown',
-        dataType: 'markdown',
+        dataType: 'text',
 
         encode: function(json) {
             return encode(json.root);

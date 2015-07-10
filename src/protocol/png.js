@@ -146,7 +146,7 @@ define(function(require, exports, module) {
         fileDescription: 'PNG 图片',
         fileExtension: '.png',
         mineType: 'image/png',
-        dataType: 'png',
+        dataType: 'base64',
         encode: encode
     });
 });

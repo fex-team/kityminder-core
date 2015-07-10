@@ -5,7 +5,7 @@ define(function(require, exports, module) {
         fileDescription: 'SVG 矢量图',
         fileExtension: '.svg',
         mineType: 'image/svg+xml',
-        dataType: 'svg',
+        dataType: 'text',
 
         encode: function(json, minder) {
 

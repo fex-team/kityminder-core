@@ -4,7 +4,7 @@ define(function(require, exports, module) {
     data.registerProtocol('json', module.exports = {
         fileDescription: 'KityMinder 格式',
         fileExtension: '.km',
-        dataType: 'json',
+        dataType: 'text',
         mineType: 'application/json',
 
         encode: function(json) {
