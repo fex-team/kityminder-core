@@ -1,6 +1,6 @@
 /*!
  * ====================================================
- * kityminder - v1.4.1 - 2015-07-09
+ * kityminder - v1.4.1 - 2015-07-10
  * https://github.com/fex-team/kityminder-core
  * GitHub: https://github.com/fex-team/kityminder-core.git 
  * Copyright (c) 2015 Baidu FEX; Licensed MIT
@@ -691,7 +691,11 @@ _p[11] = {
         function registerProtocol(name, protocol) {
             protocols[name] = protocol;
         }
+        function getRegisterProtocol(name) {
+            return name === undefined ? protocols : protocols[name] || null;
+        }
         exports.registerProtocol = registerProtocol;
+        exports.getRegisterProtocol = getRegisterProtocol;
         // 导入导出
         kity.extendClass(Minder, {
             // 自动导入
@@ -841,7 +845,7 @@ _p[11] = {
                 };
                 // 导入前抛事件
                 this._fire(new MinderEvent("beforeimport", params));
-                return protocol.decode(data, this, option).then(function(json) {
+                return Promise.resolve(protocol.decode(data, this, option)).then(function(json) {
                     minder.importJson(json);
                     return json;
                 });

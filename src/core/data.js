@@ -12,7 +12,13 @@ define(function(require, exports, module) {
     function registerProtocol(name, protocol) {
         protocols[name] = protocol;
     }
+
+    function getRegisterProtocol(name) {
+        return name === undefined ? protocols : (protocols[name] || null);
+    }
+
     exports.registerProtocol = registerProtocol;
+    exports.getRegisterProtocol = getRegisterProtocol;
 
     // 导入导出
     kity.extendClass(Minder, {
@@ -194,7 +200,7 @@ define(function(require, exports, module) {
             // 导入前抛事件
             this._fire(new MinderEvent('beforeimport', params));
 
-            return protocol.decode(data, this, option).then(function(json) {
+            return Promise.resolve(protocol.decode(data, this, option)).then(function(json) {
                 minder.importJson(json);
                 return json;
             });
