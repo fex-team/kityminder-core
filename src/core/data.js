@@ -178,7 +178,7 @@ define(function(require, exports, module) {
         /**
          * @method importData()
          * @for Minder
-         * @description 使用指定的数据协议，导出脑图数据
+         * @description 使用指定的数据协议，导入脑图数据，覆盖当前实例的脑图
          *
          * @grammar importData(protocol, callback) => Promise<json>
          *
@@ -209,6 +209,43 @@ define(function(require, exports, module) {
 
             return Promise.resolve(protocol.decode(data, this, option)).then(function(json) {
                 minder.importJson(json);
+                return json;
+            });
+        },
+
+        /**
+         * @method decodeData()
+         * @for Minder
+         * @description 使用指定的数据协议，解析为脑图数据，与 importData 的区别在于：不覆盖当前实例的脑图
+         *
+         * @grammar decodeData(protocol, callback) => Promise<json>
+         *
+         * @param {string} protocol 指定的用于解析数据的数据协议（默认内置三种数据协议 `json`、`text` 和 `markdown` 的支持）
+         * @param {any} data 要导入的数据
+         */
+        decodeData: function(protocolName, data, option) {
+            var json, protocol;
+            var minder = this;
+
+            // 指定了协议进行导入，需要检测协议是否支持
+            if (protocolName) {
+                protocol = protocols[protocolName];
+
+                if (!protocol || !protocol.decode) {
+                    return Promise.reject(new Error('Not supported protocol:' + protocolName));
+                }
+            }
+
+            var params = {
+                local: data,
+                protocolName: protocolName,
+                protocol: protocol
+            };
+
+            // 导入前抛事件
+            this._fire(new MinderEvent('beforeimport', params));
+
+            return Promise.resolve(protocol.decode(data, this, option)).then(function(json) {
                 return json;
             });
         }

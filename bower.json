@@ -2,7 +2,7 @@
     "name": "kityminder-core",
     "title": "Kity Minder Core",
     "description": "Powerful online mind graphic visualization and editor (command based)",
-    "version": "1.4.10",
+    "version": "1.4.11",
     "main": [
         "release/kityminder.core.min.js",
         "release/kityminder.core.css"
