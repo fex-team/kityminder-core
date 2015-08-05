@@ -20,6 +20,15 @@ define(function(require, exports, module) {
             var children = child.children.map(function(node) {
                 return node.clone();
             });
+
+            /*
+            * fixed bug: Modified on 2015.08.05
+            * 原因：粘贴递归 append 时没有清空原来父节点的子节点，而父节点被复制的时候，是连同子节点一起复制过来的
+            * 解决办法：增加了下面这一行代码
+            * by: @zhangbobell zhangbobell@163.com
+            */
+            child.clearChildren();
+
             for (var i = 0, ci;
                 (ci = children[i]); i++) {
                 appendChildNode(child, ci);
