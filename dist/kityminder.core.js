@@ -1801,7 +1801,7 @@ _p[18] = {
                 this.fire("finishInitHook");
             }
         });
-        Minder.version = "1.4.1";
+        Minder.version = "1.4.15";
         Minder.registerInitHook = function(hook) {
             _initHooks.push(hook);
         };
