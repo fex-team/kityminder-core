@@ -311,7 +311,7 @@ define(function(require, exports, module) {
                         this.execCommand('camera', this.getRoot(), 800);
                     }
                 },
-                'paperrender': function() {
+                'paperrender finishInitHook': function() {
                     this.execCommand('camera', null, 0);
                     this._lastClientSize = {
                         width: this.getRenderTarget().clientWidth,

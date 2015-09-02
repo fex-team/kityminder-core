@@ -1,6 +1,6 @@
 /*!
  * ====================================================
- * kityminder - v1.4.1 - 2015-08-05
+ * kityminder - v1.4.1 - 2015-09-02
  * https://github.com/fex-team/kityminder-core
  * GitHub: https://github.com/fex-team/kityminder-core.git 
  * Copyright (c) 2015 Baidu FEX; Licensed MIT
@@ -1798,7 +1798,7 @@ _p[18] = {
                         initHook.call(this, this._options);
                     }
                 }
-                this.fire("ready");
+                this.fire("finishInitHook");
             }
         });
         Minder.version = "1.4.1";
@@ -7010,7 +7010,7 @@ _p[59] = {
                             this.execCommand("camera", this.getRoot(), 800);
                         }
                     },
-                    paperrender: function() {
+                    "paperrender finishInitHook": function() {
                         this.execCommand("camera", null, 0);
                         this._lastClientSize = {
                             width: this.getRenderTarget().clientWidth,

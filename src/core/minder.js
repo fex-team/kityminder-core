@@ -26,7 +26,7 @@ define(function(require, exports, module) {
                 }
             }
 
-            this.fire('ready');
+            this.fire('finishInitHook');
         }
     });
 
