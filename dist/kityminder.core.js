@@ -7011,6 +7011,9 @@ _p[59] = {
                         }
                     },
                     "paperrender finishInitHook": function() {
+                        if (!this.getRenderTarget()) {
+                            return;
+                        }
                         this.execCommand("camera", null, 0);
                         this._lastClientSize = {
                             width: this.getRenderTarget().clientWidth,
