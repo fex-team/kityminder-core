@@ -1,6 +1,6 @@
 /*!
  * ====================================================
- * kityminder - v1.4.1 - 2015-09-02
+ * kityminder - v1.4.1 - 2015-09-06
  * https://github.com/fex-team/kityminder-core
  * GitHub: https://github.com/fex-team/kityminder-core.git 
  * Copyright (c) 2015 Baidu FEX; Licensed MIT
@@ -1801,7 +1801,7 @@ _p[18] = {
                 this.fire("finishInitHook");
             }
         });
-        Minder.version = "1.4.15";
+        Minder.version = "1.4.16";
         Minder.registerInitHook = function(hook) {
             _initHooks.push(hook);
         };
