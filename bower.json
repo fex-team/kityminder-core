@@ -4,8 +4,8 @@
     "description": "Powerful online mind graphic visualization and editor (command based)",
     "version": "1.4.15",
     "main": [
-        "release/kityminder.core.min.js",
-        "release/kityminder.core.css"
+        "dist/kityminder.core.min.js",
+        "dist/kityminder.core.css"
     ],
     "keywords": ["kityminder", "kity", "svg"],
     "homepage": "https://github.com/fex-team/kityminder-core",
