@@ -334,6 +334,11 @@ define(function(require, exports, module) {
                 'selectionchange layoutallfinish': function(e) {
                     var selected = this.getSelectedNode();
 
+                    /*
+                    * Added by zhangbobell 2015.9.9
+                    * windows 10 的 edge 浏览器在全部动画停止后，优先级图标不显示 text，
+                    * 因此再次触发一次 render 事件，让浏览器重绘
+                    * */
                     if (kity.Browser.edge) {
                         this.fire('paperrender');
                     }
