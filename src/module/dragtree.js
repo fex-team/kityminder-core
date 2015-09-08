@@ -281,6 +281,14 @@ define(function(require, exports, module) {
             this._minder.getRenderContainer().addShape(this);
         },
 
+        /**
+         * 通过 judge 函数判断 targetBox 和 sourceBox 的位置交叉关系
+         * @param targets -- 目标节点
+         * @param targetBoxMapper -- 目标节点与对应 Box 的映射关系
+         * @param judge -- 判断函数
+         * @returns {*}
+         * @private
+         */
         _boxTest: function(targets, targetBoxMapper, judge) {
             var sourceBoxes = this._dragSources.map(function(source) {
                 return source.getLayoutBox();
@@ -318,8 +326,17 @@ define(function(require, exports, module) {
                     return box.width * box.height;
                 }
                 if (!intersectBox) return false;
-                // 面积判断
+                /*
+                * Added by zhangbobell, 2015.9.8
+                *
+                * 增加了下面一行判断，修复了循环比较中 targetBox 为折叠节点时，intersetBox 面积为 0，
+                * 而 targetBox 的 width 和 height 均为 0
+                * 此时造成了满足以下的第二个条件而返回 true
+                * */
+                if (!!area(intersectBox)) return false;
+                // 面积判断，交叉面积大于其中的一半
                 if (area(intersectBox) > 0.5 * Math.min(area(sourceBox), area(targetBox))) return true;
+                // 有一个边完全重合的情况，也认为两个是交叉的
                 if (intersectBox.width + 1 >= Math.min(sourceBox.width, targetBox.width)) return true;
                 if (intersectBox.height + 1 >= Math.min(sourceBox.height, targetBox.height)) return true;
                 return false;
