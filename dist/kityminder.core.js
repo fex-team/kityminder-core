@@ -1,6 +1,6 @@
 /*!
  * ====================================================
- * kityminder - v1.4.1 - 2015-09-08
+ * kityminder - v1.4.18 - 2015-09-09
  * https://github.com/fex-team/kityminder-core
  * GitHub: https://github.com/fex-team/kityminder-core.git 
  * Copyright (c) 2015 Baidu FEX; Licensed MIT
@@ -1801,7 +1801,7 @@ _p[18] = {
                 this.fire("finishInitHook");
             }
         });
-        Minder.version = "1.4.17";
+        Minder.version = "1.4.18";
         Minder.registerInitHook = function(hook) {
             _initHooks.push(hook);
         };
@@ -4642,7 +4642,7 @@ _p[43] = {
                 * 而 targetBox 的 width 和 height 均为 0
                 * 此时造成了满足以下的第二个条件而返回 true
                 * */
-                    if (!!area(intersectBox)) return false;
+                    if (!area(intersectBox)) return false;
                     // 面积判断，交叉面积大于其中的一半
                     if (area(intersectBox) > .5 * Math.min(area(sourceBox), area(targetBox))) return true;
                     // 有一个边完全重合的情况，也认为两个是交叉的
@@ -6660,10 +6660,109 @@ _p[58] = {
         var Command = _p.r(8);
         var Module = _p.r(19);
         var Renderer = _p.r(26);
+        /**
+     * 针对不同系统、不同浏览器、不同字体做居中兼容性处理
+     * 暂时未增加Linux的处理
+     */
         var FONT_ADJUST = {
-            "微软雅黑,Microsoft YaHei": -.15,
-            "arial black,avant garde": -.17,
-            "default": -.15
+            safari: {
+                "微软雅黑,Microsoft YaHei": -.17,
+                "楷体,楷体_GB2312,SimKai": -.1,
+                "隶书, SimLi": -.1,
+                "comic sans ms": -.23,
+                "impact,chicago": -.15,
+                "times new roman": -.1,
+                "arial black,avant garde": -.17,
+                "default": -.15
+            },
+            ie: {
+                10: {
+                    "微软雅黑,Microsoft YaHei": -.17,
+                    "comic sans ms": -.17,
+                    "impact,chicago": -.08,
+                    "times new roman": .04,
+                    "arial black,avant garde": -.17,
+                    "default": -.15
+                },
+                11: {
+                    "微软雅黑,Microsoft YaHei": -.17,
+                    "arial,helvetica,sans-serif": -.17,
+                    "comic sans ms": -.17,
+                    "impact,chicago": -.08,
+                    "times new roman": .04,
+                    "sans-serif": -.16,
+                    "arial black,avant garde": -.17,
+                    "default": -.15
+                }
+            },
+            edge: {
+                "微软雅黑,Microsoft YaHei": -.15,
+                "arial,helvetica,sans-serif": -.17,
+                "comic sans ms": -.17,
+                "impact,chicago": -.08,
+                "sans-serif": -.16,
+                "arial black,avant garde": -.17,
+                "default": -.15
+            },
+            sg: {
+                "微软雅黑,Microsoft YaHei": -.15,
+                "arial,helvetica,sans-serif": -.05,
+                "comic sans ms": -.22,
+                "impact,chicago": -.16,
+                "times new roman": -.03,
+                "arial black,avant garde": -.22,
+                "default": -.15
+            },
+            chrome: {
+                Mac: {
+                    "andale mono": -.05,
+                    "comic sans ms": -.3,
+                    "impact,chicago": -.13,
+                    "times new roman": -.1,
+                    "arial black,avant garde": -.17,
+                    "default": 0
+                },
+                Win: {
+                    "微软雅黑,Microsoft YaHei": -.15,
+                    "arial,helvetica,sans-serif": -.02,
+                    "arial black,avant garde": -.2,
+                    "comic sans ms": -.2,
+                    "impact,chicago": -.12,
+                    "times new roman": -.02,
+                    "default": -.15
+                },
+                Lux: {
+                    "微软雅黑,Microsoft YaHei": -.15,
+                    "arial black,avant garde": -.17,
+                    "default": -.15
+                }
+            },
+            firefox: {
+                Mac: {
+                    "微软雅黑,Microsoft YaHei": -.2,
+                    "宋体,SimSun": -.15,
+                    "comic sans ms": -.2,
+                    "impact,chicago": -.15,
+                    "arial black,avant garde": -.17,
+                    "default": -.15
+                },
+                Win: {
+                    "微软雅黑,Microsoft YaHei": -.16,
+                    "andale mono": -.17,
+                    "arial,helvetica,sans-serif": -.17,
+                    "comic sans ms": -.22,
+                    "impact,chicago": -.23,
+                    "times new roman": -.22,
+                    "sans-serif": -.22,
+                    "arial black,avant garde": -.17,
+                    "default": -.16
+                },
+                Lux: {
+                    "微软雅黑,Microsoft YaHei": -.15,
+                    "arial black,avant garde": -.17,
+                    "default": -.15
+                }
+            }
         };
         var TextRenderer = kity.createClass("TextRenderer", {
             base: Renderer,
@@ -6681,10 +6780,25 @@ _p[58] = {
                 var fontFamily = getDataOrStyle("font-family") || "default";
                 var height = lineHeight * fontSize * textArr.length - (lineHeight - 1) * fontSize;
                 var yStart = -height / 2;
-                if (kity.Browser.ie) {
-                    var adjust = FONT_ADJUST[fontFamily] || 0;
-                    textGroup.setTranslate(0, adjust * fontSize);
+                var Browser = kity.Browser;
+                var adjust;
+                if (Browser.chrome || Browser.opera || Browser.bd || Browser.lb === "chrome") {
+                    adjust = FONT_ADJUST["chrome"][Browser.platform][fontFamily];
+                } else if (Browser.gecko) {
+                    adjust = FONT_ADJUST["firefox"][Browser.platform][fontFamily];
+                } else if (Browser.sg) {
+                    adjust = FONT_ADJUST["sg"][fontFamily];
+                } else if (Browser.safari) {
+                    adjust = FONT_ADJUST["safari"][fontFamily];
+                } else if (Browser.ie) {
+                    adjust = FONT_ADJUST["ie"][Browser.version][fontFamily];
+                } else if (Browser.edge) {
+                    adjust = FONT_ADJUST["edge"][fontFamily];
+                } else if (Browser.lb) {
+                    // 猎豹浏览器的ie内核兼容性模式下
+                    adjust = .9;
                 }
+                textGroup.setTranslate(0, (adjust || 0) * fontSize);
                 var rBox = new kity.Box(), r = Math.round;
                 this.setTextStyle(node, textGroup);
                 var textLength = textArr.length;
@@ -6698,7 +6812,7 @@ _p[58] = {
                     var growth = textLength - textGroupLength;
                     while (growth--) {
                         textShape = new kity.Text().setAttr("text-rendering", "inherit");
-                        if (kity.Browser.ie) {
+                        if (kity.Browser.ie || kity.Browser.edge) {
                             textShape.setVerticalAlign("top");
                         } else {
                             textShape.setAttr("dominant-baseline", "text-before-edge");
@@ -6708,7 +6822,7 @@ _p[58] = {
                 }
                 for (i = 0, text, textShape; text = textArr[i], textShape = textGroup.getItem(i); i++) {
                     textShape.setContent(text);
-                    if (kity.Browser.ie) {
+                    if (kity.Browser.ie || kity.Browser.edge) {
                         textShape.fixPosition();
                     }
                 }
@@ -7047,6 +7161,9 @@ _p[59] = {
                     },
                     "selectionchange layoutallfinish": function(e) {
                         var selected = this.getSelectedNode();
+                        if (kity.Browser.edge) {
+                            this.fire("paperrender");
+                        }
                         if (!selected) return;
                         var dragger = this._viewDragger;
                         var view = dragger.getView();

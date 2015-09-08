@@ -334,6 +334,10 @@ define(function(require, exports, module) {
                 'selectionchange layoutallfinish': function(e) {
                     var selected = this.getSelectedNode();
 
+                    if (kity.Browser.edge) {
+                        this.fire('paperrender');
+                    }
+
                     if (!selected) return;
 
                     var dragger = this._viewDragger;
@@ -360,6 +364,8 @@ define(function(require, exports, module) {
                     if (dx || dy) {
                         dragger.move(new kity.Point(dx, dy));
                     }
+
+
                 }
             }
         };
