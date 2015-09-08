@@ -333,7 +333,7 @@ define(function(require, exports, module) {
                 * 而 targetBox 的 width 和 height 均为 0
                 * 此时造成了满足以下的第二个条件而返回 true
                 * */
-                if (!!area(intersectBox)) return false;
+                if (!area(intersectBox)) return false;
                 // 面积判断，交叉面积大于其中的一半
                 if (area(intersectBox) > 0.5 * Math.min(area(sourceBox), area(targetBox))) return true;
                 // 有一个边完全重合的情况，也认为两个是交叉的
