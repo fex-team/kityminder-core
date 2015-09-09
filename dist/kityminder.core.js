@@ -1,6 +1,6 @@
 /*!
  * ====================================================
- * kityminder - v1.4.18 - 2015-09-09
+ * kityminder - v1.4.19 - 2015-09-09
  * https://github.com/fex-team/kityminder-core
  * GitHub: https://github.com/fex-team/kityminder-core.git 
  * Copyright (c) 2015 Baidu FEX; Licensed MIT
@@ -1801,7 +1801,7 @@ _p[18] = {
                 this.fire("finishInitHook");
             }
         });
-        Minder.version = "1.4.18";
+        Minder.version = "1.4.19";
         Minder.registerInitHook = function(hook) {
             _initHooks.push(hook);
         };
@@ -6662,7 +6662,6 @@ _p[58] = {
         var Renderer = _p.r(26);
         /**
      * 针对不同系统、不同浏览器、不同字体做居中兼容性处理
-     * 暂时未增加Linux的处理
      */
         var FONT_ADJUST = {
             safari: {
@@ -6732,9 +6731,12 @@ _p[58] = {
                     "default": -.15
                 },
                 Lux: {
-                    "微软雅黑,Microsoft YaHei": -.15,
+                    "andale mono": -.05,
+                    "comic sans ms": -.3,
+                    "impact,chicago": -.13,
+                    "times new roman": -.1,
                     "arial black,avant garde": -.17,
-                    "default": -.15
+                    "default": 0
                 }
             },
             firefox: {
@@ -6758,9 +6760,7 @@ _p[58] = {
                     "default": -.16
                 },
                 Lux: {
-                    "微软雅黑,Microsoft YaHei": -.15,
-                    "arial black,avant garde": -.17,
-                    "default": -.15
+                    "宋体,SimSun": -.02
                 }
             }
         };
@@ -7161,6 +7161,11 @@ _p[59] = {
                     },
                     "selectionchange layoutallfinish": function(e) {
                         var selected = this.getSelectedNode();
+                        /*
+                    * Added by zhangbobell 2015.9.9
+                    * windows 10 的 edge 浏览器在全部动画停止后，优先级图标不显示 text，
+                    * 因此再次触发一次 render 事件，让浏览器重绘
+                    * */
                         if (kity.Browser.edge) {
                             this.fire("paperrender");
                         }
