@@ -9,7 +9,6 @@ define(function(require, exports, module) {
     var Renderer = require('../core/render');
     /**
      * 针对不同系统、不同浏览器、不同字体做居中兼容性处理
-     * 暂时未增加Linux的处理
      */
     var FONT_ADJUST = {
         'safari': {
@@ -79,9 +78,12 @@ define(function(require, exports, module) {
                 'default': -0.15
             },
             'Lux': {
-                '微软雅黑,Microsoft YaHei': -0.15,
+                'andale mono': -0.05,
+                'comic sans ms': -0.3,
+                'impact,chicago': -0.13,
+                'times new roman': -0.1,
                 'arial black,avant garde': -0.17,
-                'default': -0.15
+                'default': 0   
             }
         },
         'firefox': {
@@ -105,9 +107,7 @@ define(function(require, exports, module) {
                 'default': -0.16
             },
             'Lux': {
-                '微软雅黑,Microsoft YaHei': -0.15,
-                'arial black,avant garde': -0.17,
-                'default': -0.15
+                '宋体,SimSun': -0.02 
             }
         }
     };
