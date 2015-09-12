@@ -10,6 +10,7 @@
 define(function(require, exports, module) {
     var kity = require('./kity');
     var Minder = require('./minder');
+    var MinderEvent = require('./event');
 
     Minder.registerInitHook(function(options) {
         if (options.readOnly) {
@@ -39,6 +40,14 @@ define(function(require, exports, module) {
                 return null;
             };
             this.setStatus('readonly');
+
+            /* Added by zhangbobell 2015.9.12
+            * 为了能够在只读的状态下去掉外层 receiver 和 hotbox
+            * 需要触发一个 readonly 事件
+            * */
+
+            this._fire(new MinderEvent("readonly"));
+
             me._interactChange();
         },
 
