@@ -1,6 +1,6 @@
 /*!
  * ====================================================
- * kityminder - v1.4.19 - 2015-09-09
+ * kityminder - v1.4.20 - 2015-09-14
  * https://github.com/fex-team/kityminder-core
  * GitHub: https://github.com/fex-team/kityminder-core.git 
  * Copyright (c) 2015 Baidu FEX; Licensed MIT
@@ -1801,7 +1801,7 @@ _p[18] = {
                 this.fire("finishInitHook");
             }
         });
-        Minder.version = "1.4.19";
+        Minder.version = "1.4.20";
         Minder.registerInitHook = function(hook) {
             _initHooks.push(hook);
         };
@@ -2661,6 +2661,7 @@ _p[25] = {
     value: function(require, exports, module) {
         var kity = _p.r(16);
         var Minder = _p.r(18);
+        var MinderEvent = _p.r(12);
         Minder.registerInitHook(function(options) {
             if (options.readOnly) {
                 this.setDisabled();
@@ -2687,6 +2688,11 @@ _p[25] = {
                     return null;
                 };
                 this.setStatus("readonly");
+                /* Added by zhangbobell 2015.9.12
+            * 为了能够在只读的状态下去掉外层 receiver 和 hotbox
+            * 需要触发一个 readonly 事件
+            * */
+                this._fire(new MinderEvent("readonly"));
                 me._interactChange();
             },
             enable: function() {
@@ -7173,23 +7179,20 @@ _p[59] = {
                         var dragger = this._viewDragger;
                         var view = dragger.getView();
                         var focus = selected.getLayoutBox();
-                        var space = 150;
-                        var tolerance = 150;
+                        var space = 50;
                         var dx = 0, dy = 0;
-                        if (focus.right > view.right - tolerance) {
+                        if (focus.right > view.right) {
                             dx += view.right - focus.right - space;
-                        } else if (focus.left < view.left + tolerance) {
+                        } else if (focus.left < view.left) {
                             dx += view.left - focus.left + space;
                         }
-                        if (focus.bottom > view.bottom - tolerance) {
+                        if (focus.bottom > view.bottom) {
                             dy += view.bottom - focus.bottom - space;
                         }
-                        if (focus.top < view.top + tolerance) {
+                        if (focus.top < view.top) {
                             dy += view.top - focus.top + space;
                         }
-                        if (dx || dy) {
-                            dragger.move(new kity.Point(dx, dy));
-                        }
+                        if (dx || dy) dragger.move(new kity.Point(dx, dy), 100);
                     }
                 }
             };
