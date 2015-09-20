@@ -5,20 +5,26 @@ define(function(require, exports, module) {
 
     var DomURL = window.URL || window.webkitURL || window;
 
-    function loadImage(url, callback) {
+    function loadImage(info, callback) {
         return new Promise(function(resolve, reject) {
-            var image = document.createElement('img');
+            var image = document.createElement("img");
             image.onload = function() {
-                resolve(this);
+                resolve({
+                    element: this,
+                    x: info.x,
+                    y: info.y,
+                    width: info.width,
+                    height: info.height
+                });
             };
             image.onerror = function(err) {
                 reject(err);
             };
+            //image.setAttribute('crossOrigin', 'anonymous');
             image.crossOrigin = '';
-            image.src = url;
+            image.src = info.url;
         });
     }
-
     function getSVGInfo(minder) {
         var paper = minder.getPaper(),
             paperTransform,
@@ -74,11 +80,41 @@ define(function(require, exports, module) {
 
         //svgUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgXml);
 
+        var allNodes = minder.getAllNode();
+        var imagesInfo = [];
+
+        for(var i = 0; i < allNodes.length; i++) {
+            var nodeData = allNodes[i].data;
+
+            if (nodeData.image) {
+                /*
+                * 导出之前渲染这个节点，否则取出的 contentBox 不对
+                * by zhangbobell
+                * */
+                minder.renderNode(allNodes[i]);
+                var imageUrl = nodeData.image;
+                var imageSize = nodeData.imageSize;
+
+                var imageRenderBox = allNodes[i].getRenderBox('ImageRenderer', minder.getRenderContainer());
+
+                var imageInfo = {
+                    url: imageUrl,
+                    width: imageSize.width,
+                    height: imageSize.height,
+                    x: -renderContainer.getBoundaryBox().x + imageRenderBox.x + 20,
+                    y: -renderContainer.getBoundaryBox().y + imageRenderBox.y + 20
+                };
+
+                imagesInfo.push(imageInfo);
+            }
+        }
+
         return {
             width: width,
             height: height,
             dataUrl: svgUrl,
-            xml: svgXml
+            xml: svgXml,
+            imagesInfo: imagesInfo
         };
     }
 
@@ -87,13 +123,15 @@ define(function(require, exports, module) {
 
         var resultCallback;
 
+        var Promise = kityminder.Promise;
+
         /* 绘制 PNG 的画布及上下文 */
         var canvas = document.createElement('canvas');
         var ctx = canvas.getContext('2d');
 
         /* 尝试获取背景图片 URL 或背景颜色 */
         var bgDeclare = minder.getStyle('background').toString();
-        var bgUrl = /url\((.+)\)/.exec(bgDeclare);
+        var bgUrl = /url\(\"(.+)\"\)/.exec(bgDeclare);
         var bgColor = kity.Color.parse(bgDeclare);
 
         /* 获取 SVG 文件内容 */
@@ -101,6 +139,7 @@ define(function(require, exports, module) {
         var width = svgInfo.width;
         var height = svgInfo.height;
         var svgDataUrl = svgInfo.dataUrl;
+        var imagesInfo = svgInfo.imagesInfo;
 
         /* 画布的填充大小 */
         var padding = 20;
@@ -115,25 +154,48 @@ define(function(require, exports, module) {
             ctx.restore();
         }
 
-        function drawImage(ctx, image, x, y) {
-            ctx.drawImage(image, x, y);
+        function drawImage(ctx, image, x, y, width, height) {
+            if (width && height) {
+                ctx.drawImage(image, x, y, width, height);
+            } else {
+                ctx.drawImage(image, x, y);
+            }
         }
 
         function generateDataUrl(canvas) {
-            return canvas.toDataURL('png');
+            return canvas.toDataURL('image/png');
+        }
+
+        // 加载节点上的图片
+        function loadImages(imagesInfo) {
+            var imagePromises = imagesInfo.map(function(imageInfo) {
+                return loadImage(imageInfo);
+            });
+
+            return Promise.all(imagePromises);
         }
 
         function drawSVG() {
-            return loadImage(svgDataUrl).then(function(svgImage) {
-                drawImage(ctx, svgImage, padding, padding);
+            var svgData = {url: svgDataUrl};
+
+            return loadImage(svgData).then(function($image) {
+                drawImage(ctx, $image.element, padding, padding);
+                return loadImages(imagesInfo);
+            }).then(function($images) {
+                for(var i = 0; i < $images.length; i++) {
+                    drawImage(ctx, $images[i].element, $images[i].x, $images[i].y, $images[i].width, $images[i].height);
+                }
+
                 DomURL.revokeObjectURL(svgDataUrl);
+                document.body.appendChild(canvas);
                 return generateDataUrl(canvas);
             });
         }
 
         if (bgUrl) {
-            return loadImage(bgUrl[1]).then(function(image) {
-                fillBackground(ctx, ctx.createPattern(image, 'repeat'));
+            var bgInfo = {url: bgUrl[1]};
+            return loadImage(bgInfo).then(function($image) {
+                fillBackground(ctx, ctx.createPattern($image.element, "repeat"));
                 return drawSVG();
             });
         } else {
@@ -141,12 +203,11 @@ define(function(require, exports, module) {
             return drawSVG();
         }
     }
-
-    data.registerProtocol('png', module.exports = {
-        fileDescription: 'PNG 图片',
-        fileExtension: '.png',
-        mineType: 'image/png',
-        dataType: 'base64',
+    data.registerProtocol("png", module.exports = {
+        fileDescription: "PNG 图片",
+        fileExtension: ".png",
+        mineType: "image/png",
+        dataType: "base64",
         encode: encode
     });
 });

@@ -49,6 +49,34 @@ define(function(require, exports, module) {
         }
     };
 
+    Promise.all = function (arr) {
+        return new Promise(function(resolve, reject) {
+            var len = arr.length,
+                i = 0,
+                res = 0,
+                results = [];
+
+            if (len === 0) {
+                resolve(results);
+            }
+
+            while (i < len) {
+                arr[i].then(
+                    function (result) {
+                        results.push(result);
+                        if (++res === len) {
+                            resolve(results);
+                        }
+                    },
+                    function (val) {
+                        reject(val);
+                    }
+                );
+                i++;
+            }
+        });
+    };
+
     /*  deliver an action  */
     var deliver = function(curr, state, name, value) {
         if (curr.state === STATE_PENDING) {
