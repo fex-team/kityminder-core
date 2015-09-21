@@ -54,6 +54,27 @@ define(function(require, exports, module) {
                     moduleDeals.init.call(me, this._options);
                 }
 
+                /**
+                 * @Desc: 判断是否支持原生clipboard事件，如果支持，则对pager添加其监听
+                 * @Editor: Naixor
+                 * @Date: 2015.9.20
+                 */
+                if (name === 'ClipboardModule' && this.supportClipboardEvent  && !kity.Browser.gecko) {
+                    var on = function () {
+                        var clipBoardReceiver = this.clipBoardReceiver || document;
+                        
+                        if (document.addEventListener) {
+                            clipBoardReceiver.addEventListener.apply(this, arguments);
+                        } else {
+                            arguments[0] = 'on' + arguments[0];
+                            clipBoardReceiver.attachEvent.apply(this, arguments);
+                        }
+                    }
+                    for (var command in moduleDeals.clipBoardEvents) {
+                        on(command, moduleDeals.clipBoardEvents[command]);
+                    }
+                };
+
                 // command加入命令池子
                 dealCommands = moduleDeals.commands;
                 for (name in dealCommands) {
@@ -88,7 +109,6 @@ define(function(require, exports, module) {
                 if (moduleDeals.commandShortcutKeys) {
                     this.addCommandShortcutKeys(moduleDeals.commandShortcutKeys);
                 }
-
             }
         },
 

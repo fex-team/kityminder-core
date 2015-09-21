@@ -1,9 +1,34 @@
 define(function(require, exports, module) {
     var data = require('../core/data');
+    var Browser = require('../core/kity').Browser;
 
+    /**
+     * @Desc: 增加对不容浏览器下节点中文本\t匹配的处理，不同浏览器下\t无法正确匹配，导致无法使用TAB来批量导入节点
+     * @Editor: Naixor
+     * @Date: 2015.9.17
+     */
     var LINE_ENDING = '\r',
         LINE_ENDING_SPLITER = /\r\n|\r|\n/,
-        TAB_CHAR = '\t';
+        TAB_CHAR = '\t',
+        TAB_CHAR = (function(Browser) {
+            if (Browser.gecko) {
+                return {
+                    REGEXP: new RegExp('^(\t|'+ String.fromCharCode(160,160,32,160) +')'),
+                    DELETE: new RegExp('^(\t|'+ String.fromCharCode(160,160,32,160) +')+')
+                }
+            } else if (Browser.ie || Browser.edge) {
+                // ie系列和edge比较特别，\t在div中会被直接转义成SPACE故只好使用SPACE来做处理
+                return {
+                    REGEXP: new RegExp('^('+ String.fromCharCode(32) +'|'+ String.fromCharCode(160) +')'),
+                    DELETE: new RegExp('^('+ String.fromCharCode(32) +'|'+ String.fromCharCode(160) +')+')
+                }
+            } else {
+                return {
+                    REGEXP: /^(\t|\x20\x20\x20\x20)/,
+                    DELETE: /^(\t|\x20\x20\x20\x20)+/
+                }
+            }
+        })(Browser);
 
     function repeat(s, n) {
         var result = '';
@@ -14,7 +39,7 @@ define(function(require, exports, module) {
     function encode(json, level) {
         var local = '';
         level = level || 0;
-        local += repeat(TAB_CHAR, level);
+        local += repeat('\t', level);
         local += json.data.text + LINE_ENDING;
         if (json.children) {
             json.children.forEach(function(child) {
@@ -30,14 +55,18 @@ define(function(require, exports, module) {
 
     function getLevel(line) {
         var level = 0;
-        while (line.charAt(level) === TAB_CHAR) level++;
+        while (TAB_CHAR.REGEXP.test(line)) {
+            line = line.replace(TAB_CHAR.REGEXP, '');
+            level++;
+        }
+        
         return level;
     }
 
     function getNode(line) {
         return {
             data: {
-                text: line.replace(new RegExp('^' + TAB_CHAR + '*'), '')
+                text: line.replace(TAB_CHAR.DELETE, "")
             }
         };
     }

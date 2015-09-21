@@ -7,11 +7,9 @@ define(function(require, exports, module) {
 
     Module.register('ClipboardModule', function() {
         var km = this,
-
             _clipboardNodes = [],
-
             _selectedNodes = [];
-
+        
         function appendChildNode(parent, child) {
             _selectedNodes.push(child);
             km.appendNode(child, parent);
@@ -43,7 +41,7 @@ define(function(require, exports, module) {
             _clipboardNodes = nodes.map(function(node) {
                 return node.clone();
             });
-        }
+        } 
 
         /**
          * @command Copy
@@ -123,17 +121,51 @@ define(function(require, exports, module) {
             }
         });
 
-        return {
-            'commands': {
-                'copy': CopyCommand,
-                'cut': CutCommand,
-                'paste': PasteCommand
-            },
-            'commandShortcutKeys': {
-                'copy': 'normal::ctrl+c|',
-                'cut': 'normal::ctrl+x',
-                'paste': 'normal::ctrl+v'
+        /**
+         * @Desc: 若支持原生clipboadr事件则基于原生扩展，否则使用km的基础事件只处理节点的粘贴复制
+         * @Editor: Naixor
+         * @Date: 2015.9.20
+         */
+        if (km.supportClipboardEvent && !kity.Browser.gecko) {
+            var Copy = function (e) {
+                this.fire('beforeCopy', e);
             }
-        };
+
+            var Cut = function (e) {    
+                this.fire('beforeCut', e);
+            }
+
+            var Paste = function (e) {
+                this.fire('beforePaste', e);
+            }
+
+            return {
+                'commands': {
+                    'copy': CopyCommand,
+                    'cut': CutCommand,
+                    'paste': PasteCommand
+                },
+                'clipBoardEvents': {
+                    'copy': Copy.bind(km),
+                    'cut': Cut.bind(km),
+                    'paste': Paste.bind(km)
+                },
+                sendToClipboard: sendToClipboard
+            };
+        } else {
+            return {
+                'commands': {
+                    'copy': CopyCommand,
+                    'cut': CutCommand,
+                    'paste': PasteCommand
+                },
+                'commandShortcutKeys': {
+                    'copy': 'normal::ctrl+c|',
+                    'cut': 'normal::ctrl+x',
+                    'paste': 'normal::ctrl+v'
+                },
+                sendToClipboard: sendToClipboard
+            };
+        }
     });
 });

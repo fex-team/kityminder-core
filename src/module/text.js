@@ -9,6 +9,7 @@ define(function(require, exports, module) {
     var Renderer = require('../core/render');
     /**
      * 针对不同系统、不同浏览器、不同字体做居中兼容性处理
+     * 暂时未增加Linux的处理
      */
     var FONT_ADJUST = {
         'safari': {
@@ -75,7 +76,7 @@ define(function(require, exports, module) {
                 'comic sans ms': -0.2,
                 'impact,chicago': -0.12,
                 'times new roman': -0.02,
-                'default': -0.15
+                'default': -0.15  
             },
             'Lux': {
                 'andale mono': -0.05,
@@ -89,11 +90,12 @@ define(function(require, exports, module) {
         'firefox': {
             'Mac': {
                 '微软雅黑,Microsoft YaHei': -0.2,
-                '宋体,SimSun': -0.15,
+                '宋体,SimSun': 0.05,
                 'comic sans ms': -0.2,
                 'impact,chicago': -0.15,
                 'arial black,avant garde': -0.17,
-                'default': -0.15
+                'times new roman': -0.1,
+                'default': 0.05
             },
             'Win': {
                 '微软雅黑,Microsoft YaHei': -0.16,
@@ -104,12 +106,12 @@ define(function(require, exports, module) {
                 'times new roman': -0.22,
                 'sans-serif': -0.22,
                 'arial black,avant garde': -0.17,
-                'default': -0.16
+                'default': -0.16 
             },
             'Lux': {
-                '宋体,SimSun': -0.02 
+                '宋体,SimSun': -0.02    
             }
-        }
+        },
     };
 
     var TextRenderer = kity.createClass('TextRenderer', {
@@ -187,7 +189,7 @@ define(function(require, exports, module) {
             }
 
             for (i = 0, text, textShape;
-                 (text = textArr[i], textShape = textGroup.getItem(i)); i++) {
+                (text = textArr[i], textShape = textGroup.getItem(i)); i++) {
                 textShape.setContent(text);
                 if (kity.Browser.ie || kity.Browser.edge) {
                     textShape.fixPosition();

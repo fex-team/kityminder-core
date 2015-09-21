@@ -135,6 +135,15 @@ define(function(require, exports, module) {
         getCommandShortcutKey: function(cmd) {
             var binds = this._commandShortcutKeys;
             return binds && binds[cmd] || null;
-        }
+        },
+        
+        /**
+         * @Desc: 添加一个判断是否支持原生Clipboard的变量，用于对ctrl + v和ctrl + c的处理
+         * @Editor: Naixor
+         * @Date: 2015.9.20
+         */
+        supportClipboardEvent: (function(window) {
+            return !!window.ClipboardEvent;
+        })(window)
     });
 });

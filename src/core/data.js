@@ -78,6 +78,28 @@ define(function(require, exports, module) {
         },
 
         /**
+         * @method importNode()
+         * @description 根据纯json {data, children}数据转换成为脑图节点
+         * @Editor: Naixor
+         * @Date: 2015.9.20
+         */
+        importNode: function(node, json) {
+            var data = json.data;
+            node.data = {};
+
+            for (var field in data) {
+                node.setData(field, data[field]);
+            }
+
+            var childrenTreeData = json.children || [];
+            for (var i = 0; i < childrenTreeData.length; i++) {
+                var childNode = this.createNode(null, node);
+                this.importNode(childNode, childrenTreeData[i]);
+            }
+            return node;
+        },
+
+        /**
          * @method importJson()
          * @for Minder
          * @description 导入脑图数据，数据为 JSON 对象，具体的数据字段形式请参考 [Data](data) 章节。
@@ -87,23 +109,6 @@ define(function(require, exports, module) {
          * @param {plain} json 要导入的数据
          */
         importJson: function(json) {
-
-            function importNode(node, json, km) {
-                var data = json.data;
-                node.data = {};
-
-                for (var field in data) {
-                    node.setData(field, data[field]);
-                }
-
-                var childrenTreeData = json.children || [];
-                for (var i = 0; i < childrenTreeData.length; i++) {
-                    var childNode = km.createNode(null, node);
-                    importNode(childNode, childrenTreeData[i], km);
-                }
-                return node;
-            }
-
             if (!json) return;
 
             /**
@@ -120,7 +125,7 @@ define(function(require, exports, module) {
 
             json = compatibility(json);
 
-            importNode(this._root, json.root, this);
+            this.importNode(this._root, json.root);
 
             this.setTemplate(json.template || 'default');
             this.setTheme(json.theme || null);
