@@ -100,6 +100,95 @@ define(function(require, exports, module) {
         },
 
         /**
+         * function Text2Children(MinderNode, String) 
+         * @param {MinderNode} node 要导入数据的节点
+         * @param {String} text 导入的text数据
+         * @Desc: 用于批量插入子节点，并不会修改被插入的父节点
+         * @Editor: Naixor
+         * @Date: 2015.9.21
+         * @example: 用于批量导入如下类型的节点
+         *      234
+         *      3456346 asadf
+         *          12312414
+         *              wereww
+         *          12314
+         *      1231412
+         *      13123    
+         */
+        Text2Children: function (node, text) {
+            if (!(node instanceof kityminder.Node)) {
+                return;
+                // throw new Error('Json2Children::node is not a kityminder.Node type!');
+            };
+            var children = [],
+                jsonMap = {},
+                level = 0;
+
+            var LINE_SPLITTER = /\r|\n|\r\n/,
+                TAB_REGEXP = /^(\t|\x20{4})/;
+
+            var lines = text.split(LINE_SPLITTER),
+                line = '', jsonNode, i = 0;
+            var minder = this;
+
+            function isEmpty(line) {
+                return line === "" && !/\S/.test(line);
+            }
+
+            function getNode(line) {
+                return {
+                    data: {
+                        text: line.replace(/^(\t|\x20{4})+/, '').replace(/(\t|\x20{4})+$/, '')
+                    },
+                    children: []
+                }
+            }
+
+            function getLevel(text) {
+                var level = 0;
+                while (TAB_REGEXP.test(text)) {
+                    text = text.replace(TAB_REGEXP, '');
+                    level++;
+                }
+                return level;
+            }
+
+            function addChild(parent, node) {
+                parent.children.push(node);
+            }
+
+            function importChildren(node, children) {
+                for (var i = 0, l = children.length; i < l; i++) {
+                    var childNode = minder.createNode(null, node);
+                    childNode.setData('text', children[i].data.text || '');
+                    importChildren(childNode, children[i].children);
+                }
+            }
+
+            while ((line = lines[i++]) !== undefined) {
+                line = line.replace(/&nbsp;/g, '');
+                if (isEmpty(line)) continue;
+
+                level = getLevel(line);
+                jsonNode = getNode(line);
+                if (level === 0) {
+                    jsonMap = {};
+                    children.push(jsonNode);
+                    jsonMap[0] = children[children.length-1];
+                } else {
+                    if (!jsonMap[level-1]) {
+                        throw new Error('Invalid local format');
+                    };
+                    addChild(jsonMap[level-1], jsonNode);
+                    jsonMap[level] = jsonNode;
+                }
+            }
+
+            importChildren(node, children);
+            minder.refresh();
+        },
+        
+        /**
          * @method importJson()
          * @for Minder
          * @description 导入脑图数据，数据为 JSON 对象，具体的数据字段形式请参考 [Data](data) 章节。

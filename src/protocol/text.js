@@ -24,8 +24,8 @@ define(function(require, exports, module) {
                 }
             } else {
                 return {
-                    REGEXP: /^(\t|\x20\x20\x20\x20)/,
-                    DELETE: /^(\t|\x20\x20\x20\x20)+/
+                    REGEXP: /^(\t|\x20{4})/,
+                    DELETE: /^(\t|\x20{4})+/
                 }
             }
         })(Browser);
@@ -105,6 +105,29 @@ define(function(require, exports, module) {
         return json;
     }
 
+    /**
+     * @Desc: 增加一个将当前选中节点转换成text的方法
+     * @Editor: Naixor
+     * @Date: 2015.9.21
+     */
+    function Node2Text(node) {
+        function exportNode(node) {
+            var exported = {};
+            exported.data = node.getData();
+            var childNodes = node.getChildren();
+            exported.children = [];
+            for (var i = 0; i < childNodes.length; i++) {
+                exported.children.push(exportNode(childNodes[i]));
+            }
+            return exported;
+        }
+        if (!node) return;
+        if (/^\s*$/.test(node.data.text)) {
+            node.data.text = "分支主题";
+        }
+        return encode({ root: exportNode(node) });
+    }
+
     data.registerProtocol('text', module.exports = {
         fileDescription: '大纲文本',
         fileExtension: '.txt',
@@ -117,6 +140,10 @@ define(function(require, exports, module) {
 
         decode: function(local) {
             return decode(local);
+        },
+
+        Node2Text: function(node) {
+            return Node2Text(node);
         }
     });
 });
