@@ -125,7 +125,7 @@ define(function(require, exports, module) {
         if (/^\s*$/.test(node.data.text)) {
             node.data.text = "分支主题";
         }
-        return encode({ root: exportNode(node) });
+        return encode(exportNode(node));
     }
 
     data.registerProtocol('text', module.exports = {
