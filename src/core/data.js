@@ -78,28 +78,6 @@ define(function(require, exports, module) {
         },
 
         /**
-         * @method importNode()
-         * @description 根据纯json {data, children}数据转换成为脑图节点
-         * @Editor: Naixor
-         * @Date: 2015.9.20
-         */
-        importNode: function(node, json) {
-            var data = json.data;
-            node.data = {};
-
-            for (var field in data) {
-                node.setData(field, data[field]);
-            }
-
-            var childrenTreeData = json.children || [];
-            for (var i = 0; i < childrenTreeData.length; i++) {
-                var childNode = this.createNode(null, node);
-                this.importNode(childNode, childrenTreeData[i]);
-            }
-            return node;
-        },
-
-        /**
          * function Text2Children(MinderNode, String) 
          * @param {MinderNode} node 要导入数据的节点
          * @param {String} text 导入的text数据
@@ -187,7 +165,46 @@ define(function(require, exports, module) {
             importChildren(node, children);
             minder.refresh();
         },
-        
+
+        /**
+         * @method exportNode(MinderNode)
+         * @param  {MinderNode} node 当前要被导出的节点
+         * @return {Object}      返回只含有data和children的Object
+         * @Editor: Naixor
+         * @Date: 2015.9.22
+         */
+        exportNode: function (node) {
+            var exported = {};
+            exported.data = node.getData();
+            var childNodes = node.getChildren();
+            exported.children = [];
+            for (var i = 0; i < childNodes.length; i++) {
+                exported.children.push(this.exportNode(childNodes[i]));
+            }
+            return exported;
+        },
+        /**
+         * @method importNode()
+         * @description 根据纯json {data, children}数据转换成为脑图节点
+         * @Editor: Naixor
+         * @Date: 2015.9.20
+         */
+        importNode: function(node, json) {
+            var data = json.data;
+            node.data = {};
+
+            for (var field in data) {
+                node.setData(field, data[field]);
+            }
+
+            var childrenTreeData = json.children || [];
+            for (var i = 0; i < childrenTreeData.length; i++) {
+                var childNode = this.createNode(null, node);
+                this.importNode(childNode, childrenTreeData[i]);
+            }
+            return node;
+        },
+
         /**
          * @method importJson()
          * @for Minder
