@@ -1,6 +1,6 @@
 /*!
  * ====================================================
- * kityminder - v1.4.20 - 2015-09-14
+ * kityminder - v1.4.21 - 2015-09-23
  * https://github.com/fex-team/kityminder-core
  * GitHub: https://github.com/fex-team/kityminder-core.git 
  * Copyright (c) 2015 Baidu FEX; Licensed MIT
@@ -747,6 +747,115 @@ _p[11] = {
                 return JSON.parse(JSON.stringify(json));
             },
             /**
+         * function Text2Children(MinderNode, String) 
+         * @param {MinderNode} node 要导入数据的节点
+         * @param {String} text 导入的text数据
+         * @Desc: 用于批量插入子节点，并不会修改被插入的父节点
+         * @Editor: Naixor
+         * @Date: 2015.9.21
+         * @example: 用于批量导入如下类型的节点
+         *      234
+         *      3456346 asadf
+         *          12312414
+         *              wereww
+         *          12314
+         *      1231412
+         *      13123    
+         */
+            Text2Children: function(node, text) {
+                if (!(node instanceof kityminder.Node)) {
+                    return;
+                }
+                var children = [], jsonMap = {}, level = 0;
+                var LINE_SPLITTER = /\r|\n|\r\n/, TAB_REGEXP = /^(\t|\x20{4})/;
+                var lines = text.split(LINE_SPLITTER), line = "", jsonNode, i = 0;
+                var minder = this;
+                function isEmpty(line) {
+                    return line === "" && !/\S/.test(line);
+                }
+                function getNode(line) {
+                    return {
+                        data: {
+                            text: line.replace(/^(\t|\x20{4})+/, "").replace(/(\t|\x20{4})+$/, "")
+                        },
+                        children: []
+                    };
+                }
+                function getLevel(text) {
+                    var level = 0;
+                    while (TAB_REGEXP.test(text)) {
+                        text = text.replace(TAB_REGEXP, "");
+                        level++;
+                    }
+                    return level;
+                }
+                function addChild(parent, node) {
+                    parent.children.push(node);
+                }
+                function importChildren(node, children) {
+                    for (var i = 0, l = children.length; i < l; i++) {
+                        var childNode = minder.createNode(null, node);
+                        childNode.setData("text", children[i].data.text || "");
+                        importChildren(childNode, children[i].children);
+                    }
+                }
+                while ((line = lines[i++]) !== undefined) {
+                    line = line.replace(/&nbsp;/g, "");
+                    if (isEmpty(line)) continue;
+                    level = getLevel(line);
+                    jsonNode = getNode(line);
+                    if (level === 0) {
+                        jsonMap = {};
+                        children.push(jsonNode);
+                        jsonMap[0] = children[children.length - 1];
+                    } else {
+                        if (!jsonMap[level - 1]) {
+                            throw new Error("Invalid local format");
+                        }
+                        addChild(jsonMap[level - 1], jsonNode);
+                        jsonMap[level] = jsonNode;
+                    }
+                }
+                importChildren(node, children);
+                minder.refresh();
+            },
+            /**
+         * @method exportNode(MinderNode)
+         * @param  {MinderNode} node 当前要被导出的节点
+         * @return {Object}      返回只含有data和children的Object
+         * @Editor: Naixor
+         * @Date: 2015.9.22
+         */
+            exportNode: function(node) {
+                var exported = {};
+                exported.data = node.getData();
+                var childNodes = node.getChildren();
+                exported.children = [];
+                for (var i = 0; i < childNodes.length; i++) {
+                    exported.children.push(this.exportNode(childNodes[i]));
+                }
+                return exported;
+            },
+            /**
+         * @method importNode()
+         * @description 根据纯json {data, children}数据转换成为脑图节点
+         * @Editor: Naixor
+         * @Date: 2015.9.20
+         */
+            importNode: function(node, json) {
+                var data = json.data;
+                node.data = {};
+                for (var field in data) {
+                    node.setData(field, data[field]);
+                }
+                var childrenTreeData = json.children || [];
+                for (var i = 0; i < childrenTreeData.length; i++) {
+                    var childNode = this.createNode(null, node);
+                    this.importNode(childNode, childrenTreeData[i]);
+                }
+                return node;
+            },
+            /**
          * @method importJson()
          * @for Minder
          * @description 导入脑图数据，数据为 JSON 对象，具体的数据字段形式请参考 [Data](data) 章节。
@@ -756,19 +865,6 @@ _p[11] = {
          * @param {plain} json 要导入的数据
          */
             importJson: function(json) {
-                function importNode(node, json, km) {
-                    var data = json.data;
-                    node.data = {};
-                    for (var field in data) {
-                        node.setData(field, data[field]);
-                    }
-                    var childrenTreeData = json.children || [];
-                    for (var i = 0; i < childrenTreeData.length; i++) {
-                        var childNode = km.createNode(null, node);
-                        importNode(childNode, childrenTreeData[i], km);
-                    }
-                    return node;
-                }
                 if (!json) return;
                 /**
              * @event preimport
@@ -781,7 +877,7 @@ _p[11] = {
                     this.removeNode(this._root.getChildren()[0]);
                 }
                 json = compatibility(json);
-                importNode(this._root, json.root, this);
+                this.importNode(this._root, json.root);
                 this.setTemplate(json.template || "default");
                 this.setTheme(json.theme || null);
                 this.refresh();
@@ -1801,7 +1897,7 @@ _p[18] = {
                 this.fire("finishInitHook");
             }
         });
-        Minder.version = "1.4.20";
+        Minder.version = "1.4.21";
         Minder.registerInitHook = function(hook) {
             _initHooks.push(hook);
         };
@@ -1851,6 +1947,25 @@ _p[19] = {
                     }
                     if (moduleDeals.init) {
                         moduleDeals.init.call(me, this._options);
+                    }
+                    /**
+                 * @Desc: 判断是否支持原生clipboard事件，如果支持，则对pager添加其监听
+                 * @Editor: Naixor
+                 * @Date: 2015.9.20
+                 */
+                    if (name === "ClipboardModule" && this.supportClipboardEvent && !kity.Browser.gecko) {
+                        var on = function() {
+                            var clipBoardReceiver = this.clipBoardReceiver || document;
+                            if (document.addEventListener) {
+                                clipBoardReceiver.addEventListener.apply(this, arguments);
+                            } else {
+                                arguments[0] = "on" + arguments[0];
+                                clipBoardReceiver.attachEvent.apply(this, arguments);
+                            }
+                        };
+                        for (var command in moduleDeals.clipBoardEvents) {
+                            on(command, moduleDeals.clipBoardEvents[command]);
+                        }
                     }
                     // command加入命令池子
                     dealCommands = moduleDeals.commands;
@@ -2526,6 +2641,25 @@ _p[24] = {
                 return next;
             }
         };
+        Promise.all = function(arr) {
+            return new Promise(function(resolve, reject) {
+                var len = arr.length, i = 0, res = 0, results = [];
+                if (len === 0) {
+                    resolve(results);
+                }
+                while (i < len) {
+                    arr[i].then(function(result) {
+                        results.push(result);
+                        if (++res === len) {
+                            resolve(results);
+                        }
+                    }, function(val) {
+                        reject(val);
+                    });
+                    i++;
+                }
+            });
+        };
         /*  deliver an action  */
         var deliver = function(curr, state, name, value) {
             if (curr.state === STATE_PENDING) {
@@ -3179,7 +3313,15 @@ _p[28] = {
             getCommandShortcutKey: function(cmd) {
                 var binds = this._commandShortcutKeys;
                 return binds && binds[cmd] || null;
-            }
+            },
+            /**
+         * @Desc: 添加一个判断是否支持原生Clipboard的变量，用于对ctrl + v和ctrl + c的处理
+         * @Editor: Naixor
+         * @Date: 2015.9.20
+         */
+            supportClipboardEvent: function(window) {
+                return !!window.ClipboardEvent;
+            }(window)
         });
     }
 };
@@ -4358,18 +4500,49 @@ _p[42] = {
                     return km.getSelectedNode() ? 0 : -1;
                 }
             });
-            return {
-                commands: {
-                    copy: CopyCommand,
-                    cut: CutCommand,
-                    paste: PasteCommand
-                },
-                commandShortcutKeys: {
-                    copy: "normal::ctrl+c|",
-                    cut: "normal::ctrl+x",
-                    paste: "normal::ctrl+v"
-                }
-            };
+            /**
+         * @Desc: 若支持原生clipboadr事件则基于原生扩展，否则使用km的基础事件只处理节点的粘贴复制
+         * @Editor: Naixor
+         * @Date: 2015.9.20
+         */
+            if (km.supportClipboardEvent && !kity.Browser.gecko) {
+                var Copy = function(e) {
+                    this.fire("beforeCopy", e);
+                };
+                var Cut = function(e) {
+                    this.fire("beforeCut", e);
+                };
+                var Paste = function(e) {
+                    this.fire("beforePaste", e);
+                };
+                return {
+                    commands: {
+                        copy: CopyCommand,
+                        cut: CutCommand,
+                        paste: PasteCommand
+                    },
+                    clipBoardEvents: {
+                        copy: Copy.bind(km),
+                        cut: Cut.bind(km),
+                        paste: Paste.bind(km)
+                    },
+                    sendToClipboard: sendToClipboard
+                };
+            } else {
+                return {
+                    commands: {
+                        copy: CopyCommand,
+                        cut: CutCommand,
+                        paste: PasteCommand
+                    },
+                    commandShortcutKeys: {
+                        copy: "normal::ctrl+c|",
+                        cut: "normal::ctrl+x",
+                        paste: "normal::ctrl+v"
+                    },
+                    sendToClipboard: sendToClipboard
+                };
+            }
         });
     }
 };
@@ -6668,6 +6841,7 @@ _p[58] = {
         var Renderer = _p.r(26);
         /**
      * 针对不同系统、不同浏览器、不同字体做居中兼容性处理
+     * 暂时未增加Linux的处理
      */
         var FONT_ADJUST = {
             safari: {
@@ -6748,11 +6922,12 @@ _p[58] = {
             firefox: {
                 Mac: {
                     "微软雅黑,Microsoft YaHei": -.2,
-                    "宋体,SimSun": -.15,
+                    "宋体,SimSun": .05,
                     "comic sans ms": -.2,
                     "impact,chicago": -.15,
                     "arial black,avant garde": -.17,
-                    "default": -.15
+                    "times new roman": -.1,
+                    "default": .05
                 },
                 Win: {
                     "微软雅黑,Microsoft YaHei": -.16,
@@ -7539,17 +7714,24 @@ _p[63] = {
         var data = _p.r(11);
         var Promise = _p.r(24);
         var DomURL = window.URL || window.webkitURL || window;
-        function loadImage(url, callback) {
+        function loadImage(info, callback) {
             return new Promise(function(resolve, reject) {
                 var image = document.createElement("img");
                 image.onload = function() {
-                    resolve(this);
+                    resolve({
+                        element: this,
+                        x: info.x,
+                        y: info.y,
+                        width: info.width,
+                        height: info.height
+                    });
                 };
                 image.onerror = function(err) {
                     reject(err);
                 };
+                //image.setAttribute('crossOrigin', 'anonymous');
                 image.crossOrigin = "";
-                image.src = url;
+                image.src = info.url;
             });
         }
         function getSVGInfo(minder) {
@@ -7582,27 +7764,53 @@ _p[63] = {
             });
             svgUrl = DomURL.createObjectURL(blob);
             //svgUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgXml);
+            var allNodes = minder.getAllNode();
+            var imagesInfo = [];
+            for (var i = 0; i < allNodes.length; i++) {
+                var nodeData = allNodes[i].data;
+                if (nodeData.image) {
+                    /*
+                * 导出之前渲染这个节点，否则取出的 contentBox 不对
+                * by zhangbobell
+                * */
+                    minder.renderNode(allNodes[i]);
+                    var imageUrl = nodeData.image;
+                    var imageSize = nodeData.imageSize;
+                    var imageRenderBox = allNodes[i].getRenderBox("ImageRenderer", minder.getRenderContainer());
+                    var imageInfo = {
+                        url: imageUrl,
+                        width: imageSize.width,
+                        height: imageSize.height,
+                        x: -renderContainer.getBoundaryBox().x + imageRenderBox.x + 20,
+                        y: -renderContainer.getBoundaryBox().y + imageRenderBox.y + 20
+                    };
+                    imagesInfo.push(imageInfo);
+                }
+            }
             return {
                 width: width,
                 height: height,
                 dataUrl: svgUrl,
-                xml: svgXml
+                xml: svgXml,
+                imagesInfo: imagesInfo
             };
         }
         function encode(json, minder) {
             var resultCallback;
+            var Promise = kityminder.Promise;
             /* 绘制 PNG 的画布及上下文 */
             var canvas = document.createElement("canvas");
             var ctx = canvas.getContext("2d");
             /* 尝试获取背景图片 URL 或背景颜色 */
             var bgDeclare = minder.getStyle("background").toString();
-            var bgUrl = /url\((.+)\)/.exec(bgDeclare);
+            var bgUrl = /url\(\"(.+)\"\)/.exec(bgDeclare);
             var bgColor = kity.Color.parse(bgDeclare);
             /* 获取 SVG 文件内容 */
             var svgInfo = getSVGInfo(minder);
             var width = svgInfo.width;
             var height = svgInfo.height;
             var svgDataUrl = svgInfo.dataUrl;
+            var imagesInfo = svgInfo.imagesInfo;
             /* 画布的填充大小 */
             var padding = 20;
             canvas.width = width + padding * 2;
@@ -7613,22 +7821,52 @@ _p[63] = {
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
                 ctx.restore();
             }
-            function drawImage(ctx, image, x, y) {
-                ctx.drawImage(image, x, y);
+            function drawImage(ctx, image, x, y, width, height) {
+                if (width && height) {
+                    ctx.drawImage(image, x, y, width, height);
+                } else {
+                    ctx.drawImage(image, x, y);
+                }
             }
             function generateDataUrl(canvas) {
-                return canvas.toDataURL("png");
+                return canvas.toDataURL("image/png");
+            }
+            // 加载节点上的图片
+            function loadImages(imagesInfo) {
+                var imagePromises = imagesInfo.map(function(imageInfo) {
+                    return loadImage(imageInfo);
+                });
+                return Promise.all(imagePromises);
             }
             function drawSVG() {
-                return loadImage(svgDataUrl).then(function(svgImage) {
-                    drawImage(ctx, svgImage, padding, padding);
+                var svgData = {
+                    url: svgDataUrl
+                };
+                return loadImage(svgData).then(function($image) {
+                    drawImage(ctx, $image.element, padding, padding);
+                    return loadImages(imagesInfo);
+                }).then(function($images) {
+                    for (var i = 0; i < $images.length; i++) {
+                        drawImage(ctx, $images[i].element, $images[i].x, $images[i].y, $images[i].width, $images[i].height);
+                    }
                     DomURL.revokeObjectURL(svgDataUrl);
+                    document.body.appendChild(canvas);
+                    return generateDataUrl(canvas);
+                }, function(err) {
+                    // 这里处理 reject，出错基本上是因为跨域，
+                    // 出错后依然导出，只不过没有图片。
+                    alert("脑图的节点中包含跨域图片，导出的 png 中节点图片不显示，你可以替换掉这些跨域的图片并重试。");
+                    DomURL.revokeObjectURL(svgDataUrl);
+                    document.body.appendChild(canvas);
                     return generateDataUrl(canvas);
                 });
             }
             if (bgUrl) {
-                return loadImage(bgUrl[1]).then(function(image) {
-                    fillBackground(ctx, ctx.createPattern(image, "repeat"));
+                var bgInfo = {
+                    url: bgUrl[1]
+                };
+                return loadImage(bgInfo).then(function($image) {
+                    fillBackground(ctx, ctx.createPattern($image.element, "repeat"));
                     return drawSVG();
                 });
             } else {
@@ -7684,7 +7922,31 @@ _p[64] = {
 _p[65] = {
     value: function(require, exports, module) {
         var data = _p.r(11);
-        var LINE_ENDING = "\r", LINE_ENDING_SPLITER = /\r\n|\r|\n/, TAB_CHAR = "	";
+        var Browser = _p.r(16).Browser;
+        /**
+     * @Desc: 增加对不容浏览器下节点中文本\t匹配的处理，不同浏览器下\t无法正确匹配，导致无法使用TAB来批量导入节点
+     * @Editor: Naixor
+     * @Date: 2015.9.17
+     */
+        var LINE_ENDING = "\r", LINE_ENDING_SPLITER = /\r\n|\r|\n/, TAB_CHAR = "	", TAB_CHAR = function(Browser) {
+            if (Browser.gecko) {
+                return {
+                    REGEXP: new RegExp("^(	|" + String.fromCharCode(160, 160, 32, 160) + ")"),
+                    DELETE: new RegExp("^(	|" + String.fromCharCode(160, 160, 32, 160) + ")+")
+                };
+            } else if (Browser.ie || Browser.edge) {
+                // ie系列和edge比较特别，\t在div中会被直接转义成SPACE故只好使用SPACE来做处理
+                return {
+                    REGEXP: new RegExp("^(" + String.fromCharCode(32) + "|" + String.fromCharCode(160) + ")"),
+                    DELETE: new RegExp("^(" + String.fromCharCode(32) + "|" + String.fromCharCode(160) + ")+")
+                };
+            } else {
+                return {
+                    REGEXP: /^(\t|\x20{4})/,
+                    DELETE: /^(\t|\x20{4})+/
+                };
+            }
+        }(Browser);
         function repeat(s, n) {
             var result = "";
             while (n--) result += s;
@@ -7693,7 +7955,7 @@ _p[65] = {
         function encode(json, level) {
             var local = "";
             level = level || 0;
-            local += repeat(TAB_CHAR, level);
+            local += repeat("	", level);
             local += json.data.text + LINE_ENDING;
             if (json.children) {
                 json.children.forEach(function(child) {
@@ -7707,13 +7969,16 @@ _p[65] = {
         }
         function getLevel(line) {
             var level = 0;
-            while (line.charAt(level) === TAB_CHAR) level++;
+            while (TAB_CHAR.REGEXP.test(line)) {
+                line = line.replace(TAB_CHAR.REGEXP, "");
+                level++;
+            }
             return level;
         }
         function getNode(line) {
             return {
                 data: {
-                    text: line.replace(new RegExp("^" + TAB_CHAR + "*"), "")
+                    text: line.replace(TAB_CHAR.DELETE, "")
                 }
             };
         }
@@ -7743,6 +8008,28 @@ _p[65] = {
             }
             return json;
         }
+        /**
+     * @Desc: 增加一个将当前选中节点转换成text的方法
+     * @Editor: Naixor
+     * @Date: 2015.9.21
+     */
+        function Node2Text(node) {
+            function exportNode(node) {
+                var exported = {};
+                exported.data = node.getData();
+                var childNodes = node.getChildren();
+                exported.children = [];
+                for (var i = 0; i < childNodes.length; i++) {
+                    exported.children.push(exportNode(childNodes[i]));
+                }
+                return exported;
+            }
+            if (!node) return;
+            if (/^\s*$/.test(node.data.text)) {
+                node.data.text = "分支主题";
+            }
+            return encode(exportNode(node));
+        }
         data.registerProtocol("text", module.exports = {
             fileDescription: "大纲文本",
             fileExtension: ".txt",
@@ -7753,6 +8040,9 @@ _p[65] = {
             },
             decode: function(local) {
                 return decode(local);
+            },
+            Node2Text: function(node) {
+                return Node2Text(node);
             }
         });
     }
@@ -7973,7 +8263,7 @@ _p[72] = {
     value: function(require, exports, module) {
         var theme = _p.r(31);
         theme.register("fish", {
-            background: "#3A4144 url(ui/theme/default/images/grid.png) repeat",
+            background: '#3A4144 url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAIAAAACDbGyAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyRpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoTWFjaW50b3NoKSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDowQzg5QTQ0NDhENzgxMUUzOENGREE4QTg0RDgzRTZDNyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDowQzg5QTQ0NThENzgxMUUzOENGREE4QTg0RDgzRTZDNyI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkMwOEQ1NDRGOEQ3NzExRTM4Q0ZEQThBODREODNFNkM3IiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOkMwOEQ1NDUwOEQ3NzExRTM4Q0ZEQThBODREODNFNkM3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+e9P33AAAACVJREFUeNpisXJ0YUACTAyoAMr/+eM7EGGRZ4FQ7BycEAZAgAEAHbEGtkoQm/wAAAAASUVORK5CYII=") repeat',
             "root-color": "#430",
             "root-background": "#e9df98",
             "root-stroke": "#e9df98",
