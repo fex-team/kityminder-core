@@ -18,7 +18,7 @@ KityMinder 是一款强大的脑图可视化/编辑工具，由百度 FEX 团队
 
 ```js
 <div id="minder-container"></div>
-<script type="text/javascript" src="kityminder.all.min.js"></script>
+<script type="text/javascript" src="kityminder.core.min.js"></script>
 <script type="text/javascript">
 var minder = new kityminder.Minder({
 	renderTo: 'minder-container'
@@ -37,32 +37,17 @@ KityMinder 基于 SVG 技术实现，支持绝大多数的 HTML5 浏览器，包
 3. Safari
 4. Internet Explorer 10 或以上
 
-## 依赖说明
+## 使用说明
 
-kityminder-core 依赖 [Kity](https://github.com/fex-team/kity)库。需要二次开发 kityminder-core，需要初始化并更新子模块：
+kityminder-core 依赖于 [kity](https://github.com/fex-team/kity)，开发中用到 seajs 进行异步加载。
+例子中 dev.html 使用 seajs 进行包加载，example.html 使用同步加载的方式。
+使用步骤如下：
 
-```bash
-git submodule init
-git submodule update
-```
-
-kityminder-core 的 example 使用 seajs 进行包加载，seajs 可以使用 bower 获取：
+1. 安装 [bower](http://bower.io/#install-bower)
+2. 切换到 kityminder-core 目录下，运行：
 
 ```bash
 bower install
-```
-
-kityminder-core 使用 grunt 进行打包，安装 npm 组件后直接 grunt 即可打包：
-
-```bash
-npm install
-grunt
-```
-
-想偷懒？可以用下面这个一行安装脚本：
-
-```bash
-https://gist.githubusercontent.com/techird/72b420c7ea05154ce821/raw/6416f2709ce82a3a0d86a50763de1ce3ca7f3ca2/setup-km-core
 ```
 
 ## 联系我们

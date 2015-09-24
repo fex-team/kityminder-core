@@ -189,6 +189,13 @@ define(function(require, exports, module) {
                 DomURL.revokeObjectURL(svgDataUrl);
                 document.body.appendChild(canvas);
                 return generateDataUrl(canvas);
+            }, function(err) {
+                // 这里处理 reject，出错基本上是因为跨域，
+                // 出错后依然导出，只不过没有图片。
+                alert('脑图的节点中包含跨域图片，导出的 png 中节点图片不显示，你可以替换掉这些跨域的图片并重试。');
+                DomURL.revokeObjectURL(svgDataUrl);
+                document.body.appendChild(canvas);
+                return generateDataUrl(canvas);
             });
         }
 
