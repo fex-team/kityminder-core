@@ -59,21 +59,26 @@ define(function(require, exports, module) {
                  * @Editor: Naixor
                  * @Date: 2015.9.20
                  */
-                if (name === 'ClipboardModule' && this.supportClipboardEvent  && !kity.Browser.gecko) {
-                    var on = function () {
-                        var clipBoardReceiver = this.clipBoardReceiver || document;
+                /**
+                 * 由于当前脑图解构问题，clipboard暂时全权交由玩不托管
+                 * @Editor: Naixor
+                 * @Date: 2015.9.24
+                 */
+                // if (name === 'ClipboardModule' && this.supportClipboardEvent  && !kity.Browser.gecko) {
+                //     var on = function () {
+                //         var clipBoardReceiver = this.clipBoardReceiver || document;
                         
-                        if (document.addEventListener) {
-                            clipBoardReceiver.addEventListener.apply(this, arguments);
-                        } else {
-                            arguments[0] = 'on' + arguments[0];
-                            clipBoardReceiver.attachEvent.apply(this, arguments);
-                        }
-                    }
-                    for (var command in moduleDeals.clipBoardEvents) {
-                        on(command, moduleDeals.clipBoardEvents[command]);
-                    }
-                };
+                //         if (document.addEventListener) {
+                //             clipBoardReceiver.addEventListener.apply(this, arguments);
+                //         } else {
+                //             arguments[0] = 'on' + arguments[0];
+                //             clipBoardReceiver.attachEvent.apply(this, arguments);
+                //         }
+                //     }
+                //     for (var command in moduleDeals.clipBoardEvents) {
+                //         on(command, moduleDeals.clipBoardEvents[command]);
+                //     }
+                // };
 
                 // command加入命令池子
                 dealCommands = moduleDeals.commands;
