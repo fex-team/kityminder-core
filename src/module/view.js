@@ -30,6 +30,9 @@ define(function(require, exports, module) {
             paper.setStyle('cursor', value ? '-webkit-grab' : 'default');
             this._enabled = value;
         },
+        timeline: function() {
+            return this._moveTimeline;
+        },
 
         move: function(offset, duration) {
             var minder = this._minder;
@@ -52,7 +55,7 @@ define(function(require, exports, module) {
                     function(target, value) {
                         dragger.moveTo(value);
                     }
-                ), duration, 'easeOutCubic');
+                ), duration, 'easeOutCubic').timeline();
 
                 this._moveTimeline.on('finish', function() {
                     dragger._moveTimeline = null;
@@ -334,6 +337,7 @@ define(function(require, exports, module) {
                 },
                 'selectionchange layoutallfinish': function(e) {
                     var selected = this.getSelectedNode();
+                    var minder = this;
 
                     /*
                     * Added by zhangbobell 2015.9.9
@@ -346,6 +350,24 @@ define(function(require, exports, module) {
                     if (!selected) return;
 
                     var dragger = this._viewDragger;
+                    var timeline = dragger.timeline();
+
+                    /*
+                    * Added by zhangbobell 2015.09.25
+                    * 如果之前有动画，那么就先暂时返回，等之前动画结束之后再次执行本函数
+                    * 以防止 view 动画变动了位置，导致本函数执行的时候位置计算不对
+                    *
+                    * fixed bug : 初始化的时候中心节点位置不固定（有的时候在左上角，有的时候在中心）
+                    * */
+                    if (timeline){
+                        timeline.on('finish', function() {
+                            minder.fire('selectionchange');
+                        });
+
+                        return;
+                    }
+
+
                     var view = dragger.getView();
                     var focus = selected.getLayoutBox();
                     var space = 50;
