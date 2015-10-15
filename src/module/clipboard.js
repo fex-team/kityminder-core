@@ -101,12 +101,13 @@ define(function(require, exports, module) {
 
             execute: function(km) {
                 if (_clipboardNodes.length) {
-                    var node = km.getSelectedNode();
-                    if (!node) return;
+                    var nodes = km.getSelectedNodes();
+                    if (!nodes.length) return;
 
-                    for (var i = 0, ni;
-                        (ni = _clipboardNodes[i]); i++) {
-                        appendChildNode(node, ni.clone());
+                    for (var i = 0, ni; ni = _clipboardNodes[i]; i++) {
+                        for (var j = 0, node; node = nodes[j]; j++) {
+                            appendChildNode(node, ni.clone());
+                        }
                     }
 
                     km.select(_selectedNodes, true);
