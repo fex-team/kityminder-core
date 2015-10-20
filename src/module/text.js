@@ -109,7 +109,19 @@ define(function(require, exports, module) {
                 'default': -0.16 
             },
             'Lux': {
-                '宋体,SimSun': -0.02    
+                "宋体,SimSun": -0.2,
+                "微软雅黑,Microsoft YaHei": -0.2,
+                "黑体, SimHei": -0.2,
+                "隶书, SimLi": -0.2,
+                "楷体,楷体_GB2312,SimKai": -0.2,
+                "andale mono": -0.2,
+                "arial,helvetica,sans-serif": -0.2,
+                "comic sans ms": -0.2,
+                "impact,chicago": -0.2,
+                "times new roman": -0.2,
+                "sans-serif": -0.2,
+                "arial black,avant garde": -0.2,
+                "default": -0.16
             }
         },
     };
