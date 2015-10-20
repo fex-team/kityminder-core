@@ -76,6 +76,7 @@ define(function(require, exports, module) {
     require('./layout/filetree');
     require('./layout/fish-bone-master');
     require('./layout/fish-bone-slave');
+    require('./layout/tianpan');
 
     require('./theme/default');
     require('./theme/snow');
@@ -83,8 +84,10 @@ define(function(require, exports, module) {
     require('./theme/fish');
     require('./theme/snow');
     require('./theme/wire');
+    require('./theme/tianpan');
 
     require('./connect/arc');
+    require('./connect/arc_tp');
     require('./connect/bezier');
     require('./connect/fish-bone-master');
     require('./connect/l');
@@ -96,6 +99,7 @@ define(function(require, exports, module) {
     require('./template/filetree');
     require('./template/right');
     require('./template/fish-bone');
+    require('./template/tianpan');
 
     module.exports = kityminder;
 });
