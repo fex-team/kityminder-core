@@ -23,6 +23,8 @@ define(function(require, exports, module) {
 
         update: function(outline, node, box) {
 
+            var shape = node.getStyle('shape');
+
             var paddingLeft = node.getStyle('padding-left'),
                 paddingRight = node.getStyle('padding-right'),
                 paddingTop = node.getStyle('padding-top'),
@@ -35,14 +37,29 @@ define(function(require, exports, module) {
                 height: box.height + paddingTop + paddingBottom
             };
 
+
+            var radius = node.getStyle('radius');
+            // 天盘图圆形的情况
+            if (shape && shape == 'circle') {
+                var width= Math.max(box.width,box.height);
+
+                outlineBox.width = width + paddingLeft + paddingRight;
+                outlineBox.height = width + paddingTop + paddingBottom;
+
+                outlineBox.width = Math.max(outlineBox.width, outlineBox.height);
+                outlineBox.height = Math.max(outlineBox.width, outlineBox.height);
+
+                radius = outlineBox.width / 2;
+            }
+
             var prefix = node.isSelected() ? (node.getMinder().isFocused() ? 'selected-' : 'blur-selected-') : '';
             outline
                 .setPosition(outlineBox.x, outlineBox.y)
                 .setSize(outlineBox.width, outlineBox.height)
-                .setRadius(node.getStyle('radius'))
+                .setRadius(radius)
                 .fill(node.getData('background') || node.getStyle(prefix + 'background') || node.getStyle('background'))
                 .stroke(node.getStyle(prefix + 'stroke' || node.getStyle('stroke')),
-                    node.getStyle(prefix + 'stroke-width'));
+                node.getStyle(prefix + 'stroke-width'));
 
             return new kity.Box(outlineBox);
         }
@@ -62,9 +79,18 @@ define(function(require, exports, module) {
 
         update: function(shadow, node, box) {
             shadow.setPosition(box.x + 4, box.y + 5)
-                .setSize(box.width, box.height)
-                .fill(node.getStyle('shadow'))
-                .setRadius(node.getStyle('radius'));
+                .fill(node.getStyle('shadow'));
+
+            var shape = node.getStyle('shape');
+            if(!shape){
+                shadow.setSize(box.width, box.height);
+                shadow.setRadius(node.getStyle('radius'));
+
+            }else if(shape=='circle'){
+                var width= Math.max(box.width,box.height);
+                shadow.setSize(width, width);
+                shadow.setRadius(width/2);
+            }
         }
     });
 
