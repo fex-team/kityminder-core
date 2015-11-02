@@ -94,7 +94,7 @@ define(function(require, exports, module) {
             execute: function(km, level) {
                 km.getRoot().traverse(function(node) {
                     if (node.getLevel() < level) node.expand();
-                    if (node.getLevel() == level) node.collapse();
+                    if (node.getLevel() == level && !node.isLeaf()) node.collapse();
                 });
                 km.refresh(100);
             },
