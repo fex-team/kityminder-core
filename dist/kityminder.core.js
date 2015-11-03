@@ -1,6 +1,6 @@
 /*!
  * ====================================================
- * kityminder - v1.4.22 - 2015-11-02
+ * kityminder - v1.4.23 - 2015-11-03
  * https://github.com/fex-team/kityminder-core
  * GitHub: https://github.com/fex-team/kityminder-core.git 
  * Copyright (c) 2015 Baidu FEX; Licensed MIT
@@ -97,10 +97,15 @@ _p[1] = {
             this.dot = dot;
             this.node.setAttribute("markerUnits", "userSpaceOnUse");
         });
+        /**
+     * 天盘图连线除了连接当前节点和前一个节点外, 还需要渲染当前节点和后一个节点的连接, 防止样式上的断线
+     * 这是天盘图与其余的模板不同的地方
+     */
         connect.register("arc_tp", function(node, parent, connection, width, color) {
             var end_box = node.getLayoutBox(), start_box = parent.getLayoutBox();
+            var index = node.getIndex();
+            var nextNode = parent.getChildren()[index + 1];
             if (node.getIndex() > 0) {
-                var index = node.getIndex();
                 start_box = parent.getChildren()[index - 1].getLayoutBox();
             }
             var start, end, vector;
@@ -110,7 +115,7 @@ _p[1] = {
             node.getMinder().getPaper().addResource(connectMarker);
             start = new kity.Point(start_box.cx, start_box.cy);
             end = new kity.Point(end_box.cx, end_box.cy);
-            var jl = Math.sqrt(Math.abs(start.x - end.x) * Math.abs(start.x - end.x) + Math.abs(start.y - end.y) * Math.abs(start.y - end.y));
+            var jl = Math.sqrt(Math.pow(start.x - end.x, 2) + Math.pow(start.y - end.y, 2));
             //两圆中心点距离
             jl = node.getIndex() == 0 ? jl * .4 : jl;
             vector = kity.Vector.fromPoints(start, end);
@@ -119,6 +124,20 @@ _p[1] = {
             connection.setMarker(connectMarker);
             connectMarker.dot.fill(color);
             connection.setPathData(pathData);
+            // 设置下一个的节点的连接线
+            if (nextNode) {
+                var nextConnection = nextNode.getConnection();
+                var next_end_box = nextNode.getLayoutBox();
+                var next_end = new kity.Point(next_end_box.cx, next_end_box.cy);
+                var jl2 = Math.sqrt(Math.pow(end.x - next_end.x, 2) + Math.pow(end.y - next_end.y, 2));
+                //两圆中心点距离
+                pathData = [];
+                pathData.push("M", end);
+                pathData.push("A", jl2, jl2, 0, 0, 1, next_end);
+                nextConnection.setMarker(connectMarker);
+                connectMarker.dot.fill(color);
+                nextConnection.setPathData(pathData);
+            }
         });
     }
 };
@@ -1943,7 +1962,7 @@ _p[19] = {
                 this.fire("finishInitHook");
             }
         });
-        Minder.version = "1.4.22";
+        Minder.version = "1.4.23";
         Minder.registerInitHook = function(hook) {
             _initHooks.push(hook);
         };
@@ -5102,7 +5121,7 @@ _p[46] = {
                 execute: function(km, level) {
                     km.getRoot().traverse(function(node) {
                         if (node.getLevel() < level) node.expand();
-                        if (node.getLevel() == level) node.collapse();
+                        if (node.getLevel() == level && !node.isLeaf()) node.collapse();
                     });
                     km.refresh(100);
                 },
@@ -6161,12 +6180,13 @@ _p[54] = {
                 var radius = node.getStyle("radius");
                 // 天盘图圆形的情况
                 if (shape && shape == "circle") {
-                    var width = Math.max(box.width, box.height);
-                    outlineBox.width = width + paddingLeft + paddingRight;
-                    outlineBox.height = width + paddingTop + paddingBottom;
-                    outlineBox.width = Math.max(outlineBox.width, outlineBox.height);
-                    outlineBox.height = Math.max(outlineBox.width, outlineBox.height);
-                    radius = outlineBox.width / 2;
+                    var p = Math.pow;
+                    var r = Math.round;
+                    radius = r(Math.sqrt(p(outlineBox.width, 2) + p(outlineBox.height, 2)) / 2);
+                    outlineBox.x = box.cx - radius;
+                    outlineBox.y = box.cy - radius;
+                    outlineBox.width = 2 * radius;
+                    outlineBox.height = 2 * radius;
                 }
                 var prefix = node.isSelected() ? node.getMinder().isFocused() ? "selected-" : "blur-selected-" : "";
                 outline.setPosition(outlineBox.x, outlineBox.y).setSize(outlineBox.width, outlineBox.height).setRadius(radius).fill(node.getData("background") || node.getStyle(prefix + "background") || node.getStyle("background")).stroke(node.getStyle(prefix + "stroke" || node.getStyle("stroke")), node.getStyle(prefix + "stroke-width"));
@@ -7271,13 +7291,7 @@ _p[60] = {
                         var bbox = textShape.getBoundaryBox();
                         rBox = rBox.merge(new kity.Box(0, y, bbox.height && bbox.width || 1, fontSize));
                     });
-                    //为了让文字在圆中垂直居中
-                    var w = 0;
-                    var shape = node.getStyle("shape");
-                    if (shape && shape == "circle") {
-                        w = Math.max(rBox.width, rBox.height) / 2 - rBox.height / 2;
-                    }
-                    var nBox = new kity.Box(r(rBox.x), r(rBox.y - w), r(rBox.width), r(rBox.height));
+                    var nBox = new kity.Box(r(rBox.x), r(rBox.y), r(rBox.width), r(rBox.height));
                     node._currentTextGroupBox = nBox;
                     return nBox;
                 };
