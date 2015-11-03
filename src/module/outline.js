@@ -41,15 +41,15 @@ define(function(require, exports, module) {
             var radius = node.getStyle('radius');
             // 天盘图圆形的情况
             if (shape && shape == 'circle') {
-                var width= Math.max(box.width,box.height);
+                var p = Math.pow;
+                var r = Math.round;
 
-                outlineBox.width = width + paddingLeft + paddingRight;
-                outlineBox.height = width + paddingTop + paddingBottom;
+                radius = r(Math.sqrt(p(outlineBox.width, 2) + p(outlineBox.height, 2)) / 2);
 
-                outlineBox.width = Math.max(outlineBox.width, outlineBox.height);
-                outlineBox.height = Math.max(outlineBox.width, outlineBox.height);
-
-                radius = outlineBox.width / 2;
+                outlineBox.x = box.cx - radius;
+                outlineBox.y = box.cy - radius;
+                outlineBox.width = 2 * radius;
+                outlineBox.height = 2 * radius;
             }
 
             var prefix = node.isSelected() ? (node.getMinder().isFocused() ? 'selected-' : 'blur-selected-') : '';
