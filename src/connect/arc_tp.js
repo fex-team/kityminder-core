@@ -24,8 +24,7 @@ define(function(require, exports, module) {
      */
     connect.register('arc_tp', function (node, parent, connection, width, color) {
         var end_box = node.getLayoutBox(),
-            start_box = parent.getLayoutBox(),
-            next_end_box = null;
+            start_box = parent.getLayoutBox();
 
         var index = node.getIndex();
         var nextNode = parent.getChildren()[index + 1];
@@ -35,12 +34,8 @@ define(function(require, exports, module) {
             start_box = parent.getChildren()[index - 1].getLayoutBox();
         }
 
-        if (nextNode) {
-            next_end_box = nextNode.getLayoutBox();
-        }
 
-
-        var start, end, vector, next_end;
+        var start, end, vector;
         var abs = Math.abs;
         var pathData = [];
         var side = end_box.x > start_box.x ? 'right' : 'left';
@@ -50,7 +45,6 @@ define(function(require, exports, module) {
 
         start = new kity.Point(start_box.cx, start_box.cy);
         end = new kity.Point(end_box.cx, end_box.cy);
-        next_end = next_end_box ? new kity.Point(next_end_box.cx, next_end_box.cy) : null;
 
         var jl = Math.sqrt(Math.pow((start.x - end.x), 2) + Math.pow((start.y - end.y), 2)); //两圆中心点距离
 
@@ -70,6 +64,8 @@ define(function(require, exports, module) {
         // 设置下一个的节点的连接线
         if (nextNode) {
             var nextConnection = nextNode.getConnection();
+            var next_end_box = nextNode.getLayoutBox();
+            var next_end = new kity.Point(next_end_box.cx, next_end_box.cy);
 
             var jl2 = Math.sqrt(Math.pow((end.x - next_end.x), 2) + Math.pow((end.y - next_end.y), 2)); //两圆中心点距离
 
