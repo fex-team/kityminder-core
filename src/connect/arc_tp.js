@@ -62,7 +62,7 @@ define(function(require, exports, module) {
 
 
         // 设置下一个的节点的连接线
-        if (nextNode) {
+        if (nextNode && nextNode.getConnection()) {
             var nextConnection = nextNode.getConnection();
             var next_end_box = nextNode.getLayoutBox();
             var next_end = new kity.Point(next_end_box.cx, next_end_box.cy);
