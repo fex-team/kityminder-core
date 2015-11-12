@@ -1,6 +1,6 @@
 /*!
  * ====================================================
- * kityminder - v1.4.23 - 2015-11-03
+ * kityminder - v1.4.24 - 2015-11-12
  * https://github.com/fex-team/kityminder-core
  * GitHub: https://github.com/fex-team/kityminder-core.git 
  * Copyright (c) 2015 Baidu FEX; Licensed MIT
@@ -125,7 +125,7 @@ _p[1] = {
             connectMarker.dot.fill(color);
             connection.setPathData(pathData);
             // 设置下一个的节点的连接线
-            if (nextNode) {
+            if (nextNode && nextNode.getConnection()) {
                 var nextConnection = nextNode.getConnection();
                 var next_end_box = nextNode.getLayoutBox();
                 var next_end = new kity.Point(next_end_box.cx, next_end_box.cy);
@@ -1962,7 +1962,7 @@ _p[19] = {
                 this.fire("finishInitHook");
             }
         });
-        Minder.version = "1.4.23";
+        Minder.version = "1.4.24";
         Minder.registerInitHook = function(hook) {
             _initHooks.push(hook);
         };
