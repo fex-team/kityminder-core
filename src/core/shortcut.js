@@ -125,7 +125,12 @@ define(function(require, exports, module) {
                 binds[command] = keys;
 
                 minder.addShortcut(keys, function execCommandByShortcut() {
-                    if (minder.queryCommandState(command) === 0) {
+                    /**
+                     * 之前判断有问题，由 === 0 改为 !== -1
+                     * @editor Naixor
+                     * @Date 2015-12-2
+                     */
+                    if (minder.queryCommandState(command) !== -1) {
                         minder.execCommand(command);
                     }
                 });
