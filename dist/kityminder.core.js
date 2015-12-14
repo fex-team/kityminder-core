@@ -1,6 +1,6 @@
 /*!
  * ====================================================
- * kityminder - v1.4.25 - 2015-12-14
+ * kityminder - v1.4.26 - 2015-12-14
  * https://github.com/fex-team/kityminder-core
  * GitHub: https://github.com/fex-team/kityminder-core.git 
  * Copyright (c) 2015 Baidu FEX; Licensed MIT
@@ -2892,11 +2892,6 @@ _p[26] = {
                     return null;
                 };
                 this.setStatus("readonly");
-                /* Added by zhangbobell 2015.9.12
-            * 为了能够在只读的状态下去掉外层 receiver 和 hotbox
-            * 需要触发一个 readonly 事件
-            * */
-                this._fire(new MinderEvent("readonly"));
                 me._interactChange();
             },
             enable: function() {
