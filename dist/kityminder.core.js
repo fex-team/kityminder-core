@@ -1,6 +1,6 @@
 /*!
  * ====================================================
- * kityminder - v1.4.24 - 2015-11-12
+ * kityminder - v1.4.25 - 2015-12-14
  * https://github.com/fex-team/kityminder-core
  * GitHub: https://github.com/fex-team/kityminder-core.git 
  * Copyright (c) 2015 Baidu FEX; Licensed MIT
@@ -1962,7 +1962,7 @@ _p[19] = {
                 this.fire("finishInitHook");
             }
         });
-        Minder.version = "1.4.24";
+        Minder.version = "1.4.25";
         Minder.registerInitHook = function(hook) {
             _initHooks.push(hook);
         };
@@ -3374,7 +3374,12 @@ _p[29] = {
                 utils.each(obj, function(keys, command) {
                     binds[command] = keys;
                     minder.addShortcut(keys, function execCommandByShortcut() {
-                        if (minder.queryCommandState(command) === 0) {
+                        /**
+                     * 之前判断有问题，由 === 0 改为 !== -1
+                     * @editor Naixor
+                     * @Date 2015-12-2
+                     */
+                        if (minder.queryCommandState(command) !== -1) {
                             minder.execCommand(command);
                         }
                     });
@@ -7113,7 +7118,7 @@ _p[60] = {
                 "impact,chicago": -.15,
                 "times new roman": -.1,
                 "arial black,avant garde": -.17,
-                "default": -.15
+                "default": 0
             },
             ie: {
                 10: {
