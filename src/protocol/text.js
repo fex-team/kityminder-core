@@ -9,7 +9,6 @@ define(function(require, exports, module) {
      */
     var LINE_ENDING = '\r',
         LINE_ENDING_SPLITER = /\r\n|\r|\n/,
-        TAB_CHAR = '\t',
         TAB_CHAR = (function(Browser) {
             if (Browser.gecko) {
                 return {
@@ -36,11 +35,100 @@ define(function(require, exports, module) {
         return result;
     }
 
+    /**
+     * 对节点text中的换行符进行处理
+     * @method encodeWrap
+     * @param  {String}   nodeText MinderNode.data.text
+     * @return {String}            \n -> '\n'; \\n -> '\\n'
+     */
+    function encodeWrap(nodeText) {
+        if (!nodeText) {
+            return '';
+        }
+        var textArr = [],
+            WRAP_TEXT = ['\\', 'n'];
+        for (var i = 0, j = 0, l = nodeText.length; i < l; i++) {
+            if (nodeText[i] === '\n' || nodeText[i] === '\r') {
+                textArr.push('\\n');
+                j = 0;
+                continue;
+            }
+            if (nodeText[i] === WRAP_TEXT[j]) {
+                j++;
+                if (j === 2) {
+                    j = 0;
+                    textArr.push('\\\\n');
+                }
+                continue;
+            }
+            switch (j) {
+                case 0: {
+                    textArr.push(nodeText[i]);
+                    break;
+                }
+                case 1: {
+                    textArr.push(nodeText[i-1], nodeText[i]);
+                }
+            }
+            j = 0;
+        }
+        return textArr.join('');
+    }
+
+    /**
+     * 将文本内容中的'\n'和'\\n'分别转换成\n和\\n
+     * @method decodeWrap
+     * @param  {[type]}   text [description]
+     * @return {[type]}        [description]
+     */
+    function decodeWrap(text) {
+        if (!text) {
+            return '';
+        }
+        var textArr = [],
+            WRAP_TEXT = ['\\', '\\', 'n'];
+        for (var i = 0, j = 0, l = text.length; i < l; i++) {
+            if (text[i] === WRAP_TEXT[j]) {
+                j++;
+                if (j === 3) {
+                    j = 0;
+                    textArr.push('\\n');
+                }
+                continue;
+            }
+            switch (j) {
+                case 0: {
+                    textArr.push(text[i]);
+                    j = 0;
+                    break;
+                }
+                case 1: {
+                    if (text[i] === 'n') {
+                        textArr.push('\n');
+                    } else {
+                        textArr.push(text[i-1], text[i]);
+                    }
+                    j = 0;
+                    break;
+                }
+                case 2: {
+                    textArr.push(text[i-2]);
+                    if (text[i] !== '\\') {
+                        j = 0;
+                        textArr.push(text[i-1], text[i]);
+                    }
+                    break;
+                }
+            }
+        }
+        return textArr.join('');
+    }
+
     function encode(json, level) {
         var local = '';
         level = level || 0;
         local += repeat('\t', level);
-        local += json.data.text + LINE_ENDING;
+        local += encodeWrap(json.data.text) + LINE_ENDING;
         if (json.children) {
             json.children.forEach(function(child) {
                 local += encode(child, level + 1);
@@ -59,14 +147,14 @@ define(function(require, exports, module) {
             line = line.replace(TAB_CHAR.REGEXP, '');
             level++;
         }
-        
+
         return level;
     }
 
     function getNode(line) {
         return {
             data: {
-                text: line.replace(TAB_CHAR.DELETE, "")
+                text: decodeWrap(line.replace(TAB_CHAR.DELETE, ""))
             }
         };
     }
