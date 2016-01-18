@@ -142,6 +142,7 @@ define(function(require, exports, module) {
 
             initEvent: function(node) {
                 this.on('mousedown', function(e) {
+                    minder.select([node], true);
                     if (node.isExpanded()) {
                         node.collapse();
                     } else {
