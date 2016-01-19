@@ -1,9 +1,9 @@
 /*!
  * ====================================================
- * kityminder - v1.4.26 - 2015-12-14
+ * kityminder - v1.4.27 - 2016-01-19
  * https://github.com/fex-team/kityminder-core
  * GitHub: https://github.com/fex-team/kityminder-core.git 
- * Copyright (c) 2015 Baidu FEX; Licensed MIT
+ * Copyright (c) 2016 Baidu FEX; Licensed MIT
  * ====================================================
  */
 
@@ -1962,7 +1962,7 @@ _p[19] = {
                 this.fire("finishInitHook");
             }
         });
-        Minder.version = "1.4.25";
+        Minder.version = "1.4.27";
         Minder.registerInitHook = function(hook) {
             _initHooks.push(hook);
         };
@@ -5162,6 +5162,7 @@ _p[46] = {
                 },
                 initEvent: function(node) {
                     this.on("mousedown", function(e) {
+                        minder.select([ node ], true);
                         if (node.isExpanded()) {
                             node.collapse();
                         } else {
@@ -6806,6 +6807,13 @@ _p[57] = {
                     var i, overlay, x;
                     x = 0;
                     for (i = 0; i < resource.length; i++) {
+                        /* 修复 resource 数组中出现 null 的 bug
+                    *  @Author zhangbobell
+                    *  @date 2016-01-15
+                    */
+                        if (!resource[i]) {
+                            continue;
+                        }
                         x += spaceRight;
                         overlay = overlays[i];
                         if (!overlay) {
@@ -8179,6 +8187,197 @@ _p[65] = {
 _p[66] = {
     value: function(require, exports, module) {
         var data = _p.r(12);
+        /**
+     * 导出svg时删除全部svg元素中的transform
+     * @auth Naixor
+     * @method removeTransform
+     * @param  {[type]}        svgDom [description]
+     * @return {[type]}               [description]
+     */
+        function removeTransform(svgDom) {
+            function getTransformToElement(target, source) {
+                var matrix;
+                try {
+                    matrix = source.getScreenCTM().inverse();
+                } catch (e) {
+                    throw new Error("Can not inverse source element' ctm.");
+                }
+                return matrix.multiply(target.getScreenCTM());
+            }
+            function dealWithPath(d, dealWithPattern) {
+                if (!(dealWithPattern instanceof Function)) {
+                    dealWithPattern = function() {};
+                }
+                var strArr = [], pattern = [], cache = [];
+                for (var i = 0, l = d.length; i < l; i++) {
+                    switch (d[i]) {
+                      case "M":
+                      case "L":
+                      case "T":
+                      case "S":
+                      case "A":
+                      case "C":
+                        {
+                            if (cache.length) {
+                                pattern.push(cache.join(""));
+                                cache = [];
+                            }
+                            if (pattern.length) {
+                                dealWithPattern(pattern);
+                                strArr.push(pattern.join(""));
+                                pattern = [];
+                            }
+                            pattern.push(d[i]);
+                            break;
+                        }
+
+                      case "Z":
+                      case "z":
+                        {
+                            pattern.push(cache.join(""), d[i]);
+                            dealWithPattern(pattern);
+                            strArr.push(pattern.join(""));
+                            cache = [];
+                            pattern = [];
+                            break;
+                        }
+
+                      case ".":
+                        {
+                            cache.push(".");
+                            break;
+                        }
+
+                      case "-":
+                        {
+                            if (cache.length) {
+                                pattern.push(cache.join(""), ",");
+                            }
+                            cache = [];
+                            cache.push("-");
+                            break;
+                        }
+
+                      case " ":
+                      case ",":
+                        {
+                            pattern.push(cache.join(""), ",");
+                            cache = [];
+                            break;
+                        }
+
+                      default:
+                        {
+                            if (/\d/.test(d[i])) {
+                                cache.push(d[i]);
+                            } else {
+                                if (cache.length) {
+                                    pattern.push(cache.join(""), d[i]);
+                                    cache = [];
+                                }
+                            }
+                            if (i + 1 === l) {
+                                if (cache.length) {
+                                    pattern.push(cache.join(""));
+                                }
+                                dealWithPattern(pattern);
+                                strArr.push(pattern.join(""));
+                                cache = null;
+                                pattern = null;
+                            }
+                        }
+                    }
+                }
+                return strArr.join("");
+            }
+            function replaceWithNode(parent, svgNode, parentX, parentY) {
+                if (!svgNode) {
+                    return;
+                }
+                parentX = parentX || 0;
+                parentY = parentY || 0;
+                if (svgNode.getAttribute("transform")) {
+                    var ctm = getTransformToElement(svgNode, parent);
+                    parentX -= ctm.e;
+                    parentY -= ctm.f;
+                    svgNode.removeAttribute("transform");
+                }
+                switch (svgNode.tagName.toLowerCase()) {
+                  case "g":
+                    {
+                        break;
+                    }
+
+                  case "path":
+                    {
+                        var d = svgNode.getAttribute("d");
+                        if (d) {
+                            d = dealWithPath(d, function(pattern) {
+                                switch (pattern[0]) {
+                                  case "M":
+                                  case "L":
+                                  case "T":
+                                    {
+                                        pattern[1] = +pattern[1] - parentX;
+                                        pattern[3] = +pattern[3] - parentY;
+                                        break;
+                                    }
+
+                                  case "S":
+                                    {
+                                        pattern[1] = +pattern[1] - parentX;
+                                        pattern[3] = +pattern[3] - parentY;
+                                        pattern[5] = +pattern[5] - parentX;
+                                        pattern[7] = +pattern[7] - parentY;
+                                        break;
+                                    }
+
+                                  case "A":
+                                    {
+                                        pattern[11] = +pattern[11] - parentX;
+                                        pattern[13] = +pattern[13] - parentY;
+                                        break;
+                                    }
+
+                                  case "C":
+                                    {
+                                        pattern[1] = +pattern[1] - parentX;
+                                        pattern[3] = +pattern[3] - parentY;
+                                        pattern[5] = +pattern[5] - parentX;
+                                        pattern[7] = +pattern[7] - parentY;
+                                        pattern[9] = +pattern[9] - parentX;
+                                        pattern[11] = +pattern[11] - parentY;
+                                    }
+                                }
+                            });
+                            svgNode.setAttribute("d", d);
+                            svgNode.removeAttribute("transform");
+                        }
+                        return;
+                    }
+
+                  case "image":
+                  case "text":
+                    {
+                        if (parentX && parentY) {
+                            var x = +svgNode.getAttribute("x") || 0, y = +svgNode.getAttribute("y") || 0;
+                            svgNode.setAttribute("x", x - parentX);
+                            svgNode.setAttribute("y", y - parentY);
+                        }
+                        svgNode.removeAttribute("transform");
+                        return;
+                    }
+                }
+                if (svgNode.children) {
+                    for (var i = 0, l = svgNode.children.length; i < l; i++) {
+                        replaceWithNode(svgNode, svgNode.children[i], parentX, parentY);
+                    }
+                }
+            }
+            svgDom.style.display = "none";
+            replaceWithNode(null, svgDom, 0, 0);
+            svgDom.style.display = "inline";
+        }
         data.registerProtocol("svg", module.exports = {
             fileDescription: "SVG 矢量图",
             fileExtension: ".svg",
@@ -8194,9 +8393,10 @@ _p[66] = {
                 svgDom = svgContainer.querySelector("svg");
                 svgDom.setAttribute("width", width + padding * 2 | 0);
                 svgDom.setAttribute("height", height + padding * 2 | 0);
-                svgDom.setAttribute("style", 'font-family: Arial, "Microsoft Yahei",  "Heiti SC"; ' + "background: " + minder.getStyle("background"));
+                svgDom.setAttribute("style", "font-family: Arial, Microsoft Yahei, Heiti SC; " + "background: " + minder.getStyle("background"));
                 svgDom.setAttribute("viewBox", [ renderBox.x - padding | 0, renderBox.y - padding | 0, width + padding * 2 | 0, height + padding * 2 | 0 ].join(" "));
                 svgContainer = document.createElement("div");
+                removeTransform(svgDom);
                 svgContainer.appendChild(svgDom);
                 // need a xml with width and height
                 svgXml = svgContainer.innerHTML;
@@ -8219,7 +8419,7 @@ _p[67] = {
      * @Editor: Naixor
      * @Date: 2015.9.17
      */
-        var LINE_ENDING = "\r", LINE_ENDING_SPLITER = /\r\n|\r|\n/, TAB_CHAR = "	", TAB_CHAR = function(Browser) {
+        var LINE_ENDING = "\r", LINE_ENDING_SPLITER = /\r\n|\r|\n/, TAB_CHAR = function(Browser) {
             if (Browser.gecko) {
                 return {
                     REGEXP: new RegExp("^(	|" + String.fromCharCode(160, 160, 32, 160) + ")"),
@@ -8243,11 +8443,104 @@ _p[67] = {
             while (n--) result += s;
             return result;
         }
+        /**
+     * 对节点text中的换行符进行处理
+     * @method encodeWrap
+     * @param  {String}   nodeText MinderNode.data.text
+     * @return {String}            \n -> '\n'; \\n -> '\\n'
+     */
+        function encodeWrap(nodeText) {
+            if (!nodeText) {
+                return "";
+            }
+            var textArr = [], WRAP_TEXT = [ "\\", "n" ];
+            for (var i = 0, j = 0, l = nodeText.length; i < l; i++) {
+                if (nodeText[i] === "\n" || nodeText[i] === "\r") {
+                    textArr.push("\\n");
+                    j = 0;
+                    continue;
+                }
+                if (nodeText[i] === WRAP_TEXT[j]) {
+                    j++;
+                    if (j === 2) {
+                        j = 0;
+                        textArr.push("\\\\n");
+                    }
+                    continue;
+                }
+                switch (j) {
+                  case 0:
+                    {
+                        textArr.push(nodeText[i]);
+                        break;
+                    }
+
+                  case 1:
+                    {
+                        textArr.push(nodeText[i - 1], nodeText[i]);
+                    }
+                }
+                j = 0;
+            }
+            return textArr.join("");
+        }
+        /**
+     * 将文本内容中的'\n'和'\\n'分别转换成\n和\\n
+     * @method decodeWrap
+     * @param  {[type]}   text [description]
+     * @return {[type]}        [description]
+     */
+        function decodeWrap(text) {
+            if (!text) {
+                return "";
+            }
+            var textArr = [], WRAP_TEXT = [ "\\", "\\", "n" ];
+            for (var i = 0, j = 0, l = text.length; i < l; i++) {
+                if (text[i] === WRAP_TEXT[j]) {
+                    j++;
+                    if (j === 3) {
+                        j = 0;
+                        textArr.push("\\n");
+                    }
+                    continue;
+                }
+                switch (j) {
+                  case 0:
+                    {
+                        textArr.push(text[i]);
+                        j = 0;
+                        break;
+                    }
+
+                  case 1:
+                    {
+                        if (text[i] === "n") {
+                            textArr.push("\n");
+                        } else {
+                            textArr.push(text[i - 1], text[i]);
+                        }
+                        j = 0;
+                        break;
+                    }
+
+                  case 2:
+                    {
+                        textArr.push(text[i - 2]);
+                        if (text[i] !== "\\") {
+                            j = 0;
+                            textArr.push(text[i - 1], text[i]);
+                        }
+                        break;
+                    }
+                }
+            }
+            return textArr.join("");
+        }
         function encode(json, level) {
             var local = "";
             level = level || 0;
             local += repeat("	", level);
-            local += json.data.text + LINE_ENDING;
+            local += encodeWrap(json.data.text) + LINE_ENDING;
             if (json.children) {
                 json.children.forEach(function(child) {
                     local += encode(child, level + 1);
@@ -8269,7 +8562,7 @@ _p[67] = {
         function getNode(line) {
             return {
                 data: {
-                    text: line.replace(TAB_CHAR.DELETE, "")
+                    text: decodeWrap(line.replace(TAB_CHAR.DELETE, ""))
                 }
             };
         }
