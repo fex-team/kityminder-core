@@ -408,9 +408,9 @@ define(function(require, exports, module) {
                 }
 
                 var layout = node.getLayoutInstance();
-                var childrenInFlow = node.getChildren().filter(function(child) {
-                    return !child.hasLayoutOffset();
-                });
+                // var childrenInFlow = node.getChildren().filter(function(child) {
+                //     return !child.hasLayoutOffset();
+                // });
                 layout.doLayout(node, node.getChildren(), round);
             }
 
@@ -422,7 +422,14 @@ define(function(require, exports, module) {
 
             var minder = this;
             this.applyLayoutResult(this.getRoot(), duration, function() {
-                minder.fire('layoutallfinish');
+                /**
+                 * 当节点>200, 不使用动画时, 此处逻辑变为同步逻辑, 外部minder.on事件无法
+                 * 被提前录入, 因此增加setTimeout
+                 * @author Naixor
+                 */
+                setTimeout(function () {
+                    minder.fire('layoutallfinish');
+                }, 0);
             });
 
             return this.fire('layout');
