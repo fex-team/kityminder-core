@@ -76,7 +76,7 @@ define(function(require, exports, module) {
                 'comic sans ms': -0.2,
                 'impact,chicago': -0.12,
                 'times new roman': -0.02,
-                'default': -0.15  
+                'default': -0.15
             },
             'Lux': {
                 'andale mono': -0.05,
@@ -84,7 +84,7 @@ define(function(require, exports, module) {
                 'impact,chicago': -0.13,
                 'times new roman': -0.1,
                 'arial black,avant garde': -0.17,
-                'default': 0   
+                'default': 0
             }
         },
         'firefox': {
@@ -106,7 +106,7 @@ define(function(require, exports, module) {
                 'times new roman': -0.22,
                 'sans-serif': -0.22,
                 'arial black,avant garde': -0.17,
-                'default': -0.16 
+                'default': -0.16
             },
             'Lux': {
                 "宋体,SimSun": -0.2,
@@ -216,6 +216,10 @@ define(function(require, exports, module) {
             if (node._currentTextHash == textHash && node._currentTextGroupBox) return node._currentTextGroupBox;
 
             node._currentTextHash = textHash;
+
+            if (node.type === 'root') {
+                node.minder.fire('roottextchange', {node: node});
+            };
 
             return function() {
                 textGroup.eachItem(function(i, textShape) {
