@@ -256,20 +256,22 @@ define(function(require, exports, module) {
                 var spaceRight = node.getStyle('space-right');
 
                 var overlays = this.overlays;
-                var resource = node.getData('resource');
+
+                /*  修复 resource 数组中出现 null 的 bug
+                 *  @Author zhangbobell
+                 *  @date 2016-01-15
+                 */
+                var resource = node.getData("resource").filter(function(ele) {
+                    return ele !== null;
+                });
+                if (resource.length === 0) {
+                    return;
+                }
                 var minder = node.getMinder();
                 var i, overlay, x;
 
                 x = 0;
                 for (i = 0; i < resource.length; i++) {
-
-                    /* 修复 resource 数组中出现 null 的 bug
-                    *  @Author zhangbobell
-                    *  @date 2016-01-15
-                    */
-                    if (!resource[i]) {
-                        continue;
-                    }
 
                     x += spaceRight;
 
