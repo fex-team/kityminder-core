@@ -1,6 +1,6 @@
 /*!
  * ====================================================
- * kityminder - v1.4.30 - 2016-01-22
+ * kityminder - v1.4.31 - 2016-01-22
  * https://github.com/fex-team/kityminder-core
  * GitHub: https://github.com/fex-team/kityminder-core.git 
  * Copyright (c) 2016 Baidu FEX; Licensed MIT
@@ -1969,7 +1969,7 @@ _p[19] = {
                 this.fire("finishInitHook");
             }
         });
-        Minder.version = "1.4.30";
+        Minder.version = "1.4.31";
         Minder.registerInitHook = function(hook) {
             _initHooks.push(hook);
         };
@@ -6809,18 +6809,20 @@ _p[57] = {
                 update: function(container, node, box) {
                     var spaceRight = node.getStyle("space-right");
                     var overlays = this.overlays;
-                    var resource = node.getData("resource");
+                    /*  修复 resource 数组中出现 null 的 bug
+                 *  @Author zhangbobell
+                 *  @date 2016-01-15
+                 */
+                    var resource = node.getData("resource").filter(function(ele) {
+                        return ele !== null;
+                    });
+                    if (resource.length === 0) {
+                        return;
+                    }
                     var minder = node.getMinder();
                     var i, overlay, x;
                     x = 0;
                     for (i = 0; i < resource.length; i++) {
-                        /* 修复 resource 数组中出现 null 的 bug
-                    *  @Author zhangbobell
-                    *  @date 2016-01-15
-                    */
-                        if (!resource[i]) {
-                            continue;
-                        }
                         x += spaceRight;
                         overlay = overlays[i];
                         if (!overlay) {
