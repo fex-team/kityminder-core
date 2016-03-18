@@ -217,10 +217,6 @@ define(function(require, exports, module) {
 
             node._currentTextHash = textHash;
 
-            if (node.type === 'root') {
-                node.minder.fire('roottextchange', {node: node});
-            };
-
             return function() {
                 textGroup.eachItem(function(i, textShape) {
                     var y = yStart + i * fontSize * lineHeight;
