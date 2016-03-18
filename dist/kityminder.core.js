@@ -1,6 +1,6 @@
 /*!
  * ====================================================
- * kityminder - v1.4.31 - 2016-01-22
+ * kityminder - v1.4.33 - 2016-03-19
  * https://github.com/fex-team/kityminder-core
  * GitHub: https://github.com/fex-team/kityminder-core.git 
  * Copyright (c) 2016 Baidu FEX; Licensed MIT
@@ -1969,7 +1969,7 @@ _p[19] = {
                 this.fire("finishInitHook");
             }
         });
-        Minder.version = "1.4.31";
+        Minder.version = "1.4.33";
         Minder.registerInitHook = function(hook) {
             _initHooks.push(hook);
         };
@@ -7301,11 +7301,6 @@ _p[60] = {
                 var textHash = node.getText() + [ "font-size", "font-name", "font-weight", "font-style" ].map(getDataOrStyle).join("/");
                 if (node._currentTextHash == textHash && node._currentTextGroupBox) return node._currentTextGroupBox;
                 node._currentTextHash = textHash;
-                if (node.type === "root") {
-                    node.minder.fire("roottextchange", {
-                        node: node
-                    });
-                }
                 return function() {
                     textGroup.eachItem(function(i, textShape) {
                         var y = yStart + i * fontSize * lineHeight;
