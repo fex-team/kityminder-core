@@ -119,7 +119,7 @@ define(function(require, exports, module) {
     }
 
 
-    function encode(json, minder) {
+    function encode(json, minder, option) {
 
         var resultCallback;
 
@@ -136,8 +136,10 @@ define(function(require, exports, module) {
 
         /* 获取 SVG 文件内容 */
         var svgInfo = getSVGInfo(minder);
-        var width = svgInfo.width;
-        var height = svgInfo.height;
+        var width = option.width && option.width > svgInfo.width ? option.width : svgInfo.width;
+        var height = option.height && option.height > svgInfo.height ? option.height : svgInfo.height;
+        var offsetX = option.width && option.width > svgInfo.width ? (option.width - svgInfo.width)/2 : 0;
+        var offsetY = option.height && option.height > svgInfo.height ? (option.height - svgInfo.height)/2 : 0;
         var svgDataUrl = svgInfo.dataUrl;
         var imagesInfo = svgInfo.imagesInfo;
 
@@ -179,7 +181,7 @@ define(function(require, exports, module) {
             var svgData = {url: svgDataUrl};
 
             return loadImage(svgData).then(function($image) {
-                drawImage(ctx, $image.element, padding, padding);
+                drawImage(ctx, $image.element, offsetX, offsetY, $image.width, $image.height);
                 return loadImages(imagesInfo);
             }).then(function($images) {
                 for(var i = 0; i < $images.length; i++) {
