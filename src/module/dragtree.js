@@ -10,7 +10,7 @@ define(function(require, exports, module) {
         base: Command,
         execute: function(minder, nodes, parent) {
             var node;
-            for (var i = nodes.length - 1; i >= 0; i--) {
+            for (var i = 0; i < nodes.length; i++) {
                 node = nodes[i];
                 if (node.parent) {
                     node.parent.removeChild(node);
