@@ -1,6 +1,6 @@
 /*!
  * ====================================================
- * kityminder - v1.4.33 - 2016-03-19
+ * kityminder - v1.4.34 - 2016-09-06
  * https://github.com/fex-team/kityminder-core
  * GitHub: https://github.com/fex-team/kityminder-core.git 
  * Copyright (c) 2016 Baidu FEX; Licensed MIT
@@ -4714,7 +4714,7 @@ _p[45] = {
             base: Command,
             execute: function(minder, nodes, parent) {
                 var node;
-                for (var i = nodes.length - 1; i >= 0; i--) {
+                for (var i = 0; i < nodes.length; i++) {
                     node = nodes[i];
                     if (node.parent) {
                         node.parent.removeChild(node);
@@ -8103,7 +8103,7 @@ _p[65] = {
                 imagesInfo: imagesInfo
             };
         }
-        function encode(json, minder) {
+        function encode(json, minder, option) {
             var resultCallback;
             var Promise = kityminder.Promise;
             /* 绘制 PNG 的画布及上下文 */
@@ -8115,8 +8115,10 @@ _p[65] = {
             var bgColor = kity.Color.parse(bgDeclare);
             /* 获取 SVG 文件内容 */
             var svgInfo = getSVGInfo(minder);
-            var width = svgInfo.width;
-            var height = svgInfo.height;
+            var width = option.width && option.width > svgInfo.width ? option.width : svgInfo.width;
+            var height = option.height && option.height > svgInfo.height ? option.height : svgInfo.height;
+            var offsetX = option.width && option.width > svgInfo.width ? (option.width - svgInfo.width) / 2 : 0;
+            var offsetY = option.height && option.height > svgInfo.height ? (option.height - svgInfo.height) / 2 : 0;
             var svgDataUrl = svgInfo.dataUrl;
             var imagesInfo = svgInfo.imagesInfo;
             /* 画布的填充大小 */
@@ -8151,7 +8153,7 @@ _p[65] = {
                     url: svgDataUrl
                 };
                 return loadImage(svgData).then(function($image) {
-                    drawImage(ctx, $image.element, padding, padding);
+                    drawImage(ctx, $image.element, offsetX, offsetY, $image.width, $image.height);
                     return loadImages(imagesInfo);
                 }).then(function($images) {
                     for (var i = 0; i < $images.length; i++) {
