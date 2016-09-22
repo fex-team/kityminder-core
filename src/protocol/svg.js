@@ -206,9 +206,9 @@ define(function(require, exports, module) {
                      }
                  }
              }
-             svgDom.style.display = "none";
+             svgDom.style.visibility = "hidden";
              replaceWithNode(svgDom, x || 0, y || 0);
-             svgDom.style.display = "inline";
+             svgDom.style.visibility = "visible";
          }
          data.registerProtocol("svg", module.exports = {
              fileDescription: "SVG 矢量图",
@@ -221,17 +221,19 @@ define(function(require, exports, module) {
                  svgXml = paper.container.innerHTML;
                  paper.shapeNode.setAttribute("transform", paperTransform);
                  svgContainer = document.createElement("div");
+                 document.body.appendChild(svgContainer);
                  svgContainer.innerHTML = svgXml;
                  svgDom = svgContainer.querySelector("svg");
                  svgDom.setAttribute("width", width + padding * 2 | 0);
                  svgDom.setAttribute("height", height + padding * 2 | 0);
                  svgDom.setAttribute("style", "background: " + minder.getStyle("background"));//"font-family: Arial, Microsoft Yahei, Heiti SC; " +
                  svgDom.setAttribute("viewBox", [ 0, 0, width + padding * 2 | 0, height + padding * 2 | 0 ].join(" "));
-                 svgContainer = document.createElement("div");
+                 tempSvgContainer = document.createElement("div");
                  cleanSVG(svgDom, renderBox.x - padding | 0, renderBox.y - padding | 0);
-                 svgContainer.appendChild(svgDom);
+                 document.body.removeChild(svgContainer);
+                 tempSvgContainer.appendChild(svgDom);
                  // need a xml with width and height
-                 svgXml = svgContainer.innerHTML;
+                 svgXml = tempSvgContainer.innerHTML;
                  // svg 含有 &nbsp; 符号导出报错 Entity 'nbsp' not defined
                  svgXml = svgXml.replace(/&nbsp;/g, "&#xa0;");
                  // svg 含有 &nbsp; 符号导出报错 Entity 'nbsp' not defined
