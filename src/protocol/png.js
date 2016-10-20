@@ -136,10 +136,10 @@ define(function(require, exports, module) {
 
         /* 获取 SVG 文件内容 */
         var svgInfo = getSVGInfo(minder);
-        var width = option.width && option.width > svgInfo.width ? option.width : svgInfo.width;
-        var height = option.height && option.height > svgInfo.height ? option.height : svgInfo.height;
-        var offsetX = option.width && option.width > svgInfo.width ? (option.width - svgInfo.width)/2 : 0;
-        var offsetY = option.height && option.height > svgInfo.height ? (option.height - svgInfo.height)/2 : 0;
+        var width = option && option.width && option.width > svgInfo.width ? option.width : svgInfo.width;
+        var height = option && option.height && option.height > svgInfo.height ? option.height : svgInfo.height;
+        var offsetX = option && option.width && option.width > svgInfo.width ? (option.width - svgInfo.width)/2 : 0;
+        var offsetY = option && option.height && option.height > svgInfo.height ? (option.height - svgInfo.height)/2 : 0;
         var svgDataUrl = svgInfo.dataUrl;
         var imagesInfo = svgInfo.imagesInfo;
 
