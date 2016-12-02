@@ -20,8 +20,8 @@ define(function(require, exports, module) {
             image.onerror = function(err) {
                 reject(err);
             };
-            //image.setAttribute('crossOrigin', 'anonymous');
-            image.crossOrigin = '';
+
+            image.crossOrigin = 'anonymous';
             image.src = info.url;
         });
     }
