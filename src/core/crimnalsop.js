@@ -1,6 +1,7 @@
 /**
  * 扩展了一个插件化渲染器加载的入口；
  * 可在minder实例创建之后，添加该添加一个扩展渲染器；
+ * 基于模块插件化、基于数据插件化会是一个比较有趣的方向。
  **/ 
 define(function(require, exports, module) {
     var kity = require('./kity');
