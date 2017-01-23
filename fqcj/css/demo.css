@@ -1,0 +1,197 @@
+/*这些CSS仅为Demo页面，使用此插件时如无需要请不要引入。*/
+body{
+	font-family:"微软雅黑", "Microsoft Yahei";
+	margin:0px;
+	background-color:#D3D8E1;
+	background-image:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAABCAYAAADjAO9DAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAABhJREFUGFdjvHzj4X8GNPD37z+ICCMDAwCMtQaGDCo14gAAAABJRU5ErkJggg==");
+	background-repeat:repeat;
+}
+h1{
+	position:fixed;
+	left:0px;
+	top:0px;
+	width:100%;
+	height:44px;
+	margin:0px;
+	background-color:#8B9FBA;
+	background-image:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAsCAYAAACkJ9JhAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAMtJREFUGFcFwesqAwAAgNHvybyHJklJSkpNQ2u0EC1CNKYZY8waM9ZaYy6z1lyyRORS3kAp/z/n8PP7J/X2t9Tuv+Ts9lOqrQ+pNN+l3HiT0s2rFK9fpHD5LIe1J8lV25KtPEqm/CDp0ztJFVuSLDQlkW9I/KAuK/tXsrR7IQvpc4mlqjKbrMh0oizReEkmVk8kvHwsY4tHEprPSzCWk+G5rAzN7MngVEYGojvSP7ktfZEt6Q1vSs94UrpHN6QrlJDAyLp0BtekIxDxH7iff7xpdOmmAAAAAElFTkSuQmCC");
+	background-repeat:repeat-x;
+	text-align:center;
+	line-height:44px;
+	font-weight:bold;
+	font-size:17px;
+	color:#FFFFFF;
+	text-shadow:0px -1px 0px rgba(0,0,0,.7);
+	box-shadow:0px 1px 1px rgba(0,0,0,.3);
+}
+.section{
+	margin:10px 5px;
+	border:1px solid #63666C;
+	border-color:rgba(99,102,108,.5);
+	border-radius:4px;
+	background:rgba(255,255,255,.3)
+}
+h3{
+	margin:2px;
+	color:#4C566C;
+	text-shadow:0px 1px 0px rgba(255,255,255,.7);
+}
+button{
+	outline:none;
+	padding:8px;
+	color:#000000;
+	font-family:inherit;
+	font-size:18px;
+	border-radius:8px;
+	background: #F7F7F7;
+	border:1px solid #CACACA;
+	margin:3px;
+	margin-left:4px;
+	margin-top:0px;
+	box-shadow:0px 1px 0px #FFFFFF, 0px 1px 1px rgba(0,0,0,.5) inset;
+	cursor:pointer;
+	cursor:hand;
+}
+button:hover{
+	background:#FFFFFF;
+}
+button:active{
+	color:#FFFFFF;
+	background:#205FC9;
+	filter:progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#3E83FD',endColorstr='#00398F');
+	-ms-filter:"progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#3E83FD',endColorstr='#00398F')";
+	background:-webkit-linear-gradient(#3E83FD,#00398F);
+	background:linear-gradient(#3E83FD,#00398F);
+	box-shadow:0px 1px 0px #FFFFFF;
+}
+pre{
+	color:#2D3340;
+	font-family:"Courier New", Courier, monospace;
+	white-space:pre-wrap;
+	font-size:12px;
+	border:1px solid #FFFFFF;
+	border:1px solid rgba(255,255,255,.7);
+	border-radius:4px;
+	margin:5px;
+	margin-top:1px;
+	margin-bottom:2px;
+	padding:3px;
+	background:#C9CCD2;
+	background:rgba(201,204,210,.5);
+}
+hr{
+	height:0px;
+	border:none;
+	margin:5px;
+	border-bottom:1px solid #63666C;
+	border-bottom-color:rgba(99,102,108,.5);
+}
+.note{
+	font-size:12px;
+	font-style:italic;
+	color:#4C566C;
+	text-shadow:0px 1px 0px rgba(255,255,255,.7);
+	margin:0px 5px 2px 5px;
+}
+.togglea{
+	margin-left:5px;
+	color:#336699;
+	text-shadow:0px 1px 0px rgba(255,255,255,.7);
+	cursor:hand;
+	cursor:pointer;
+}
+.togglea:hover{
+	color:#3399CC;
+}
+.togglea:active{
+	color:#333399;
+}
+ol{
+	margin:5px;
+	color:#4C566C;
+	text-shadow:0px 1px 0px rgba(255,255,255,.7);
+}
+.pre_s{
+	color:#2D3340;
+	font-family:"Courier New", Courier, monospace;
+	font-size:12px;
+	border:1px solid #FFFFFF;
+	border:1px solid rgba(255,255,255,.7);
+	border-radius:4px;
+	padding:1px;
+	background:#C9CCD2;
+	background:rgba(201,204,210,.5);
+}
+table{
+	background:#FFF;
+	border-radius:5px;
+	border-right:1px solid #999;
+	border-bottom:1px solid #999;
+}
+td{
+	color:#222;
+	padding:2px;
+	border-top:1px solid #999;
+	border-left:1px solid #999;
+	vertical-align:top;
+}
+.★{
+	float:left;
+	color:#4C566C;
+	text-shadow:0px 1px 0px rgba(255,255,255,.7);
+}
+.☆{
+	cursor:crosshair;
+	color:#06C;
+	text-shadow:0px 1px 0px rgba(255,255,255,.7);
+	float:right;
+}
+.☆:hover{
+	color:#09C;
+}
+.☆:active{
+	color:#03C;
+}
+
+/*自定义样式*/
+.ios6alert.myalertstyle1{
+	color:#0FF;
+}
+.ios6alert.myalertstyle1 .side_top .alt_titlebar{
+	font-size:20px;
+	color:#0F6;
+}
+.ios6alert.myalertstyle1 .alt_content{
+	font-size:18px;
+}
+.ios6alert.myalertstyle1 .alt_button .alt_button_bg{
+	color:#06F;
+	font-size:20px;
+}
+.ios6alert.myalertstyle2{
+	color:#0F0;
+}
+.ios6alert.myalertstyle2 .side_top{
+	background-image:url(../images/myStyle_Background_side.png);
+}
+.ios6alert.myalertstyle2 .side_bottom{
+	background-image:url(../images/myStyle_Background_side.png);
+}
+.ios6alert.myalertstyle2 .alt_bg{
+	background-image:url(../images/myStyle_Background.png);
+}
+.ios6alert.myalertstyle2 .alt_button.alt_button_def .alt_button_bg{
+	color:#F00;
+}
+.ios6alert.myalertstyle2 .alt_button.alt_button_def:active .alt_button_bg{
+	background-image:url(../images/myStyle_ButtonDefPress_bg.png) !important;
+}
+.ios6alert.myalertstyle2 .alt_button.alt_button_def:active .alt_button_side_left, .ios6alert.myalertstyle2 .alt_button.alt_button_def:active .alt_button_side_right{
+	background-image:url(../images/myStyle_ButtonDefPress_side.png);
+}
+.alt_icon{
+	height:16px;
+	width:16px;
+	vertical-align:middle;
+	margin-right:7px;
+}

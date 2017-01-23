@@ -174,7 +174,8 @@ define(function(require, exports, module) {
         });
 
         var ExpanderRenderer = kity.createClass('ExpanderRenderer', {
-            base: Renderer,
+            
+			base: Renderer,
 
             create: function(node) {
                 if (node.isRoot()) return;
@@ -198,7 +199,6 @@ define(function(require, exports, module) {
 
                 var vector = node.getLayoutVectorIn().normalize(expander.radius + node.getStyle('stroke-width'));
                 var position = node.getVertexIn().offset(vector.reverse());
-
                 this.expander.setTranslate(position);
             }
         });

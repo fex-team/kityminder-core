@@ -1,0 +1,196 @@
+.ios6alert{
+	width:284px;
+	/*position:fixed; Auto add by js*/
+	font-family:"微软雅黑", "Microsoft Yahei";
+	color:#FFF;
+	-moz-user-select: none;/*Unselectable*/
+	-webkit-user-select: none;
+	user-select: none;
+	cursor:default;
+}
+.ios6alert_bg{
+	position:fixed;
+	top:0px;
+	left:0px;
+	height:100%;
+	width:100%;
+	filter:progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#80000000',endColorstr='#80000000');/*For IE7-*/
+	-ms-filter:"progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#80000000',endColorstr='#80000000')";/*For IE8*/
+	background:rgba(0,0,0,.5)/*For IE9*/;
+	background:-webkit-radial-gradient(circle,rgba(0,0,0,0),rgba(0,0,0,.5));
+	background:radial-gradient(circle,rgba(0,0,0,0),rgba(0,0,0,.5));
+	-moz-user-select: none;/*Unselectable*/
+	-webkit-user-select: none;
+	user-select: none;
+	cursor:default;
+}
+.ios6alert .side_top{
+	position:relative;
+	height:30px;
+	background:url(../images/iOS6AlertBackground_side.png) no-repeat;
+}
+.ios6alert .side_bottom{
+	height:18px;
+	background:url(../images/iOS6AlertBackground_side.png) no-repeat;
+	background-position:0px -31px;
+}
+.ios6alert .alt_bg{
+	background:url(../images/iOS6AlertBackground_bg.png) no-repeat;
+	background-size:100% 100%;
+	-ms-behavior: url(../images/backgroundsize.min.htc);/*background-size support for IE*/
+	behavior: url(../images/backgroundsize.min.htc);/*background-size support for IE*/
+	word-wrap:break-word;
+	word-break:normal;
+	text-align:center;
+	padding:11px;
+	padding-top:8px;
+	padding-bottom:44px;
+	text-shadow:0px -1px 0px #000;
+}
+.ios6alert .alt_content{
+	padding:7px 5px;
+	font-size:15px;
+}
+.ios6alert .side_top .alt_titlebar{
+	font-size:17px;
+	padding:14px 10px 0 10px;
+	font-weight:bold;
+	text-align:center;
+	text-shadow:0px -1px 0px #000;
+	word-break:keep-all;
+	white-space:nowrap;
+	overflow-x:hidden;
+	text-overflow:ellipsis;
+}
+.ios6alert .alt_button{
+	margin:2.4px;
+	margin-top:4px;
+	height:43px;
+	float:left;
+}
+.ios6alert .alt_button .alt_button_side_left, .ios6alert .alt_button .alt_button_side_right{
+	width:5px;
+	height:100%;
+	background:url(../images/iOS6AlertButton_side.png) no-repeat;
+	float:left;
+}
+.ios6alert .alt_button .alt_button_side_right{
+	background-position:-6px 0px;
+}
+.ios6alert .alt_button .alt_button_bg{
+	height:100%;
+	float:left;
+	line-height:43px;
+	background:url(../images/iOS6AlertButton_bg.png) repeat-x;
+	font-weight:bold;
+	width:116px;
+	word-break:keep-all;
+	white-space:nowrap;
+	overflow-x:hidden;
+	text-overflow:ellipsis;
+}
+.ios6alert .alt_button_single .alt_button_bg{
+	width:247.2px;
+}
+.ios6alert .alt_button:active .alt_button_side_left{
+	background-position:-22px 0px !important;
+}
+.ios6alert .alt_button:active .alt_button_side_right{
+	background-position:-28px 0px !important;
+}
+.ios6alert .alt_button:active .alt_button_bg{
+	background:url(../images/iOS6AlertButtonPress_bg.png) repeat-x !important;
+}
+.ios6alert .alt_button.alt_button_def .alt_button_side_left{
+	background-position:-11px 0px;
+}
+.ios6alert .alt_button.alt_button_def .alt_button_side_right{
+	background-position:-17px 0px;
+}
+.ios6alert .alt_button.alt_button_def .alt_button_bg{
+	background:url(../images/iOS6AlertButtonDef_bg.png) repeat-x;
+}
+.ios6alert .alt_button.alt_button_def:active .alt_button_side_left{
+	background-position:-33px 0px !important;
+}
+.ios6alert .alt_button.alt_button_def:active .alt_button_side_right{
+	background-position:-39px 0px !important;
+}
+.ios6alert .alt_button.alt_button_def:active .alt_button_bg{
+	background:url(../images/iOS6AlertButtonDefPress_bg.png) repeat-x !important;
+}
+.ios6alert .alt_button.alt_button_del .alt_button_side_left{
+	background-position:-44px 0px;
+}
+.ios6alert .alt_button.alt_button_del .alt_button_side_right{
+	background-position:-50px 0px;
+}
+.ios6alert .alt_button.alt_button_del .alt_button_bg{
+	background:url(../images/iOS6AlertButtonDel_bg.png) repeat-x;
+}
+.ios6alert .alt_button.alt_button_del:active .alt_button_side_left{
+	background-position:-55px 0px !important;
+}
+.ios6alert .alt_button.alt_button_del:active .alt_button_side_right{
+	background-position:-61px 0px !important;
+}
+.ios6alert .alt_button.alt_button_del:active .alt_button_bg{
+	background:url(../images/iOS6AlertButtonDelPress_bg.png) repeat-x !important;
+}
+/* Animation Effect */
+.ios6alert.ios6alertpopup{
+	-webkit-animation:ios6alert_popup .35s ease-in-out;
+	animation:ios6alert_popup .35s ease-in-out;
+}
+@-webkit-keyframes ios6alert_popup{
+	0%{opacity:0;-webkit-transform:scale(.65,.65);}
+	33%{opacity:100;-webkit-transform:scale(1.05,1.05);}
+	66%{-webkit-transform:scale(.95,.95);}
+	100%{-webkit-transform:scale(1,1);}
+}
+@keyframes ios6alert_popup{
+	0%{opacity:0;transform:scale(.65,.65);}
+	33%{opacity:100;transform:scale(1.05,1.05);}
+	66%{transform:scale(.95,.95);}
+	100%{transform:none;}
+}
+.ios6alert.ios6alertclose{
+	-webkit-animation:ios6alert_close .1s ease-out;
+	animation:ios6alert_close .1s ease-out;
+	-webkit-animation-fill-mode:forwards;
+	animation-fill-mode:forwards;
+}
+@-webkit-keyframes ios6alert_close{
+	0%{opacity:1;-webkit-transform:scale(1,1);}
+	100%{opacity:0;-webkit-transform:scale(.9,.9);}
+}
+@keyframes ios6alert_close{
+	0%{opacity:1;transform:none;}
+	100%{opacity:0;transform:scale(.9,.9);}
+}
+.ios6alertbgpop{
+	-webkit-animation:ios6alert_bgpop .7s ease-in-out;
+	animation:ios6alert_bgpop .7s ease-in-out;
+}
+@-webkit-keyframes ios6alert_bgpop{
+	0%{opacity:0;}
+	100%{opacity:1;}
+}
+@keyframes ios6alert_bgpop{
+	0%{opacity:0;}
+	100%{opacity:1;}
+}
+.ios6alertbgclose{
+	-webkit-animation:ios6alert_bgclose .1s ease-out;
+	animation:ios6alert_bgclose .1s ease-out;
+	-webkit-animation-fill-mode:forwards;
+	animation-fill-mode:forwards;
+}
+@-webkit-keyframes ios6alert_bgclose{
+	0%{opacity:1;}
+	100%{opacity:0;}
+}
+@keyframes ios6alert_bgclose{
+	0%{opacity:1;}
+	100%{opacity:0;}
+}

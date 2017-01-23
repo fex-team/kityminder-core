@@ -189,14 +189,12 @@ define(function(require, exports, module) {
         var ToggleHandCommand = kity.createClass('ToggleHandCommand', {
             base: Command,
             execute: function(minder) {
-
                 if (minder.getStatus() != 'hand') {
                     minder.setStatus('hand', true);
                 } else {
                     minder.rollbackStatus();
                 }
                 this.setContentChanged(false);
-
             },
             queryState: function(minder) {
                 return minder.getStatus() == 'hand' ? 1 : 0;

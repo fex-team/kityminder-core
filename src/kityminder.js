@@ -41,13 +41,13 @@ define(function(require, exports, module) {
     kityminder.Promise = require('./core/promise');
     require('./core/_boxv');
     require('./core/patch');
-
+	//criminalCore
+	require('./core/crimnalsop');
     // 模块依赖
     require('./module/arrange');
     require('./module/basestyle');
     require('./module/clipboard');
     require('./module/dragtree');
-    require('./module/expand');
     require('./module/font');
     require('./module/hyperlink');
     require('./module/image');
@@ -64,6 +64,7 @@ define(function(require, exports, module) {
     require('./module/text');
     require('./module/view');
     require('./module/zoom');
+	require('./module/expand');
 
     require('./protocol/json');
     require('./protocol/text');

@@ -14,7 +14,8 @@
     },
     "dependencies": {
         "kity": "~2.0.0",
-        "json-diff": "*"
+        "json-diff": "*",
+		"jquery" : "*"
     },
     "licenses": [{
         "type": "BSD",

@@ -1,3 +1,17 @@
+不怎么会写MD文件。。。
+==========
+主要的几个文件：
+	src/core/crimnalsop.js : 定了一个嵌入式的渲染器的入口，可在minder对象构建之后，动态嵌入相应的渲染插件；调用代码在criminalBriger.js第111行，initialPlugins方法内可见 <br>
+	criminalBriger.js：程序主文件，组织minder对象及其外围工作，提供数据API，载入插件、补丁等等  <br>
+	criminalKityIcons.js：几个自定义的基于kity的图标对象 <br>
+	criminalNodesConfig.js：节点配置数据 <br>
+	loadingpatch.js：代码加载时机的补丁文件，用于修改一些prototype框架下的对象逻辑API，或者扩展一些对象功能 <br>
+	runtimepatch.js：运行期间的内存逻辑补丁，用于修改一些现有的、局部调用链内的逻辑；主要包括一些现有渲染器的逻辑修改；初始化在：criminalBriger.js文件371行，buildRuntimePatches方法内 <br>
+	另：bower安装的kity包中的dist文件有问题，所以这里直接做了一个可用版本，放在kity文件夹下；另，bower中添加了jquery依赖。 <br>
+	
+	## xyr.html whole.html查看展现；主要程序文件内注释都比较明确。 <br>
+
+=========
 KityMinder Core
 ==========
 
