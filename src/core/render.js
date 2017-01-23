@@ -175,7 +175,6 @@ define(function(require, exports, module) {
                 });
 
                 node._contentBox = new kity.Box();
-
                 node._renderers.forEach(function(renderer) {
 
                     // 判断当前上下文是否应该渲染

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>KityMinder Example</title>
+
+    <link rel="stylesheet" href="dist/kityminder.core.css">
+	<link rel="stylesheet" href="kityminder.editor.css">
+    <style type="text/css">
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+
+        #minder-view {
+            position: absolute;
+            border: 1px solid #ccc;
+            left: 10px;
+            top: 10px;
+            bottom: 10px;
+            right: 10px;
+			margin-top:10px;
+        }
+    </style>
+	<script type="text/javascript" >
+		window.naobasepath = "";
+	</script>
+    <script type="text/javascript" src="../kity/dist/kity.js"></script>
+</head>
+<body>
+    <div id="minder-view">
+		
+    </div>
+</body>
+
+
+<script type="text/javascript" src="dist/kityminder.core.js"></script>
+<script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript" src="criminalKityIcons.js"></script>
+<script type="text/javascript">
+</script>
+<script type="text/javascript" >
+	var pp = new kity.Paper();
+	pp.renderTo('minder-view');
+	var mm = new criminalBases.MessageCountIcon().setValue(2);
+	mm.setTranslate(100, 0);
+	var ii = new criminalBases.PhotoShower();
+	ii.setUrl(window.naobasepath+"criminalicons/Koala.jpg");
+	ii.setTranslate(600,200);
+	pp.addShape(mm);
+	pp.addShape(ii);
+	
+	var rect = pp.put(new criminalBases.HalfRect());
+    var text = pp.put(new kity.Text());
+
+    text.setContent('hello kity!');
+    text.fill('white');
+    text.setX(260);
+    text.setY(260);
+    rect.setBox(text.getBoundaryBox().expand(16, 50, 16, 50));
+	
+    rect.setRadius(40);
+    rect.fill('blue');
+	rect.setAnglesSize('right');
+	var rectAnother = pp.put(new criminalBases.HalfRect());
+	var rectbox = rect.getBoundaryBox();
+	rectAnother.setPosition(rectbox.right - 40,rectbox.top);
+	rectAnother.setWidth(100);
+	rectAnother.setHeight(rectbox.height);
+	rectAnother.setRadius(40);
+	rectAnother.fill('red');
+</script>
+</html>

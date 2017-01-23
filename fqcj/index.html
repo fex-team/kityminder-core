@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>iOS6Alert.js demo</title>
+<link href="css/ios6alert.css" rel="stylesheet" />
+<link href="css/demo.css" rel="stylesheet" />
+<script src="js/jquery-1.11.0.min.js" language="javascript"></script>
+<script src="js/ios6alert.min.js" language="javascript"></script>
+</head>
+<script>
+$(document).ready(function(){
+	$(".yesnocall").click(function(){
+		/*
+		$.ajax({
+			type:'POST',
+			url:"getCjsxxByLadw.action",
+			data:{"asjbh":asjbh},
+			success:function(data){
+				if(data != null && data != ""){
+					$("body").ios6alert({
+						title : "请选择采集室：",
+						content : "<select id = 'cjsxx'><option selected = 'true' value = '下拉选择框1'>下拉选择框</option><option value = '下拉选择框2'>下拉选择框</option><option value = '下拉选择框3'>下拉选择框</option><option value = '下拉选择框4'>下拉选择框</option><option value = '下拉选择框5'>下拉选择框</option></select>",
+						type : 1,
+						html:true,
+						buttonText:{
+							Yes:"确    定",
+							No:"取   消"
+						},
+						onClickYes:function(){
+							var cjsmc = $("#cjsxx :selected").val();
+							alert(cjsmc);
+							$.ajax({
+								type:'POST',
+								url:"newBzhcj.action",
+								data:{"asjbh":asjbh,"rybh":rybh,"cjsmc":cjsmc},
+								success:function(data){
+									if(data != null && data != ""){
+										alert(data.message);
+									}
+								}
+							})
+						}
+					});
+				}
+			}
+		});
+		*/
+		$("body").ios6alert({
+			title : "请选择采集室：",
+			content : "<select id = 'cjsxx'><option selected = 'true' value = '下拉选择框1'>下拉选择框</option><option value = '下拉选择框2'>下拉选择框</option><option value = '下拉选择框3'>下拉选择框</option><option value = '下拉选择框4'>下拉选择框</option><option value = '下拉选择框5'>下拉选择框</option></select>",
+			type : 1,
+			html:true,
+			buttonText:{
+				Yes:"确    定",
+				No:"取   消"
+			},
+			onClickYes:function(){
+				var cjsmc = $("#cjsxx :selected").val();
+				alert(cjsmc);
+			}
+		});
+	});
+});
+</script>
+<body>
+	<div class="section">
+		<h3>回调函数</h3>
+		<button class="yesnocall">确定/取消</button>
+		<pre>
+$("body").ios6alert({
+	title : "请选择采集室：",
+	content : "<select><option>下拉选择框</option><option>下拉选择框</option><option>下拉选择框</option><option>下拉选择框</option><option>下拉选择框</option></select>",
+	type : 1,
+	html:true,
+	buttonText:{
+		Yes:"确    定",
+	}
+	onClickYes : function(){
+		alert("点击了“确定”");
+	}
+});
+</pre>
+</div>
+
+</body>
+</html>

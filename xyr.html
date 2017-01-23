@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>KityMinder Example</title>
+
+    <link rel="stylesheet" href="dist/kityminder.core.css">
+	<link rel="stylesheet" href="kityminder.editor.css">
+	<link rel="stylesheet" href="kmwraper.css" />
+	<link href="fqcj/css/ios6alert.css" rel="stylesheet" />
+	<link href="fqcj/css/demo.css" rel="stylesheet" />
+    <style type="text/css">
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+
+        #minder-view { 
+            position: absolute;
+            border: 1px solid #ccc;
+            left: 10px;
+            top: 10px;
+            bottom: 10px;
+            right: 10px;
+			margin-top:10px;
+        }
+    </style>
+	<script type="text/javascript" >
+		window.naobasepath = "";
+	</script>
+    <script type="text/javascript" src="kity/kity.js"></script>
+	<script type="text/javascript" src="dateFormat.js"></script>
+</head>
+<body>
+    <div id="minder-view">
+		<div id="navigatorWhole" class="navigator" style="display:none;">
+			<div class="nav-bar">
+				<div id="zoominCon" class="nav-btn zoom-in">
+					<div class="icon"></div>
+				</div>
+				<div id="zoomradioCon" class="zoom-pan">
+					<div id="zoomOrigin" class="origin"></div>
+					<div id="zoomIndica" class="indicator"></div>
+				</div>
+				<div id="zoomoutCon" class="nav-btn zoom-out">
+					<div class="icon"></div>
+				</div>
+				<div id="handerCon" class="nav-btn hand">
+					<div class="icon"></div>
+				</div>
+				<div id="cameraCon" class="nav-btn camera" style="display:none;">
+					<div class="icon"></div>
+				</div>
+				<div id="navigaCon" class="nav-btn nav-trigger active">
+					<div class="icon"></div>
+				</div>
+				<div id="compactCon" class="nav-btn nocompact">
+					<div class="icon"></div>
+				</div>
+			</div>
+			<div id="navigaEl" class="nav-previewer" ></div>
+		</div>
+    </div>
+</body>
+<script type="text/javascript" src="dist/kityminder.core.js"></script>
+<script type="text/javascript" src="loadingpatch.js"></script>
+<script type="text/javascript" src="runtimepatch.js"></script>
+<script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
+<!-- loading demo data. -->
+<script type="text/javascript" src="jqdemopatch.js"></script>
+<!-- -------------------------------- -->
+<script type="text/javascript" src="fqcj/js/ios6alert.js"></script>
+<script type="text/javascript" src="criminalKityIcons.js"></script>
+<script type="text/javascript" src="criminalBriger.js"></script>
+<script type="text/javascript" src="criminalNodesConfig.js" ></script>
+<script type="text/javascript" >
+	window.__KW = new kmwraper('minder-view',{
+		navigatorable : true,
+		trunkType  : 'xyr'
+	});
+</script>
+</html>
