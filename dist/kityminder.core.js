@@ -1,9 +1,9 @@
 /*!
  * ====================================================
- * kityminder - v1.4.34 - 2016-09-06
+ * kityminder - v1.4.35 - 2017-02-03
  * https://github.com/fex-team/kityminder-core
  * GitHub: https://github.com/fex-team/kityminder-core.git 
- * Copyright (c) 2016 Baidu FEX; Licensed MIT
+ * Copyright (c) 2017 Baidu FEX; Licensed MIT
  * ====================================================
  */
 
@@ -8037,8 +8037,7 @@ _p[65] = {
                 image.onerror = function(err) {
                     reject(err);
                 };
-                //image.setAttribute('crossOrigin', 'anonymous');
-                image.crossOrigin = "";
+                image.crossOrigin = "anonymous";
                 image.src = info.url;
             });
         }
@@ -8115,10 +8114,10 @@ _p[65] = {
             var bgColor = kity.Color.parse(bgDeclare);
             /* 获取 SVG 文件内容 */
             var svgInfo = getSVGInfo(minder);
-            var width = option.width && option.width > svgInfo.width ? option.width : svgInfo.width;
-            var height = option.height && option.height > svgInfo.height ? option.height : svgInfo.height;
-            var offsetX = option.width && option.width > svgInfo.width ? (option.width - svgInfo.width) / 2 : 0;
-            var offsetY = option.height && option.height > svgInfo.height ? (option.height - svgInfo.height) / 2 : 0;
+            var width = option && option.width && option.width > svgInfo.width ? option.width : svgInfo.width;
+            var height = option && option.height && option.height > svgInfo.height ? option.height : svgInfo.height;
+            var offsetX = option && option.width && option.width > svgInfo.width ? (option.width - svgInfo.width) / 2 : 0;
+            var offsetY = option && option.height && option.height > svgInfo.height ? (option.height - svgInfo.height) / 2 : 0;
             var svgDataUrl = svgInfo.dataUrl;
             var imagesInfo = svgInfo.imagesInfo;
             /* 画布的填充大小 */
@@ -8428,9 +8427,9 @@ _p[66] = {
                     }
                 }
             }
-            svgDom.style.display = "none";
+            svgDom.style.visibility = "hidden";
             replaceWithNode(svgDom, x || 0, y || 0);
-            svgDom.style.display = "inline";
+            svgDom.style.visibility = "visible";
         }
         data.registerProtocol("svg", module.exports = {
             fileDescription: "SVG 矢量图",
@@ -8443,6 +8442,7 @@ _p[66] = {
                 svgXml = paper.container.innerHTML;
                 paper.shapeNode.setAttribute("transform", paperTransform);
                 svgContainer = document.createElement("div");
+                document.body.appendChild(svgContainer);
                 svgContainer.innerHTML = svgXml;
                 svgDom = svgContainer.querySelector("svg");
                 svgDom.setAttribute("width", width + padding * 2 | 0);
@@ -8450,11 +8450,12 @@ _p[66] = {
                 svgDom.setAttribute("style", "background: " + minder.getStyle("background"));
                 //"font-family: Arial, Microsoft Yahei, Heiti SC; " +
                 svgDom.setAttribute("viewBox", [ 0, 0, width + padding * 2 | 0, height + padding * 2 | 0 ].join(" "));
-                svgContainer = document.createElement("div");
+                tempSvgContainer = document.createElement("div");
                 cleanSVG(svgDom, renderBox.x - padding | 0, renderBox.y - padding | 0);
-                svgContainer.appendChild(svgDom);
+                document.body.removeChild(svgContainer);
+                tempSvgContainer.appendChild(svgDom);
                 // need a xml with width and height
-                svgXml = svgContainer.innerHTML;
+                svgXml = tempSvgContainer.innerHTML;
                 // svg 含有 &nbsp; 符号导出报错 Entity 'nbsp' not defined
                 svgXml = svgXml.replace(/&nbsp;/g, "&#xa0;");
                 // svg 含有 &nbsp; 符号导出报错 Entity 'nbsp' not defined
