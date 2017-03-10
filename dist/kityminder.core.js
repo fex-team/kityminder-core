@@ -1,6 +1,6 @@
 /*!
  * ====================================================
- * kityminder - v1.4.35 - 2017-02-03
+ * kityminder - v1.4.36 - 2017-03-10
  * https://github.com/fex-team/kityminder-core
  * GitHub: https://github.com/fex-team/kityminder-core.git 
  * Copyright (c) 2017 Baidu FEX; Licensed MIT
@@ -1969,7 +1969,7 @@ _p[19] = {
                 this.fire("finishInitHook");
             }
         });
-        Minder.version = "1.4.33";
+        Minder.version = "1.4.36";
         Minder.registerInitHook = function(hook) {
             _initHooks.push(hook);
         };
@@ -6660,7 +6660,7 @@ _p[57] = {
                 getResourceColor: function(resource) {
                     var colorMapping = this._getResourceColorIndexMapping();
                     var nextIndex;
-                    if (!colorMapping.hasOwnProperty(resource)) {
+                    if (!colorMapping.__proto__.hasOwnProperty(resource)) {
                         // 找不到找下个可用索引
                         nextIndex = this._getNextResourceColorIndex();
                         colorMapping[resource] = nextIndex;
