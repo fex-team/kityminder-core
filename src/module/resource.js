@@ -56,7 +56,7 @@ define(function(require, exports, module) {
                 var colorMapping = this._getResourceColorIndexMapping();
                 var nextIndex;
 
-                if (!colorMapping.hasOwnProperty(resource)) {
+                if (!colorMapping.__proto__.hasOwnProperty(resource)) {
                     // 找不到找下个可用索引
                     nextIndex = this._getNextResourceColorIndex();
                     colorMapping[resource] = nextIndex;
