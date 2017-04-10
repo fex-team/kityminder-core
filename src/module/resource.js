@@ -56,7 +56,7 @@ define(function(require, exports, module) {
                 var colorMapping = this._getResourceColorIndexMapping();
                 var nextIndex;
 
-                if (!colorMapping.__proto__.hasOwnProperty(resource)) {
+                if (!Object.prototype.hasOwnProperty.call(colorMapping, resource)) {
                     // 找不到找下个可用索引
                     nextIndex = this._getNextResourceColorIndex();
                     colorMapping[resource] = nextIndex;
@@ -77,7 +77,7 @@ define(function(require, exports, module) {
                     resource;
 
                 for (resource in mapping) {
-                    if (mapping.hasOwnProperty(resource)) {
+                    if (Object.prototype.hasOwnProperty.call(mapping, resource)) {
                         used.push(resource);
                     }
                 }
@@ -101,7 +101,7 @@ define(function(require, exports, module) {
 
                 // 抽取已经使用的值到 used 数组
                 for (resource in colorMapping) {
-                    if (colorMapping.hasOwnProperty(resource)) {
+                    if (Object.prototype.hasOwnProperty.call(colorMapping, resource)) {
                         used.push(colorMapping[resource]);
                     }
                 }

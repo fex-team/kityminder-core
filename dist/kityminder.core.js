@@ -1,6 +1,6 @@
 /*!
  * ====================================================
- * kityminder - v1.4.36 - 2017-03-10
+ * kityminder - v1.4.37 - 2017-03-23
  * https://github.com/fex-team/kityminder-core
  * GitHub: https://github.com/fex-team/kityminder-core.git 
  * Copyright (c) 2017 Baidu FEX; Licensed MIT
@@ -1969,7 +1969,7 @@ _p[19] = {
                 this.fire("finishInitHook");
             }
         });
-        Minder.version = "1.4.36";
+        Minder.version = "1.4.37";
         Minder.registerInitHook = function(hook) {
             _initHooks.push(hook);
         };
@@ -6660,7 +6660,7 @@ _p[57] = {
                 getResourceColor: function(resource) {
                     var colorMapping = this._getResourceColorIndexMapping();
                     var nextIndex;
-                    if (!colorMapping.__proto__.hasOwnProperty(resource)) {
+                    if (!Object.prototype.hasOwnProperty.call(colorMapping, resource)) {
                         // 找不到找下个可用索引
                         nextIndex = this._getNextResourceColorIndex();
                         colorMapping[resource] = nextIndex;
@@ -6677,7 +6677,7 @@ _p[57] = {
                     var mapping = this._getResourceColorIndexMapping();
                     var used = [], resource;
                     for (resource in mapping) {
-                        if (mapping.hasOwnProperty(resource)) {
+                        if (Object.prototype.hasOwnProperty.call(mapping, resource)) {
                             used.push(resource);
                         }
                     }
@@ -6696,7 +6696,7 @@ _p[57] = {
                     used = [];
                     // 抽取已经使用的值到 used 数组
                     for (resource in colorMapping) {
-                        if (colorMapping.hasOwnProperty(resource)) {
+                        if (Object.prototype.hasOwnProperty.call(colorMapping, resource)) {
                             used.push(colorMapping[resource]);
                         }
                     }
