@@ -152,6 +152,9 @@ define(function(require, exports, module) {
                             renderer.getRenderShape().setVisible(false);
                             lastBoxes[j] = null;
                         }
+                        
+                        // 更新 render 的 contentBox
+                        renderer.contentBox = lastBoxes[j];
                     }
                 }
 

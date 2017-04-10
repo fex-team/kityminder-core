@@ -243,7 +243,7 @@ define(function(require, exports, module) {
         },
 
         getCommonAncestor: function(node) {
-            return MinderNode.getNodeCommonAncestor(this, node);
+            return MinderNode.getCommonAncestor(this, node);
         },
 
         contains: function(node) {

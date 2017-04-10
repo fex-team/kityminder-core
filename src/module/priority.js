@@ -30,7 +30,7 @@ define(function(require, exports, module) {
 
         var PRIORITY_DATA = 'priority';
 
-        // 进度图标的图形
+        // 优先级图标的图形
         var PriorityIcon = kity.createClass('PriorityIcon', {
             base: kity.Group,
 
