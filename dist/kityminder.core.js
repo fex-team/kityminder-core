@@ -1,6 +1,6 @@
 /*!
  * ====================================================
- * kityminder - v1.4.37 - 2017-03-23
+ * kityminder - v1.4.38 - 2017-04-10
  * https://github.com/fex-team/kityminder-core
  * GitHub: https://github.com/fex-team/kityminder-core.git 
  * Copyright (c) 2017 Baidu FEX; Licensed MIT
@@ -1969,7 +1969,7 @@ _p[19] = {
                 this.fire("finishInitHook");
             }
         });
-        Minder.version = "1.4.37";
+        Minder.version = "1.4.38";
         Minder.registerInitHook = function(hook) {
             _initHooks.push(hook);
         };
@@ -2311,7 +2311,7 @@ _p[21] = {
                 return this.rc;
             },
             getCommonAncestor: function(node) {
-                return MinderNode.getNodeCommonAncestor(this, node);
+                return MinderNode.getCommonAncestor(this, node);
             },
             contains: function(node) {
                 return this == node || this.isAncestorOf(node);
@@ -3041,6 +3041,8 @@ _p[27] = {
                                 renderer.getRenderShape().setVisible(false);
                                 lastBoxes[j] = null;
                             }
+                            // 更新 render 的 contentBox
+                            renderer.contentBox = lastBoxes[j];
                         }
                     }
                     for (j = 0; j < nodes.length; j++) {
@@ -6302,7 +6304,7 @@ _p[55] = {
             var BACK_PATH = "M0,13c0,3.866,3.134,7,7,7h6c3.866,0,7-3.134,7-7V7H0V13z";
             var MASK_PATH = "M20,10c0,3.866-3.134,7-7,7H7c-3.866,0-7-3.134-7-7V7c0-3.866,3.134-7,7-7h6c3.866,0,7,3.134,7,7V10z";
             var PRIORITY_DATA = "priority";
-            // 进度图标的图形
+            // 优先级图标的图形
             var PriorityIcon = kity.createClass("PriorityIcon", {
                 base: kity.Group,
                 constructor: function() {
@@ -8088,8 +8090,8 @@ _p[65] = {
                         url: imageUrl,
                         width: imageSize.width,
                         height: imageSize.height,
-                        x: -renderContainer.getBoundaryBox().x + imageRenderBox.x + 20,
-                        y: -renderContainer.getBoundaryBox().y + imageRenderBox.y + 20
+                        x: -renderContainer.getBoundaryBox().x + imageRenderBox.x,
+                        y: -renderContainer.getBoundaryBox().y + imageRenderBox.y
                     };
                     imagesInfo.push(imageInfo);
                 }
@@ -8132,9 +8134,9 @@ _p[65] = {
             }
             function drawImage(ctx, image, x, y, width, height) {
                 if (width && height) {
-                    ctx.drawImage(image, x, y, width, height);
+                    ctx.drawImage(image, x + padding, y + padding, width, height);
                 } else {
-                    ctx.drawImage(image, x, y);
+                    ctx.drawImage(image, x + padding, y + padding);
                 }
             }
             function generateDataUrl(canvas) {
@@ -8156,7 +8158,7 @@ _p[65] = {
                     return loadImages(imagesInfo);
                 }).then(function($images) {
                     for (var i = 0; i < $images.length; i++) {
-                        drawImage(ctx, $images[i].element, $images[i].x, $images[i].y, $images[i].width, $images[i].height);
+                        drawImage(ctx, $images[i].element, $images[i].x + offsetX, $images[i].y + offsetY, $images[i].width, $images[i].height);
                     }
                     DomURL.revokeObjectURL(svgDataUrl);
                     document.body.appendChild(canvas);
