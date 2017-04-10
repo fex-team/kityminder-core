@@ -158,9 +158,9 @@ define(function(require, exports, module) {
 
         function drawImage(ctx, image, x, y, width, height) {
             if (width && height) {
-                ctx.drawImage(image, x, y, width, height);
+                ctx.drawImage(image, x + padding, y + padding, width, height);
             } else {
-                ctx.drawImage(image, x, y);
+                ctx.drawImage(image, x + padding, y + padding);
             }
         }
 
@@ -185,7 +185,7 @@ define(function(require, exports, module) {
                 return loadImages(imagesInfo);
             }).then(function($images) {
                 for(var i = 0; i < $images.length; i++) {
-                    drawImage(ctx, $images[i].element, $images[i].x + offsetX + padding, $images[i].y + offsetY + padding, $images[i].width, $images[i].height);
+                    drawImage(ctx, $images[i].element, $images[i].x + offsetX $images[i].y + offsetY, $images[i].width, $images[i].height);
                 }
 
                 DomURL.revokeObjectURL(svgDataUrl);
