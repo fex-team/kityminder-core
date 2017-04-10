@@ -185,7 +185,7 @@ define(function(require, exports, module) {
                 return loadImages(imagesInfo);
             }).then(function($images) {
                 for(var i = 0; i < $images.length; i++) {
-                    drawImage(ctx, $images[i].element, $images[i].x + offsetX $images[i].y + offsetY, $images[i].width, $images[i].height);
+                    drawImage(ctx, $images[i].element, $images[i].x + offsetX, $images[i].y + offsetY, $images[i].width, $images[i].height);
                 }
 
                 DomURL.revokeObjectURL(svgDataUrl);
