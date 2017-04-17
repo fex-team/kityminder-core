@@ -1,6 +1,6 @@
 /*!
  * ====================================================
- * kityminder - v1.4.38 - 2017-04-10
+ * kityminder - v1.4.39 - 2017-04-17
  * https://github.com/fex-team/kityminder-core
  * GitHub: https://github.com/fex-team/kityminder-core.git 
  * Copyright (c) 2017 Baidu FEX; Licensed MIT
@@ -1969,7 +1969,7 @@ _p[19] = {
                 this.fire("finishInitHook");
             }
         });
-        Minder.version = "1.4.38";
+        Minder.version = "1.4.39";
         Minder.registerInitHook = function(hook) {
             _initHooks.push(hook);
         };
@@ -8043,6 +8043,36 @@ _p[65] = {
                 image.src = info.url;
             });
         }
+        /**
+     * xhrLoadImage: 通过 xhr 加载保存在 BOS 上的图片
+     * @note: BOS 上的 CORS 策略是取 headers 里面的 Origin 字段进行判断
+     *        而通过 image 的 src 的方式是无法传递 origin 的，因此需要通过 xhr 进行
+     */
+        function xhrLoadImage(info, callback) {
+            return Promise(function(resolve, reject) {
+                var xmlHttp = new XMLHttpRequest();
+                xmlHttp.open("GET", info.url, true);
+                xmlHttp.responseType = "blob";
+                xmlHttp.onreadystatechange = function() {
+                    if (xmlHttp.readyState === 4 && xmlHttp.status === 200) {
+                        var blob = xmlHttp.response;
+                        var image = document.createElement("img");
+                        image.src = DomURL.createObjectURL(blob);
+                        image.onload = function() {
+                            DomURL.revokeObjectURL(image.src);
+                            resolve({
+                                element: image,
+                                x: info.x,
+                                y: info.y,
+                                width: info.width,
+                                height: info.height
+                            });
+                        };
+                    }
+                };
+                xmlHttp.send();
+            });
+        }
         function getSVGInfo(minder) {
             var paper = minder.getPaper(), paperTransform, domContainer = paper.container, svgXml, svgContainer, svgDom, renderContainer = minder.getRenderContainer(), renderBox = renderContainer.getRenderBox(), width = renderBox.width + 1, height = renderBox.height + 1, blob, svgUrl, img;
             // 保存原始变换，并且移动到合适的位置
@@ -8068,6 +8098,9 @@ _p[65] = {
             svgXml = svgXml.replace(' xmlns="http://www.w3.org/2000/svg" ' + 'xmlns:NS1="" NS1:ns1:xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:NS2="" NS2:xmlns:ns1=""', "");
             // svg 含有 &nbsp; 符号导出报错 Entity 'nbsp' not defined
             svgXml = svgXml.replace(/&nbsp;/g, "&#xa0;");
+            // fix title issue in safari
+            // @ http://stackoverflow.com/questions/30273775/namespace-prefix-ns1-for-href-on-tagelement-is-not-defined-setattributens
+            svgXml = svgXml.replace(/NS\d+:title/gi, "xlink:title");
             blob = new Blob([ svgXml ], {
                 type: "image/svg+xml"
             });
@@ -8106,7 +8139,6 @@ _p[65] = {
         }
         function encode(json, minder, option) {
             var resultCallback;
-            var Promise = kityminder.Promise;
             /* 绘制 PNG 的画布及上下文 */
             var canvas = document.createElement("canvas");
             var ctx = canvas.getContext("2d");
@@ -8145,7 +8177,7 @@ _p[65] = {
             // 加载节点上的图片
             function loadImages(imagesInfo) {
                 var imagePromises = imagesInfo.map(function(imageInfo) {
-                    return loadImage(imageInfo);
+                    return xhrLoadImage(imageInfo);
                 });
                 return Promise.all(imagePromises);
             }
