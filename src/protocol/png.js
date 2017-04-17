@@ -108,6 +108,10 @@ define(function(require, exports, module) {
         // svg 含有 &nbsp; 符号导出报错 Entity 'nbsp' not defined
         svgXml = svgXml.replace(/&nbsp;/g, '&#xa0;');
 
+        // fix title issue in safari
+        // @ http://stackoverflow.com/questions/30273775/namespace-prefix-ns1-for-href-on-tagelement-is-not-defined-setattributens
+        svgXml = svgXml.replace(/NS\d+:title/gi, 'xlink:title');
+
         blob = new Blob([svgXml], {
             type: 'image/svg+xml'
         });
