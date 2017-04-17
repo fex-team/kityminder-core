@@ -1,6 +1,6 @@
 /*!
  * ====================================================
- * kityminder - v1.4.39 - 2017-04-17
+ * kityminder - v1.4.40 - 2017-04-17
  * https://github.com/fex-team/kityminder-core
  * GitHub: https://github.com/fex-team/kityminder-core.git 
  * Copyright (c) 2017 Baidu FEX; Licensed MIT
@@ -1969,7 +1969,7 @@ _p[19] = {
                 this.fire("finishInitHook");
             }
         });
-        Minder.version = "1.4.39";
+        Minder.version = "1.4.40";
         Minder.registerInitHook = function(hook) {
             _initHooks.push(hook);
         };
@@ -8051,7 +8051,7 @@ _p[65] = {
         function xhrLoadImage(info, callback) {
             return Promise(function(resolve, reject) {
                 var xmlHttp = new XMLHttpRequest();
-                xmlHttp.open("GET", info.url, true);
+                xmlHttp.open("GET", info.url + "?_=" + Date.now(), true);
                 xmlHttp.responseType = "blob";
                 xmlHttp.onreadystatechange = function() {
                     if (xmlHttp.readyState === 4 && xmlHttp.status === 200) {
