@@ -25,6 +25,42 @@ define(function(require, exports, module) {
             image.src = info.url;
         });
     }
+
+    /**
+     * xhrLoadImage: 通过 xhr 加载保存在 BOS 上的图片
+     * @note: BOS 上的 CORS 策略是取 headers 里面的 Origin 字段进行判断
+     *        而通过 image 的 src 的方式是无法传递 origin 的，因此需要通过 xhr 进行
+     */
+    function xhrLoadImage(info, callback) {
+        return Promise(function (resolve, reject) {
+            var xmlHttp = new XMLHttpRequest();
+
+            xmlHttp.open('GET', info.url, true);
+            xmlHttp.responseType = 'blob';
+            xmlHttp.onreadystatechange = function () {
+                if (xmlHttp.readyState === 4 && xmlHttp.status === 200) {
+                    var blob = xmlHttp.response;
+
+                    var image = document.createElement('img');
+                    
+                    image.src = DomURL.createObjectURL(blob);                    
+                    image.onload = function () {
+                        DomURL.revokeObjectURL(image.src);
+                        resolve({
+                            element: image,
+                            x: info.x,
+                            y: info.y,
+                            width: info.width,
+                            height: info.height
+                        });
+                    };
+                }
+            };
+
+            xmlHttp.send();
+        });
+    }
+
     function getSVGInfo(minder) {
         var paper = minder.getPaper(),
             paperTransform,
@@ -123,8 +159,6 @@ define(function(require, exports, module) {
 
         var resultCallback;
 
-        var Promise = kityminder.Promise;
-
         /* 绘制 PNG 的画布及上下文 */
         var canvas = document.createElement('canvas');
         var ctx = canvas.getContext('2d');
@@ -171,7 +205,7 @@ define(function(require, exports, module) {
         // 加载节点上的图片
         function loadImages(imagesInfo) {
             var imagePromises = imagesInfo.map(function(imageInfo) {
-                return loadImage(imageInfo);
+                return xhrLoadImage(imageInfo);
             });
 
             return Promise.all(imagePromises);
