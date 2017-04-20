@@ -1,6 +1,6 @@
 /*!
  * ====================================================
- * kityminder - v1.4.40 - 2017-04-17
+ * kityminder - v1.4.41 - 2017-04-20
  * https://github.com/fex-team/kityminder-core
  * GitHub: https://github.com/fex-team/kityminder-core.git 
  * Copyright (c) 2017 Baidu FEX; Licensed MIT
@@ -1969,7 +1969,7 @@ _p[19] = {
                 this.fire("finishInitHook");
             }
         });
-        Minder.version = "1.4.40";
+        Minder.version = "1.4.41";
         Minder.registerInitHook = function(hook) {
             _initHooks.push(hook);
         };
@@ -3041,8 +3041,6 @@ _p[27] = {
                                 renderer.getRenderShape().setVisible(false);
                                 lastBoxes[j] = null;
                             }
-                            // 更新 render 的 contentBox
-                            renderer.contentBox = lastBoxes[j];
                         }
                     }
                     for (j = 0; j < nodes.length; j++) {
