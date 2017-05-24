@@ -1,6 +1,6 @@
 /*!
  * ====================================================
- * kityminder - v1.4.41 - 2017-04-20
+ * kityminder - v1.4.42 - 2017-05-24
  * https://github.com/fex-team/kityminder-core
  * GitHub: https://github.com/fex-team/kityminder-core.git 
  * Copyright (c) 2017 Baidu FEX; Licensed MIT
@@ -1969,7 +1969,7 @@ _p[19] = {
                 this.fire("finishInitHook");
             }
         });
-        Minder.version = "1.4.41";
+        Minder.version = "1.4.42";
         Minder.registerInitHook = function(hook) {
             _initHooks.push(hook);
         };
@@ -8108,7 +8108,7 @@ _p[65] = {
             var imagesInfo = [];
             for (var i = 0; i < allNodes.length; i++) {
                 var nodeData = allNodes[i].data;
-                if (nodeData.image) {
+                if (nodeData.image && nodeData.expandState === "expand") {
                     /*
                 * 导出之前渲染这个节点，否则取出的 contentBox 不对
                 * by zhangbobell
