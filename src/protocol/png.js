@@ -120,23 +120,20 @@ define(function(require, exports, module) {
 
         //svgUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgXml);
 
-        var allNodes = minder.getAllNode();
         var imagesInfo = [];
 
-        for(var i = 0; i < allNodes.length; i++) {
-            var nodeData = allNodes[i].data;
+        // 遍历取出图片信息
+        traverse(minder.getRoot());
 
-            if (nodeData.image && nodeData.expandState === 'expand') {
-                /*
-                * 导出之前渲染这个节点，否则取出的 contentBox 不对
-                * by zhangbobell
-                * */
-                minder.renderNode(allNodes[i]);
+        function traverse(node) {
+            var nodeData = node.data;
+            
+            if (nodeData.image) {
+                minder.renderNode(node);
+                var nodeData = node.data;
                 var imageUrl = nodeData.image;
                 var imageSize = nodeData.imageSize;
-
-                var imageRenderBox = allNodes[i].getRenderBox('ImageRenderer', minder.getRenderContainer());
-
+                var imageRenderBox = node.getRenderBox("ImageRenderer", minder.getRenderContainer());
                 var imageInfo = {
                     url: imageUrl,
                     width: imageSize.width,
@@ -146,6 +143,16 @@ define(function(require, exports, module) {
                 };
 
                 imagesInfo.push(imageInfo);
+            }
+
+            // 若节点折叠，则直接返回
+            if (nodeData.expandState === 'collapse') {
+                return;
+            }
+
+            var children = node.getChildren();
+            for (var i = 0; i < children.length; i++) {
+                traverse(children[i]);
             }
         }
 
