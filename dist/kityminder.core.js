@@ -1,6 +1,6 @@
 /*!
  * ====================================================
- * kityminder - v1.4.42 - 2017-05-24
+ * kityminder - v1.4.43 - 2017-05-24
  * https://github.com/fex-team/kityminder-core
  * GitHub: https://github.com/fex-team/kityminder-core.git 
  * Copyright (c) 2017 Baidu FEX; Licensed MIT
@@ -1969,7 +1969,7 @@ _p[19] = {
                 this.fire("finishInitHook");
             }
         });
-        Minder.version = "1.4.42";
+        Minder.version = "1.4.43";
         Minder.registerInitHook = function(hook) {
             _initHooks.push(hook);
         };
@@ -8104,19 +8104,17 @@ _p[65] = {
             });
             svgUrl = DomURL.createObjectURL(blob);
             //svgUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgXml);
-            var allNodes = minder.getAllNode();
             var imagesInfo = [];
-            for (var i = 0; i < allNodes.length; i++) {
-                var nodeData = allNodes[i].data;
-                if (nodeData.image && nodeData.expandState === "expand") {
-                    /*
-                * 导出之前渲染这个节点，否则取出的 contentBox 不对
-                * by zhangbobell
-                * */
-                    minder.renderNode(allNodes[i]);
+            // 遍历取出图片信息
+            traverse(minder.getRoot());
+            function traverse(node) {
+                var nodeData = node.data;
+                if (nodeData.image) {
+                    minder.renderNode(node);
+                    var nodeData = node.data;
                     var imageUrl = nodeData.image;
                     var imageSize = nodeData.imageSize;
-                    var imageRenderBox = allNodes[i].getRenderBox("ImageRenderer", minder.getRenderContainer());
+                    var imageRenderBox = node.getRenderBox("ImageRenderer", minder.getRenderContainer());
                     var imageInfo = {
                         url: imageUrl,
                         width: imageSize.width,
@@ -8125,6 +8123,14 @@ _p[65] = {
                         y: -renderContainer.getBoundaryBox().y + imageRenderBox.y
                     };
                     imagesInfo.push(imageInfo);
+                }
+                // 若节点折叠，则直接返回
+                if (nodeData.expandState === "collapse") {
+                    return;
+                }
+                var children = node.getChildren();
+                for (var i = 0; i < children.length; i++) {
+                    traverse(children[i]);
                 }
             }
             return {
