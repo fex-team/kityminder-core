@@ -126,7 +126,7 @@ define(function(require, exports, module) {
         for(var i = 0; i < allNodes.length; i++) {
             var nodeData = allNodes[i].data;
 
-            if (nodeData.image) {
+            if (nodeData.image && nodeData.expandState === 'expand') {
                 /*
                 * 导出之前渲染这个节点，否则取出的 contentBox 不对
                 * by zhangbobell
