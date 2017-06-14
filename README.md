@@ -21,7 +21,7 @@ KityMinder 是一款强大的脑图可视化/编辑工具，由百度 FEX 团队
 <script type="text/javascript" src="kityminder.core.min.js"></script>
 <script type="text/javascript">
 var minder = new kityminder.Minder({
-	renderTo: 'minder-container'
+	renderTo: '#minder-container'
 });
 </script>
 ```
