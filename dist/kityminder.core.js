@@ -1,6 +1,6 @@
 /*!
  * ====================================================
- * kityminder - v1.4.44 - 2017-08-09
+ * kityminder - v1.4.45 - 2017-08-09
  * https://github.com/fex-team/kityminder-core
  * GitHub: https://github.com/fex-team/kityminder-core.git 
  * Copyright (c) 2017 Baidu FEX; Licensed MIT
@@ -5536,6 +5536,7 @@ _p[48] = {
                     },
                     update: function(link, node, box) {
                         var href = node.getData("hyperlink");
+                        link.setHref("#");
                         var allowed = [ "^http:", "^https:", "^ftp:", "^mailto:" ];
                         for (var i = 0; i < allowed.length; i++) {
                             var regex = new RegExp(allowed[i]);
