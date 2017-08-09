@@ -1,6 +1,6 @@
 /*!
  * ====================================================
- * kityminder - v1.4.43 - 2017-05-24
+ * kityminder - v1.4.44 - 2017-08-09
  * https://github.com/fex-team/kityminder-core
  * GitHub: https://github.com/fex-team/kityminder-core.git 
  * Copyright (c) 2017 Baidu FEX; Licensed MIT
@@ -5536,7 +5536,14 @@ _p[48] = {
                     },
                     update: function(link, node, box) {
                         var href = node.getData("hyperlink");
-                        link.setHref(href);
+                        var allowed = [ "^http:", "^https:", "^ftp:", "^mailto:" ];
+                        for (var i = 0; i < allowed.length; i++) {
+                            var regex = new RegExp(allowed[i]);
+                            if (regex.test(href)) {
+                                link.setHref(href);
+                                break;
+                            }
+                        }
                         var title = node.getData("hyperlinkTitle");
                         if (title) {
                             title = [ title, "(", href, ")" ].join("");
@@ -8198,14 +8205,18 @@ _p[65] = {
                     }
                     DomURL.revokeObjectURL(svgDataUrl);
                     document.body.appendChild(canvas);
-                    return generateDataUrl(canvas);
+                    var pngBase64 = generateDataUrl(canvas);
+                    document.body.removeChild(canvas);
+                    return pngBase64;
                 }, function(err) {
                     // 这里处理 reject，出错基本上是因为跨域，
                     // 出错后依然导出，只不过没有图片。
                     alert("脑图的节点中包含跨域图片，导出的 png 中节点图片不显示，你可以替换掉这些跨域的图片并重试。");
                     DomURL.revokeObjectURL(svgDataUrl);
                     document.body.appendChild(canvas);
-                    return generateDataUrl(canvas);
+                    var pngBase64 = generateDataUrl(canvas);
+                    document.body.removeChild(canvas);
+                    return pngBase64;
                 });
             }
             if (bgUrl) {
