@@ -50,6 +50,17 @@ kityminder-core 依赖于 [kity](https://github.com/fex-team/kity)，开发中�
 bower install
 ```
 
+## 开发说明
+
+1. 安装 [bower](http://bower.io/#install-bower)
+2. 安装 [npm](https://www.npmjs.com/get-npm)
+
+```bash
+bower install
+npm install
+npm run dev
+```
+
 ## 联系我们
 
 问题和建议反馈：[Github Issues](https://github.com/fex-team/kityminder-core/issues)

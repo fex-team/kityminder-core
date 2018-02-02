@@ -8,6 +8,7 @@
     "name": "Baidu FEX",
     "url": "http://fex.baidu.com"
   },
+  "license": "BSD-3-Clause",
   "repository": {
     "type": "git",
     "url": "https://github.com/fex-team/kityminder-core.git"
@@ -20,6 +21,10 @@
     "graphic",
     "javascript"
   ],
+  "scripts": {
+    "dev": "grunt dev",
+    "build": "grunt build"
+  },
   "bugs": {
     "url": "https://github.com/fex-team/kityminder-core/issues"
   },
@@ -29,18 +34,19 @@
       "url": "https://github.com/fex-team/kityminder-core/blob/dev/LICENSE"
     }
   ],
-  "dependencies": {
-    "grunt-contrib-copy": "^0.8.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "cz-conventional-changelog": "^1.1.5",
     "grunt": "~0.4.1",
+    "grunt-browser-sync": "^2.2.0",
     "grunt-contrib-clean": "~0.5.0",
     "grunt-contrib-concat": "~0.5.0",
-    "grunt-contrib-copy": "~0.5.0",
+    "grunt-contrib-copy": "~0.8.2",
     "grunt-contrib-uglify": "~0.4.0",
+    "grunt-contrib-watch": "^1.0.0",
     "grunt-module-dependence": "~0.2.0",
-    "grunt-replace": "~0.8.0"
+    "grunt-replace": "~0.8.0",
+    "uglify-js": "^2.4.14"
   },
   "config": {
     "commitizen": {

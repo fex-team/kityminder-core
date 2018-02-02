@@ -13,6 +13,8 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-browser-sync');
+    grunt.loadNpmTasks('grunt-contrib-watch');
 
     var pkg = grunt.file.readJSON('package.json');
 
@@ -37,6 +39,26 @@ module.exports = function(grunt) {
 
         clean: {
             last: 'dist'
+        },
+
+        // watch
+        watch: {
+            files: 'src/**',
+            tasks: ['build']
+        },
+        // browser sync for dev
+        browserSync: {
+            bsFiles: {
+                dist: 'dist/css/*.css',
+                src: 'src/**'
+            },
+            options: {
+                server: {
+                    baseDir: './',
+                    index: 'dev.html',
+                    watchTask: true
+                }
+            }
         },
 
         // resolve dependence
@@ -88,5 +110,6 @@ module.exports = function(grunt) {
 
     // Build task(s).
     grunt.registerTask('build', ['clean', 'dependence', 'concat:build', 'uglify:minimize', 'copy']);
+    grunt.registerTask('dev', ['browserSync', 'watch']);
 
 };
