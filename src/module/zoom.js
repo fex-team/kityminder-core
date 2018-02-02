@@ -181,12 +181,12 @@ define(function(require, exports, module) {
                         var value;
                         var lastValue = me.getPaper()._zoom || 1;
                         if (delta < 0) {
-                            me.execCommand('zoom-in');
+                            me.execCommand('zoomin');
                         } else if (delta > 0) {
-                            me.execCommand('zoom-out');
+                            me.execCommand('zoomout');
                         }
                     }, 100);
-
+                    
                     e.originEvent.preventDefault();
                 }
             },
