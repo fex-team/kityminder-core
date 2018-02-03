@@ -44,9 +44,9 @@
     "grunt-contrib-copy": "~0.8.2",
     "grunt-contrib-uglify": "~0.4.0",
     "grunt-contrib-watch": "^1.0.0",
-    "grunt-module-dependence": "~0.2.0",
+    "grunt-module-dependence": "~0.2.1",
     "grunt-replace": "~0.8.0",
-    "uglify-js": "^2.4.14"
+    "uglify-js": "^2.8.29"
   },
   "config": {
     "commitizen": {
