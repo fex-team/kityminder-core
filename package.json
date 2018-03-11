@@ -1,6 +1,6 @@
 {
-  "name": "kityminder",
-  "title": "kityminder",
+  "name": "kityminder-core",
+  "title": "Kity Minder Core",
   "description": "KityMinder Core Implement",
   "version": "1.4.45",
   "homepage": "https://github.com/fex-team/kityminder-core",
@@ -8,6 +8,7 @@
     "name": "Baidu FEX",
     "url": "http://fex.baidu.com"
   },
+  "main": "dist/kityminder.core.js",
   "license": "BSD-3-Clause",
   "repository": {
     "type": "git",
@@ -30,7 +31,7 @@
   },
   "licenses": [
     {
-      "type": "MIT",
+      "type": "BSD-3-Clause",
       "url": "https://github.com/fex-team/kityminder-core/blob/dev/LICENSE"
     }
   ],

@@ -1,9 +1,9 @@
 /*!
  * ====================================================
- * kityminder - v1.4.45 - 2017-08-09
+ * Kity Minder Core - v1.4.45 - 2018-03-11
  * https://github.com/fex-team/kityminder-core
  * GitHub: https://github.com/fex-team/kityminder-core.git 
- * Copyright (c) 2017 Baidu FEX; Licensed MIT
+ * Copyright (c) 2018 Baidu FEX; Licensed BSD-3-Clause
  * ====================================================
  */
 
@@ -6596,7 +6596,7 @@ _p[57] = {
                     } else {
                         a += "耀";
                         while (a.length % 32 !== 27) {
-                            a += "\x00";
+                            a += "\0";
                         }
                         a += "";
                     }
@@ -7138,7 +7138,7 @@ _p[60] = {
                 "impact,chicago": -.15,
                 "times new roman": -.1,
                 "arial black,avant garde": -.17,
-                "default": 0
+                default: 0
             },
             ie: {
                 10: {
@@ -7147,7 +7147,7 @@ _p[60] = {
                     "impact,chicago": -.08,
                     "times new roman": .04,
                     "arial black,avant garde": -.17,
-                    "default": -.15
+                    default: -.15
                 },
                 11: {
                     "微软雅黑,Microsoft YaHei": -.17,
@@ -7157,7 +7157,7 @@ _p[60] = {
                     "times new roman": .04,
                     "sans-serif": -.16,
                     "arial black,avant garde": -.17,
-                    "default": -.15
+                    default: -.15
                 }
             },
             edge: {
@@ -7167,7 +7167,7 @@ _p[60] = {
                 "impact,chicago": -.08,
                 "sans-serif": -.16,
                 "arial black,avant garde": -.17,
-                "default": -.15
+                default: -.15
             },
             sg: {
                 "微软雅黑,Microsoft YaHei": -.15,
@@ -7176,7 +7176,7 @@ _p[60] = {
                 "impact,chicago": -.16,
                 "times new roman": -.03,
                 "arial black,avant garde": -.22,
-                "default": -.15
+                default: -.15
             },
             chrome: {
                 Mac: {
@@ -7185,7 +7185,7 @@ _p[60] = {
                     "impact,chicago": -.13,
                     "times new roman": -.1,
                     "arial black,avant garde": -.17,
-                    "default": 0
+                    default: 0
                 },
                 Win: {
                     "微软雅黑,Microsoft YaHei": -.15,
@@ -7194,7 +7194,7 @@ _p[60] = {
                     "comic sans ms": -.2,
                     "impact,chicago": -.12,
                     "times new roman": -.02,
-                    "default": -.15
+                    default: -.15
                 },
                 Lux: {
                     "andale mono": -.05,
@@ -7202,7 +7202,7 @@ _p[60] = {
                     "impact,chicago": -.13,
                     "times new roman": -.1,
                     "arial black,avant garde": -.17,
-                    "default": 0
+                    default: 0
                 }
             },
             firefox: {
@@ -7213,7 +7213,7 @@ _p[60] = {
                     "impact,chicago": -.15,
                     "arial black,avant garde": -.17,
                     "times new roman": -.1,
-                    "default": .05
+                    default: .05
                 },
                 Win: {
                     "微软雅黑,Microsoft YaHei": -.16,
@@ -7224,7 +7224,7 @@ _p[60] = {
                     "times new roman": -.22,
                     "sans-serif": -.22,
                     "arial black,avant garde": -.17,
-                    "default": -.16
+                    default: -.16
                 },
                 Lux: {
                     "宋体,SimSun": -.2,
@@ -7239,7 +7239,7 @@ _p[60] = {
                     "times new roman": -.2,
                     "sans-serif": -.2,
                     "arial black,avant garde": -.2,
-                    "default": -.16
+                    default: -.16
                 }
             }
         };
@@ -7856,9 +7856,9 @@ _p[62] = {
                             var value;
                             var lastValue = me.getPaper()._zoom || 1;
                             if (delta < 0) {
-                                me.execCommand("zoom-in");
+                                me.execCommand("zoomin");
                             } else if (delta > 0) {
-                                me.execCommand("zoom-out");
+                                me.execCommand("zoomout");
                             }
                         }, 100);
                         e.originEvent.preventDefault();
@@ -7898,8 +7898,8 @@ _p[64] = {
         var data = _p.r(12);
         var LINE_ENDING_SPLITER = /\r\n|\r|\n/;
         var EMPTY_LINE = "";
-        var NOTE_MARK_START = "<!--Note-->";
-        var NOTE_MARK_CLOSE = "<!--/Note-->";
+        var NOTE_MARK_START = "\x3c!--Note--\x3e";
+        var NOTE_MARK_CLOSE = "\x3c!--/Note--\x3e";
         function encode(json) {
             return _build(json, 1).join("\n");
         }
@@ -8528,8 +8528,8 @@ _p[67] = {
         var LINE_ENDING = "\r", LINE_ENDING_SPLITER = /\r\n|\r|\n/, TAB_CHAR = function(Browser) {
             if (Browser.gecko) {
                 return {
-                    REGEXP: new RegExp("^(	|" + String.fromCharCode(160, 160, 32, 160) + ")"),
-                    DELETE: new RegExp("^(	|" + String.fromCharCode(160, 160, 32, 160) + ")+")
+                    REGEXP: new RegExp("^(\t|" + String.fromCharCode(160, 160, 32, 160) + ")"),
+                    DELETE: new RegExp("^(\t|" + String.fromCharCode(160, 160, 32, 160) + ")+")
                 };
             } else if (Browser.ie || Browser.edge) {
                 // ie系列和edge比较特别，\t在div中会被直接转义成SPACE故只好使用SPACE来做处理
@@ -8645,7 +8645,7 @@ _p[67] = {
         function encode(json, level) {
             var local = "";
             level = level || 0;
-            local += repeat("	", level);
+            local += repeat("\t", level);
             local += encodeWrap(json.data.text) + LINE_ENDING;
             if (json.children) {
                 json.children.forEach(function(child) {
