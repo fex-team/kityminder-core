@@ -1,6 +1,6 @@
 /*!
  * ====================================================
- * Kity Minder Core - v1.4.46 - 2018-03-11
+ * Kity Minder Core - v1.4.47 - 2018-03-23
  * https://github.com/fex-team/kityminder-core
  * GitHub: https://github.com/fex-team/kityminder-core.git 
  * Copyright (c) 2018 Baidu FEX; Licensed BSD-3-Clause
@@ -8102,8 +8102,8 @@ _p[65] = {
             svgXml = svgContainer.innerHTML;
             // Dummy IE
             svgXml = svgXml.replace(' xmlns="http://www.w3.org/2000/svg" ' + 'xmlns:NS1="" NS1:ns1:xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:NS2="" NS2:xmlns:ns1=""', "");
-            // svg 含有 &nbsp; 符号导出报错 Entity 'nbsp' not defined
-            svgXml = svgXml.replace(/&nbsp;/g, "&#xa0;");
+            // svg 含有 &nbsp; 符号导出报错 Entity 'nbsp' not defined ,含有控制字符触发Load Image 会触发报错
+            svgXml = svgXml.replace(/&nbsp;|[\x00-\x1F\x7F-\x9F]/g, "");
             // fix title issue in safari
             // @ http://stackoverflow.com/questions/30273775/namespace-prefix-ns1-for-href-on-tagelement-is-not-defined-setattributens
             svgXml = svgXml.replace(/NS\d+:title/gi, "xlink:title");
