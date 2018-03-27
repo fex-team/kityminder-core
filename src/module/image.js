@@ -117,6 +117,10 @@ define(function(require, exports, module) {
                     image.node.setAttributeNS('http://www.w3.org/1999/xlink', 'title', title);
                 }
 
+                image.node.ondblclick = function () {
+                    window.open(image.url);
+                }
+
                 var x = box.cx - size.width / 2;
                 var y = box.y - size.height - spaceTop;
 

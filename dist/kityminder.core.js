@@ -1,6 +1,6 @@
 /*!
  * ====================================================
- * Kity Minder Core - v1.4.47 - 2018-03-23
+ * Kity Minder Core - v1.4.48 - 2018-03-27
  * https://github.com/fex-team/kityminder-core
  * GitHub: https://github.com/fex-team/kityminder-core.git 
  * Copyright (c) 2018 Baidu FEX; Licensed BSD-3-Clause
@@ -5667,6 +5667,9 @@ _p[49] = {
                     if (title) {
                         image.node.setAttributeNS("http://www.w3.org/1999/xlink", "title", title);
                     }
+                    image.node.ondblclick = function() {
+                        !image.dragging && window.open(image.url);
+                    };
                     var x = box.cx - size.width / 2;
                     var y = box.y - size.height - spaceTop;
                     image.setUrl(url).setX(x | 0).setY(y | 0).setWidth(size.width | 0).setHeight(size.height | 0);
