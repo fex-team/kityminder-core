@@ -36,6 +36,7 @@
     }
   ],
   "dependencies": {
+    "json-diff": "^0.5.2",
     "kity": "^2.0.4",
     "seajs": "^2.3.0"
   },
