@@ -35,7 +35,10 @@
       "url": "https://github.com/fex-team/kityminder-core/blob/dev/LICENSE"
     }
   ],
-  "dependencies": {},
+  "dependencies": {
+    "kity": "^2.0.4",
+    "seajs": "^2.3.0"
+  },
   "devDependencies": {
     "cz-conventional-changelog": "^1.1.5",
     "grunt": "~0.4.1",
