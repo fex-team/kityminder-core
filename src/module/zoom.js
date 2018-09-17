@@ -166,10 +166,6 @@ define(function(require, exports, module) {
                     var delta = e.originEvent.wheelDelta;
                     var me = this;
 
-                    if (!kity.Browser.mac) {
-                        delta = -delta;
-                    }
-
                     // 稀释
                     if (Math.abs(delta) > 100) {
                         clearTimeout(this._wheelZoomTimeout);
