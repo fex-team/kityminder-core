@@ -1,6 +1,6 @@
 /*!
  * ====================================================
- * Kity Minder Core - v1.4.49 - 2018-04-02
+ * Kity Minder Core - v1.4.50 - 2018-09-17
  * https://github.com/fex-team/kityminder-core
  * GitHub: https://github.com/fex-team/kityminder-core.git 
  * Copyright (c) 2018 Baidu FEX; Licensed BSD-3-Clause
@@ -7949,9 +7949,6 @@ _p[63] = {
                         if (!e.originEvent.ctrlKey && !e.originEvent.metaKey) return;
                         var delta = e.originEvent.wheelDelta;
                         var me = this;
-                        if (!kity.Browser.mac) {
-                            delta = -delta;
-                        }
                         // 稀释
                         if (Math.abs(delta) > 100) {
                             clearTimeout(this._wheelZoomTimeout);
@@ -7961,9 +7958,9 @@ _p[63] = {
                         this._wheelZoomTimeout = setTimeout(function() {
                             var value;
                             var lastValue = me.getPaper()._zoom || 1;
-                            if (delta < 0) {
+                            if (delta > 0) {
                                 me.execCommand("zoomin");
-                            } else if (delta > 0) {
+                            } else if (delta < 0) {
                                 me.execCommand("zoomout");
                             }
                         }, 100);
