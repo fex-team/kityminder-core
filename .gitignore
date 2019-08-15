@@ -5,3 +5,4 @@
 node_modules/
 _drafts/
 bower_components
+dist/

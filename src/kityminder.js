@@ -71,6 +71,7 @@ define(function(require, exports, module) {
     require('./protocol/markdown');
     require('./protocol/svg');
     require('./protocol/png');
+    require('./protocol/csv');
 
     require('./layout/mind');
     require('./layout/btree');
