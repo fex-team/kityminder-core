@@ -142,7 +142,17 @@ define(function(require, exports, module) {
                     importChildren(childNode, children[i].children);
                 }
             }
-
+            function fillEmptyNode(jsonMap, level) {
+                    if (jsonMap[level]){
+                        return;
+                    }
+                    jsonMap[level] = {"children":[], "data":{"text":""}};
+                    if (level < 1) {
+                        return;
+                    }
+                    fillEmptyNode(jsonMap, level - 1);
+                    addChild(jsonMap[level - 1], jsonMap[level])
+            }
             while ((line = lines[i++]) !== undefined) {
                 line = line.replace(/&nbsp;/g, '');
                 if (isEmpty(line)) continue;
@@ -155,7 +165,7 @@ define(function(require, exports, module) {
                     jsonMap[0] = children[children.length-1];
                 } else {
                     if (!jsonMap[level-1]) {
-                        throw new Error('Invalid local format');
+                        fillEmptyNode(jsonMap, level -1);
                     };
                     addChild(jsonMap[level-1], jsonNode);
                     jsonMap[level] = jsonNode;
