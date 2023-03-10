@@ -125,6 +125,10 @@ define(function(require, exports, module) {
             }
         },
 
+        clearSelect: function() {
+            this.removeAllSelectedNodes();
+        },
+
         destroy: function() {
             var modules = this._modules;
 

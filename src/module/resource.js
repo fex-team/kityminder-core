@@ -262,7 +262,7 @@ define(function(require, exports, module) {
                  *  @date 2016-01-15
                  */
                 var resource = node.getData("resource").filter(function(ele) {
-                    return ele !== null;
+                    return ele !== null && ele !== undefined;
                 });
                 if (resource.length === 0) {
                     return;
