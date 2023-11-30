@@ -1,9 +1,9 @@
 {
-  "name": "kityminder-core",
-  "title": "Kity Minder Core",
-  "description": "KityMinder Core Implement",
+  "name": "@baidu/wk-kityminder-core",
+  "title": "@baidu/wk-kityminder-core",
+  "description": "fork from kityminder-core",
   "version": "1.4.50",
-  "homepage": "https://github.com/fex-team/kityminder-core",
+  "homepage": "https://github.com/jenkey2011/kityminder-core-fork",
   "author": {
     "name": "Baidu FEX",
     "url": "http://fex.baidu.com"
@@ -12,7 +12,7 @@
   "license": "BSD-3-Clause",
   "repository": {
     "type": "git",
-    "url": "https://github.com/fex-team/kityminder-core.git"
+    "url": "https://github.com/jenkey2011/kityminder-core-fork.git"
   },
   "keywords": [
     "kityminder",
@@ -24,15 +24,16 @@
   ],
   "scripts": {
     "dev": "grunt dev",
-    "build": "grunt build"
+    "build": "grunt build",
+    "build:watch": "grunt build build:watch"
   },
   "bugs": {
-    "url": "https://github.com/fex-team/kityminder-core/issues"
+    "url": "https://github.com/jenkey2011/kityminder-core-fork/issues"
   },
   "licenses": [
     {
       "type": "BSD-3-Clause",
-      "url": "https://github.com/fex-team/kityminder-core/blob/dev/LICENSE"
+      "url": "https://github.com/jenkey2011/kityminder-core-fork/blob/dev/LICENSE"
     }
   ],
   "dependencies": {

@@ -62,4 +62,20 @@ define(function(require, exports) {
             return toString.apply(obj) == '[object ' + v + ']';
         };
     });
+
+    function countNodes (node) {
+        var count = 0;
+        // 如果节点存在子节点
+        for (var i = 0; i < node.children.length; i++) {
+            var child = node.children[i];
+            // 递归调用函数，计算子节点的子节点数量
+            count += countNodes(child);
+        }
+
+        // 返回节点数量（包括当前节点）
+        return count + 1;
+    }
+
+    exports.countNodes = countNodes;
+
 });

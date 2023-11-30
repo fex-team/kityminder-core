@@ -132,9 +132,15 @@ define(function(require, exports, module) {
             constructor: function(node) {
                 this.callBase();
                 this.radius = 6;
-                this.outline = new kity.Circle(this.radius).stroke('gray').fill('white');
-                this.sign = new kity.Path().stroke('gray');
-                this.addShapes([this.outline, this.sign]);
+                this.outline = new kity.Circle(this.radius).stroke('#2E76F6').fill('white');
+                this.sign = new kity.Path().stroke('#2E76F6');
+                this.lenNumber = new kity.Text(node.parent.children.length)
+                .setX(-this.radius/2)
+                .setY(0)
+                .setSize(10)
+                .setVerticalAlign('middle')
+                .fill('#2E76F6');
+                this.addShapes([this.outline, this.sign, this.lenNumber]);
                 this.initEvent(node);
                 this.setId(utils.uuid('node_expander'));
                 this.setStyle('cursor', 'pointer');
@@ -159,15 +165,27 @@ define(function(require, exports, module) {
                 });
             },
 
-            setState: function(state) {
+            setState: function(state, length) {
                 if (state == 'hide') {
                     this.setVisible(false);
                     return;
                 }
                 this.setVisible(true);
-                var pathData = ['M', 1.5 - this.radius, 0, 'L', this.radius - 1.5, 0];
+                this.sign.setRotate(0)
+                // var pathData = ['M', 1.5 - this.radius, 0, 'L', this.radius - 1.5, 0];
+                var ax = (0.7 / 3) * this.radius;
+                var ay = (3.2 / 5) * this.radius;
+                var bx = (1 / 3) * this.radius;
+                var by = 0 * this.radius;
+                
+                pathData = ['M', ax, -ay, 'L', -bx, by, 'L', ax, ay];
+                this.lenNumber.setOpacity(0)
                 if (state == STATE_COLLAPSE) {
-                    pathData.push(['M', 0, 1.5 - this.radius, 'L', 0, this.radius - 1.5]);
+                    console.log(STATE_COLLAPSE, '-8')
+                    // pathData.push(['M', 0, 1.5 - this.radius, 'L', 0, this.radius - 1.5]);
+                    pathData = []
+                    this.lenNumber.setContent(length);
+                    this.lenNumber.setOpacity(1);
                 }
                 this.sign.setPathData(pathData);
             }
@@ -193,13 +211,13 @@ define(function(require, exports, module) {
                 if (!node.parent) return;
 
                 var visible = node.parent.isExpanded();
-
-                expander.setState(visible && node.children.length ? node.getData(EXPAND_STATE_DATA) : 'hide');
+                var len = utils.countNodes(node) - 1;
+                expander.setState(visible && node.children.length ? node.getData(EXPAND_STATE_DATA) : 'hide', len);
 
                 var vector = node.getLayoutVectorIn().normalize(expander.radius + node.getStyle('stroke-width'));
                 var position = node.getVertexIn().offset(vector.reverse());
-
-                this.expander.setTranslate(position);
+                var x = node.getLayoutBox().width + 16 + position.x;
+                this.expander.setTranslate(x, 0);
             }
         });
 
