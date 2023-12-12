@@ -5522,6 +5522,25 @@ _p[47] = {
                         if (node) return node.getData("font-size");
                         return null;
                     }
+                }),
+                /**
+             * @command fontsizeadjust
+             * @description 调整字号大小
+             * @param {number} diff 字体缩放大小（px）
+             */
+                fontsizeadjust: kity.createClass("fontsizeadjustCommand", {
+                    base: Command,
+                    execute: function(km, diff) {
+                        var nodes = km.getSelectedNodes();
+                        nodes.forEach(function(n) {
+                            var oriSize = n.getData("font-size") || n.getStyle("font-size");
+                            var size = parseFloat(oriSize) + +diff;
+                            size = Math.max(9, Math.min(96, size));
+                            n.setData("font-size", size);
+                            n.render();
+                            km.layout(300);
+                        });
+                    }
                 })
             }
         });
@@ -7364,6 +7383,7 @@ _p[61] = {
                     "impact,chicago": -.13,
                     "times new roman": -.1,
                     "arial black,avant garde": -.17,
+                    "PingFang SC": -.23,
                     default: 0
                 },
                 Win: {
@@ -7392,6 +7412,7 @@ _p[61] = {
                     "impact,chicago": -.15,
                     "arial black,avant garde": -.17,
                     "times new roman": -.1,
+                    "PingFang SC": -.23,
                     default: .05
                 },
                 Win: {

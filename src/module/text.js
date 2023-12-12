@@ -67,6 +67,7 @@ define(function(require, exports, module) {
                 'impact,chicago': -0.13,
                 'times new roman': -0.1,
                 'arial black,avant garde': -0.17,
+                'PingFang SC': -0.23,
                 'default': 0
             },
             'Win': {
@@ -95,6 +96,7 @@ define(function(require, exports, module) {
                 'impact,chicago': -0.15,
                 'arial black,avant garde': -0.17,
                 'times new roman': -0.1,
+                'PingFang SC': -0.23,
                 'default': 0.05
             },
             'Win': {

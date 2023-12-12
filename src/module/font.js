@@ -153,6 +153,26 @@ define(function(require, exports, module) {
                     if (node) return node.getData('font-size');
                     return null;
                 }
+            }),
+             /**
+             * @command fontsizeadjust
+             * @description 调整字号大小
+             * @param {number} diff 字体缩放大小（px）
+             */
+            'fontsizeadjust': kity.createClass('fontsizeadjustCommand', {
+                base: Command,
+
+                execute: function(km, diff) {
+                    var nodes = km.getSelectedNodes();
+                    nodes.forEach(function(n) {
+                        var oriSize = n.getData('font-size') || n.getStyle('font-size');
+                        var size = parseFloat(oriSize) + +diff;
+                        size = Math.max(9, Math.min(96, size));
+                        n.setData('font-size', size);
+                        n.render();
+                        km.layout(300);
+                    });
+                }
             })
         }
     });
