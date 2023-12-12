@@ -3,21 +3,26 @@ define(function(require, exports, module) {
     var data = require('../core/data');
     var Promise = require('../core/promise');
 
+    // 默认1倍图，通过外界 option 设置
+    // 本质：在一张nx画布，画nx的svg，导出base64的过程。
+    // 涉及到画布的width/height，图片的width/height,偏移量等比调整。
+    var scale = 1;
+
     var DomURL = window.URL || window.webkitURL || window;
 
     function loadImage(info, callback) {
-        return new Promise(function(resolve, reject) {
-            var image = document.createElement("img");
-            image.onload = function() {
+        return new Promise(function (resolve, reject) {
+            var image = document.createElement('img');
+            image.onload = function () {
                 resolve({
                     element: this,
                     x: info.x,
                     y: info.y,
                     width: info.width,
-                    height: info.height
+                    height: info.height,
                 });
             };
-            image.onerror = function(err) {
+            image.onerror = function (err) {
                 reject(err);
             };
 
@@ -35,15 +40,20 @@ define(function(require, exports, module) {
         return Promise(function (resolve, reject) {
             var xmlHttp = new XMLHttpRequest();
 
-            xmlHttp.open('GET', info.url + '?_=' + Date.now(), true);
+            // mpkm 如果存在图片链接，需要增加随机数，避免使用内存中的图片
+            var imgSrc = info.url;
+            var fixedImgSrc = imgSrc && imgSrc.indexOf('?') ? imgSrc + '&_=' + Date.now() : imgSrc + '?_=' + Date.now();
+
+            xmlHttp.open('GET', fixedImgSrc, true);
+            // xmlHttp.open('GET', info.url + '?_=' + Date.now(), true);
             xmlHttp.responseType = 'blob';
             xmlHttp.onreadystatechange = function () {
                 if (xmlHttp.readyState === 4 && xmlHttp.status === 200) {
                     var blob = xmlHttp.response;
 
                     var image = document.createElement('img');
-                    
-                    image.src = DomURL.createObjectURL(blob);                    
+
+                    image.src = DomURL.createObjectURL(blob);
                     image.onload = function () {
                         DomURL.revokeObjectURL(image.src);
                         resolve({
@@ -51,7 +61,7 @@ define(function(require, exports, module) {
                             x: info.x,
                             y: info.y,
                             width: info.width,
-                            height: info.height
+                            height: info.height,
                         });
                     };
                 }
@@ -62,63 +72,61 @@ define(function(require, exports, module) {
     }
 
     function getSVGInfo(minder) {
-        var paper = minder.getPaper(),
-            paperTransform,
-            domContainer = paper.container,
-            svgXml,
-            svgContainer,
-            svgDom,
+        var paper = minder.getPaper();
+        var domContainer = paper.container;
 
-            renderContainer = minder.getRenderContainer(),
-            renderBox = renderContainer.getRenderBox(),
-            width = renderBox.width + 1,
-            height = renderBox.height + 1,
+        var renderContainer = minder.getRenderContainer();
+        var renderBox = renderContainer.getRenderBox();
+        var width = renderBox.width * scale + 1;
+        var height = renderBox.height * scale + 1;
 
-            blob, svgUrl, img;
+        // var img;
 
         // 保存原始变换，并且移动到合适的位置
-        paperTransform = paper.shapeNode.getAttribute('transform');
-        paper.shapeNode.setAttribute('transform', 'translate(0.5, 0.5)');
+        var paperTransform = paper.shapeNode.getAttribute('transform');
+        // paper.shapeNode.setAttribute('transform', `translate(0.5, 0.5) scale(${scale})`);
+        paper.shapeNode.setAttribute('transform', 'translate(0.5, 0.5) scale(' + scale + ')');
         renderContainer.translate(-renderBox.x, -renderBox.y);
 
         // 获取当前的 XML 代码
-        svgXml = paper.container.innerHTML;
+        var svgXml = paper.container.innerHTML;
 
         // 回复原始变换及位置
         renderContainer.translate(renderBox.x, renderBox.y);
         paper.shapeNode.setAttribute('transform', paperTransform);
 
         // 过滤内容
-        svgContainer = document.createElement('div');
+        var svgContainer = document.createElement('div');
+        /* bca-disable */
         svgContainer.innerHTML = svgXml;
-        svgDom = svgContainer.querySelector('svg');
-        svgDom.setAttribute('width', renderBox.width + 1);
-        svgDom.setAttribute('height', renderBox.height + 1);
+        var svgDom = svgContainer.querySelector('svg');
+        svgDom.setAttribute('width', renderBox.width * scale + 1);
+        svgDom.setAttribute('height', renderBox.height * scale + 1);
         svgDom.setAttribute('style', 'font-family: Arial, "Microsoft Yahei","Heiti SC";');
 
         svgContainer = document.createElement('div');
         svgContainer.appendChild(svgDom);
-
+        /* bca-disable */
         svgXml = svgContainer.innerHTML;
 
         // Dummy IE
-        svgXml = svgXml.replace(' xmlns="http://www.w3.org/2000/svg" ' +
-            'xmlns:NS1="" NS1:ns1:xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:NS2="" NS2:xmlns:ns1=""', '');
+        svgXml = svgXml.replace(' xmlns="http://www.w3.org/2000/svg" '
+            + 'xmlns:NS1="" NS1:ns1:xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:NS2="" NS2:xmlns:ns1=""', '');
 
         // svg 含有 &nbsp; 符号导出报错 Entity 'nbsp' not defined ,含有控制字符触发Load Image 会触发报错
-        svgXml = svgXml.replace(/&nbsp;|[\x00-\x1F\x7F-\x9F]/g, "");
+        svgXml = svgXml.replace(/&nbsp;|[\x00-\x1F\x7F-\x9F]/g, '');
 
         // fix title issue in safari
         // @ http://stackoverflow.com/questions/30273775/namespace-prefix-ns1-for-href-on-tagelement-is-not-defined-setattributens
         svgXml = svgXml.replace(/NS\d+:title/gi, 'xlink:title');
 
-        blob = new Blob([svgXml], {
-            type: 'image/svg+xml'
+        var blob = new Blob([svgXml], {
+            type: 'image/svg+xml',
         });
 
-        svgUrl = DomURL.createObjectURL(blob);
+        var svgUrl = DomURL.createObjectURL(blob);
 
-        //svgUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgXml);
+        // svgUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgXml);
 
         var imagesInfo = [];
 
@@ -127,19 +135,19 @@ define(function(require, exports, module) {
 
         function traverse(node) {
             var nodeData = node.data;
-            
+
             if (nodeData.image) {
                 minder.renderNode(node);
                 var nodeData = node.data;
                 var imageUrl = nodeData.image;
                 var imageSize = nodeData.imageSize;
-                var imageRenderBox = node.getRenderBox("ImageRenderer", minder.getRenderContainer());
+                var imageRenderBox = node.getRenderBox('ImageRenderer', minder.getRenderContainer());
                 var imageInfo = {
                     url: imageUrl,
-                    width: imageSize.width,
-                    height: imageSize.height,
-                    x: -renderContainer.getBoundaryBox().x + imageRenderBox.x,
-                    y: -renderContainer.getBoundaryBox().y + imageRenderBox.y
+                    width: imageSize.width * scale,
+                    height: imageSize.height * scale,
+                    x: (-renderContainer.getBoundaryBox().x + imageRenderBox.x) * scale,
+                    y: (-renderContainer.getBoundaryBox().y + imageRenderBox.y) * scale,
                 };
 
                 imagesInfo.push(imageInfo);
@@ -161,14 +169,15 @@ define(function(require, exports, module) {
             height: height,
             dataUrl: svgUrl,
             xml: svgXml,
-            imagesInfo: imagesInfo
+            imagesInfo: imagesInfo,
         };
     }
 
 
     function encode(json, minder, option) {
 
-        var resultCallback;
+        scale = option && option.scale || 1;
+        // var resultCallback;
 
         /* 绘制 PNG 的画布及上下文 */
         var canvas = document.createElement('canvas');
@@ -183,8 +192,8 @@ define(function(require, exports, module) {
         var svgInfo = getSVGInfo(minder);
         var width = option && option.width && option.width > svgInfo.width ? option.width : svgInfo.width;
         var height = option && option.height && option.height > svgInfo.height ? option.height : svgInfo.height;
-        var offsetX = option && option.width && option.width > svgInfo.width ? (option.width - svgInfo.width)/2 : 0;
-        var offsetY = option && option.height && option.height > svgInfo.height ? (option.height - svgInfo.height)/2 : 0;
+        var offsetX = (option && option.width && option.width > svgInfo.width ? (option.width - svgInfo.width) / 2 : 0) * scale;
+        var offsetY = (option && option.height && option.height > svgInfo.height ? (option.height - svgInfo.height) / 2 : 0) * scale;
         var svgDataUrl = svgInfo.dataUrl;
         var imagesInfo = svgInfo.imagesInfo;
 
@@ -204,7 +213,8 @@ define(function(require, exports, module) {
         function drawImage(ctx, image, x, y, width, height) {
             if (width && height) {
                 ctx.drawImage(image, x + padding, y + padding, width, height);
-            } else {
+            }
+            else {
                 ctx.drawImage(image, x + padding, y + padding);
             }
         }
@@ -215,7 +225,7 @@ define(function(require, exports, module) {
 
         // 加载节点上的图片
         function loadImages(imagesInfo) {
-            var imagePromises = imagesInfo.map(function(imageInfo) {
+            var imagePromises = imagesInfo.map(function (imageInfo) {
                 return xhrLoadImage(imageInfo);
             });
 
@@ -225,21 +235,21 @@ define(function(require, exports, module) {
         function drawSVG() {
             var svgData = {url: svgDataUrl};
 
-            return loadImage(svgData).then(function($image) {
+            return loadImage(svgData).then(function ($image) {
                 drawImage(ctx, $image.element, offsetX, offsetY, $image.width, $image.height);
                 return loadImages(imagesInfo);
-            }).then(function($images) {
-                for(var i = 0; i < $images.length; i++) {
+            }).then(function ($images) {
+                for (var i = 0; i < $images.length; i++) {
                     drawImage(ctx, $images[i].element, $images[i].x + offsetX, $images[i].y + offsetY, $images[i].width, $images[i].height);
                 }
 
                 DomURL.revokeObjectURL(svgDataUrl);
                 document.body.appendChild(canvas);
                 var pngBase64 = generateDataUrl(canvas);
-                
+
                 document.body.removeChild(canvas);
                 return pngBase64;
-            }, function(err) {
+            }, function (err) {
                 // 这里处理 reject，出错基本上是因为跨域，
                 // 出错后依然导出，只不过没有图片。
                 alert('脑图的节点中包含跨域图片，导出的 png 中节点图片不显示，你可以替换掉这些跨域的图片并重试。');
@@ -254,20 +264,24 @@ define(function(require, exports, module) {
 
         if (bgUrl) {
             var bgInfo = {url: bgUrl[1]};
-            return loadImage(bgInfo).then(function($image) {
-                fillBackground(ctx, ctx.createPattern($image.element, "repeat"));
+            return loadImage(bgInfo).then(function ($image) {
+                fillBackground(ctx, ctx.createPattern($image.element, 'repeat'));
                 return drawSVG();
             });
-        } else {
-            fillBackground(ctx, bgColor.toString());
-            return drawSVG();
         }
+        // else {
+        //     fillBackground(ctx, bgColor.toString());
+        //     return drawSVG();
+        // }
+        // 上面else替换为底部，否则存在代码规范问题
+        fillBackground(ctx, bgColor.toString());
+        return drawSVG();
     }
-    data.registerProtocol("png", module.exports = {
-        fileDescription: "PNG 图片",
-        fileExtension: ".png",
-        mineType: "image/png",
-        dataType: "base64",
-        encode: encode
+    data.registerProtocol('png', module.exports = {
+        fileDescription: 'PNG 图片',
+        fileExtension: '.png',
+        mineType: 'image/png',
+        dataType: 'base64',
+        encode: encode,
     });
 });

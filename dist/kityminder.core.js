@@ -1,6 +1,6 @@
 /*!
  * ====================================================
- * @baidu/wk-kityminder-core - v1.4.53 - 2023-12-12
+ * @baidu/wk-kityminder-core - v1.5.1 - 2023-12-12
  * https://github.com/jenkey2011/kityminder-core-fork
  * GitHub: https://github.com/jenkey2011/kityminder-core-fork.git 
  * Copyright (c) 2023 Baidu FEX; Licensed BSD-3-Clause
@@ -8227,6 +8227,10 @@ _p[66] = {
         var kity = _p.r(17);
         var data = _p.r(12);
         var Promise = _p.r(25);
+        // 默认1倍图，通过外界 option 设置
+        // 本质：在一张nx画布，画nx的svg，导出base64的过程。
+        // 涉及到画布的width/height，图片的width/height,偏移量等比调整。
+        var scale = 1;
         var DomURL = window.URL || window.webkitURL || window;
         function loadImage(info, callback) {
             return new Promise(function(resolve, reject) {
@@ -8255,7 +8259,11 @@ _p[66] = {
         function xhrLoadImage(info, callback) {
             return Promise(function(resolve, reject) {
                 var xmlHttp = new XMLHttpRequest();
-                xmlHttp.open("GET", info.url + "?_=" + Date.now(), true);
+                // mpkm 如果存在图片链接，需要增加随机数，避免使用内存中的图片
+                var imgSrc = info.url;
+                var fixedImgSrc = imgSrc && imgSrc.indexOf("?") ? imgSrc + "&_=" + Date.now() : imgSrc + "?_=" + Date.now();
+                xmlHttp.open("GET", fixedImgSrc, true);
+                // xmlHttp.open('GET', info.url + '?_=' + Date.now(), true);
                 xmlHttp.responseType = "blob";
                 xmlHttp.onreadystatechange = function() {
                     if (xmlHttp.readyState === 4 && xmlHttp.status === 200) {
@@ -8278,25 +8286,34 @@ _p[66] = {
             });
         }
         function getSVGInfo(minder) {
-            var paper = minder.getPaper(), paperTransform, domContainer = paper.container, svgXml, svgContainer, svgDom, renderContainer = minder.getRenderContainer(), renderBox = renderContainer.getRenderBox(), width = renderBox.width + 1, height = renderBox.height + 1, blob, svgUrl, img;
+            var paper = minder.getPaper();
+            var domContainer = paper.container;
+            var renderContainer = minder.getRenderContainer();
+            var renderBox = renderContainer.getRenderBox();
+            var width = renderBox.width * scale + 1;
+            var height = renderBox.height * scale + 1;
+            // var img;
             // 保存原始变换，并且移动到合适的位置
-            paperTransform = paper.shapeNode.getAttribute("transform");
-            paper.shapeNode.setAttribute("transform", "translate(0.5, 0.5)");
+            var paperTransform = paper.shapeNode.getAttribute("transform");
+            // paper.shapeNode.setAttribute('transform', `translate(0.5, 0.5) scale(${scale})`);
+            paper.shapeNode.setAttribute("transform", "translate(0.5, 0.5) scale(" + scale + ")");
             renderContainer.translate(-renderBox.x, -renderBox.y);
             // 获取当前的 XML 代码
-            svgXml = paper.container.innerHTML;
+            var svgXml = paper.container.innerHTML;
             // 回复原始变换及位置
             renderContainer.translate(renderBox.x, renderBox.y);
             paper.shapeNode.setAttribute("transform", paperTransform);
             // 过滤内容
-            svgContainer = document.createElement("div");
+            var svgContainer = document.createElement("div");
+            /* bca-disable */
             svgContainer.innerHTML = svgXml;
-            svgDom = svgContainer.querySelector("svg");
-            svgDom.setAttribute("width", renderBox.width + 1);
-            svgDom.setAttribute("height", renderBox.height + 1);
+            var svgDom = svgContainer.querySelector("svg");
+            svgDom.setAttribute("width", renderBox.width * scale + 1);
+            svgDom.setAttribute("height", renderBox.height * scale + 1);
             svgDom.setAttribute("style", 'font-family: Arial, "Microsoft Yahei","Heiti SC";');
             svgContainer = document.createElement("div");
             svgContainer.appendChild(svgDom);
+            /* bca-disable */
             svgXml = svgContainer.innerHTML;
             // Dummy IE
             svgXml = svgXml.replace(' xmlns="http://www.w3.org/2000/svg" ' + 'xmlns:NS1="" NS1:ns1:xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:NS2="" NS2:xmlns:ns1=""', "");
@@ -8305,11 +8322,11 @@ _p[66] = {
             // fix title issue in safari
             // @ http://stackoverflow.com/questions/30273775/namespace-prefix-ns1-for-href-on-tagelement-is-not-defined-setattributens
             svgXml = svgXml.replace(/NS\d+:title/gi, "xlink:title");
-            blob = new Blob([ svgXml ], {
+            var blob = new Blob([ svgXml ], {
                 type: "image/svg+xml"
             });
-            svgUrl = DomURL.createObjectURL(blob);
-            //svgUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgXml);
+            var svgUrl = DomURL.createObjectURL(blob);
+            // svgUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgXml);
             var imagesInfo = [];
             // 遍历取出图片信息
             traverse(minder.getRoot());
@@ -8323,10 +8340,10 @@ _p[66] = {
                     var imageRenderBox = node.getRenderBox("ImageRenderer", minder.getRenderContainer());
                     var imageInfo = {
                         url: imageUrl,
-                        width: imageSize.width,
-                        height: imageSize.height,
-                        x: -renderContainer.getBoundaryBox().x + imageRenderBox.x,
-                        y: -renderContainer.getBoundaryBox().y + imageRenderBox.y
+                        width: imageSize.width * scale,
+                        height: imageSize.height * scale,
+                        x: (-renderContainer.getBoundaryBox().x + imageRenderBox.x) * scale,
+                        y: (-renderContainer.getBoundaryBox().y + imageRenderBox.y) * scale
                     };
                     imagesInfo.push(imageInfo);
                 }
@@ -8348,7 +8365,8 @@ _p[66] = {
             };
         }
         function encode(json, minder, option) {
-            var resultCallback;
+            scale = option && option.scale || 1;
+            // var resultCallback;
             /* 绘制 PNG 的画布及上下文 */
             var canvas = document.createElement("canvas");
             var ctx = canvas.getContext("2d");
@@ -8360,8 +8378,8 @@ _p[66] = {
             var svgInfo = getSVGInfo(minder);
             var width = option && option.width && option.width > svgInfo.width ? option.width : svgInfo.width;
             var height = option && option.height && option.height > svgInfo.height ? option.height : svgInfo.height;
-            var offsetX = option && option.width && option.width > svgInfo.width ? (option.width - svgInfo.width) / 2 : 0;
-            var offsetY = option && option.height && option.height > svgInfo.height ? (option.height - svgInfo.height) / 2 : 0;
+            var offsetX = (option && option.width && option.width > svgInfo.width ? (option.width - svgInfo.width) / 2 : 0) * scale;
+            var offsetY = (option && option.height && option.height > svgInfo.height ? (option.height - svgInfo.height) / 2 : 0) * scale;
             var svgDataUrl = svgInfo.dataUrl;
             var imagesInfo = svgInfo.imagesInfo;
             /* 画布的填充大小 */
@@ -8426,10 +8444,14 @@ _p[66] = {
                     fillBackground(ctx, ctx.createPattern($image.element, "repeat"));
                     return drawSVG();
                 });
-            } else {
-                fillBackground(ctx, bgColor.toString());
-                return drawSVG();
             }
+            // else {
+            //     fillBackground(ctx, bgColor.toString());
+            //     return drawSVG();
+            // }
+            // 上面else替换为底部，否则存在代码规范问题
+            fillBackground(ctx, bgColor.toString());
+            return drawSVG();
         }
         data.registerProtocol("png", module.exports = {
             fileDescription: "PNG 图片",
