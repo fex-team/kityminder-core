@@ -21,9 +21,10 @@ define(function(require, exports, module) {
 
             var fontWeight = getNodeDataOrStyle(node,'font-weight');
             var fontStyle = getNodeDataOrStyle(node, 'font-style');
+            var textDecoration = getNodeDataOrStyle(node, 'text-decoration');
             var styleHash = [fontWeight, fontStyle].join('/');
-
             textGroup.eachItem(function(index,item) {
+                item.setStyle('textDecoration', textDecoration);
                 item.setFont({
                     'weight': fontWeight,
                     'style': fontStyle
@@ -114,6 +115,53 @@ define(function(require, exports, module) {
                             }
                         });
                         return result;
+                    }
+                }),
+                /**
+                 * @command textdecorationCommand
+                 * @description textdecoration
+                 * @shortcut 无
+                 * @state
+                 *   0: 当前有选中的节点
+                 *  -1: 当前没有选中的节点
+                 *   1: 当前已选中的节点已有此属性
+                 */
+                'textdecoration': kity.createClass('textdecorationCommand', {
+                    base: Command,
+
+                    execute: function(km, v) {
+                        var nodes = km.getSelectedNodes();
+                        if (this.queryState('textdecoration') == 1) {
+                            nodes.forEach(function(n) {
+                                n.setData('text-decoration', v).render();
+                            });
+                        } else {
+                            nodes.forEach(function(n) {
+                                n.setData('text-decoration', v).render();
+                            });
+                        }
+
+                        km.layout();
+                    },
+                    queryState: function() {
+                        var nodes = km.getSelectedNodes(),
+                            result = 0;
+                        if (nodes.length === 0) {
+                            return -1;
+                        }
+                        nodes.forEach(function(n) {
+                            if (n && n.getData('text-decoration') && n.getData('text-decoration')) {
+                                result = 1;
+                                return false;
+                            }
+                        });
+                        return result;
+                    },
+                    queryValue: function(km) {
+                        if (km.getSelectedNodes().length == 1) {
+                            return km.getSelectedNodes()[0].getData('text-decoration');
+                        }
+                        return 'mixed';
                     }
                 })
             },

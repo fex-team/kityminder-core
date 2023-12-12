@@ -212,7 +212,7 @@ define(function(require, exports, module) {
             this.setTextStyle(node, textGroup);
 
             var textHash = node.getText() +
-                ['font-size', 'font-name', 'font-weight', 'font-style'].map(getDataOrStyle).join('/');
+                ['font-size', 'font-name', 'font-weight', 'font-style', 'text-decoration'].map(getDataOrStyle).join('/');
 
             if (node._currentTextHash == textHash && node._currentTextGroupBox) return node._currentTextGroupBox;
 

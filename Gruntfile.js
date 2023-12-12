@@ -110,7 +110,7 @@ module.exports = function(grunt) {
 
     // Build task(s).
     grunt.registerTask('build', ['clean', 'dependence', 'concat:build', 'uglify:minimize', 'copy']);
-    grunt.registerTask('build:watch', ['clean', 'dependence', 'concat:build', 'uglify:minimize', 'copy', 'watch']);
+    grunt.registerTask('build:watch', ['clean', 'dependence', 'concat:build', 'copy', 'watch']);
     grunt.registerTask('dev', ['browserSync', 'watch']);
 
 };

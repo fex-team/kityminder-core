@@ -4468,8 +4468,10 @@ _p[43] = {
             TextRenderer.registerStyleHook(function(node, textGroup) {
                 var fontWeight = getNodeDataOrStyle(node, "font-weight");
                 var fontStyle = getNodeDataOrStyle(node, "font-style");
+                var textDecoration = getNodeDataOrStyle(node, "text-decoration");
                 var styleHash = [ fontWeight, fontStyle ].join("/");
                 textGroup.eachItem(function(index, item) {
+                    item.setStyle("textDecoration", textDecoration);
                     item.setFont({
                         weight: fontWeight,
                         style: fontStyle
@@ -4552,6 +4554,50 @@ _p[43] = {
                                 }
                             });
                             return result;
+                        }
+                    }),
+                    /**
+                 * @command textdecorationCommand
+                 * @description textdecoration
+                 * @shortcut 无
+                 * @state
+                 *   0: 当前有选中的节点
+                 *  -1: 当前没有选中的节点
+                 *   1: 当前已选中的节点已有此属性
+                 */
+                    textdecoration: kity.createClass("textdecorationCommand", {
+                        base: Command,
+                        execute: function(km, v) {
+                            var nodes = km.getSelectedNodes();
+                            if (this.queryState("textdecoration") == 1) {
+                                nodes.forEach(function(n) {
+                                    n.setData("text-decoration", v).render();
+                                });
+                            } else {
+                                nodes.forEach(function(n) {
+                                    n.setData("text-decoration", v).render();
+                                });
+                            }
+                            km.layout();
+                        },
+                        queryState: function() {
+                            var nodes = km.getSelectedNodes(), result = 0;
+                            if (nodes.length === 0) {
+                                return -1;
+                            }
+                            nodes.forEach(function(n) {
+                                if (n && n.getData("text-decoration") && n.getData("text-decoration")) {
+                                    result = 1;
+                                    return false;
+                                }
+                            });
+                            return result;
+                        },
+                        queryValue: function(km) {
+                            if (km.getSelectedNodes().length == 1) {
+                                return km.getSelectedNodes()[0].getData("text-decoration");
+                            }
+                            return "mixed";
                         }
                     })
                 },
@@ -7154,7 +7200,7 @@ _p[60] = {
         var Module = _p.r(20);
         var Renderer = _p.r(27);
         Module.register("StyleModule", function() {
-            var styleNames = [ "font-size", "font-family", "font-weight", "font-style", "background", "color" ];
+            var styleNames = [ "font-size", "font-family", "font-weight", "font-style", "background", "color", "text-decoration" ];
             var styleClipBoard = null;
             function hasStyle(node) {
                 var data = node.getData();
@@ -7440,7 +7486,7 @@ _p[61] = {
                     }
                 }
                 this.setTextStyle(node, textGroup);
-                var textHash = node.getText() + [ "font-size", "font-name", "font-weight", "font-style" ].map(getDataOrStyle).join("/");
+                var textHash = node.getText() + [ "font-size", "font-name", "font-weight", "font-style", "text-decoration" ].map(getDataOrStyle).join("/");
                 if (node._currentTextHash == textHash && node._currentTextGroupBox) return node._currentTextGroupBox;
                 node._currentTextHash = textHash;
                 return function() {

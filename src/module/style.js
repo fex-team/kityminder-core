@@ -9,7 +9,7 @@ define(function(require, exports, module) {
     var Renderer = require('../core/render');
 
     Module.register('StyleModule', function() {
-        var styleNames = ['font-size', 'font-family', 'font-weight', 'font-style', 'background', 'color'];
+        var styleNames = ['font-size', 'font-family', 'font-weight', 'font-style', 'background', 'color', 'text-decoration'];
         var styleClipBoard = null;
 
         function hasStyle(node) {
