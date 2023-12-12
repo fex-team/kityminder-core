@@ -138,7 +138,7 @@ define(function(require, exports, module) {
             function importChildren(node, children) {
                 for (var i = 0, l = children.length; i < l; i++) {
                     var childNode = minder.createNode(null, node);
-                    childNode.setData('text', children[i].data.text || '');
+                    childNode.setData('text', children[i].data.text || '请输入文字');
                     importChildren(childNode, children[i].children);
                 }
             }

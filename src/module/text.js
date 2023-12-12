@@ -202,7 +202,8 @@ define(function(require, exports, module) {
 
             for (i = 0, text, textShape;
                 (text = textArr[i], textShape = textGroup.getItem(i)); i++) {
-                textShape.setContent(text);
+                const finalText = text.replace(/ /g, '') ? text : '输入文字';
+                textShape.setContent(finalText);
                 if (kity.Browser.ie || kity.Browser.edge) {
                     textShape.fixPosition();
                 }

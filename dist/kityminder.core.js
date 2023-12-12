@@ -1,8 +1,8 @@
 /*!
  * ====================================================
- * Kity Minder Core - v1.4.50 - 2023-11-30
- * https://github.com/fex-team/kityminder-core
- * GitHub: https://github.com/fex-team/kityminder-core.git 
+ * @baidu/wk-kityminder-core - v1.4.53 - 2023-12-12
+ * https://github.com/jenkey2011/kityminder-core-fork
+ * GitHub: https://github.com/jenkey2011/kityminder-core-fork.git 
  * Copyright (c) 2023 Baidu FEX; Licensed BSD-3-Clause
  * ====================================================
  */
@@ -860,7 +860,7 @@ _p[12] = {
                 function importChildren(node, children) {
                     for (var i = 0, l = children.length; i < l; i++) {
                         var childNode = minder.createNode(null, node);
-                        childNode.setData("text", children[i].data.text || "");
+                        childNode.setData("text", children[i].data.text || "请输入文字");
                         importChildren(childNode, children[i].children);
                     }
                 }
@@ -2233,7 +2233,7 @@ _p[21] = {
          * @param {String} text 文本数据
          */
             setText: function(text) {
-                return this.data.text = text;
+                return this.data.text = text || "请输入文字";
             },
             /**
          * 获取节点的文本数据
@@ -7433,7 +7433,8 @@ _p[61] = {
                     }
                 }
                 for (i = 0, text, textShape; text = textArr[i], textShape = textGroup.getItem(i); i++) {
-                    textShape.setContent(text);
+                    const finalText = text.replace(/ /g, "") ? text : "输入文字";
+                    textShape.setContent(finalText);
                     if (kity.Browser.ie || kity.Browser.edge) {
                         textShape.fixPosition();
                     }

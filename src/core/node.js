@@ -149,7 +149,7 @@ define(function(require, exports, module) {
          * @param {String} text 文本数据
          */
         setText: function(text) {
-            return this.data.text = text;
+            return this.data.text = text || '请输入文字';
         },
 
         /**
