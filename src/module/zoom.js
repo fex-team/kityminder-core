@@ -146,6 +146,9 @@ define(function(require, exports, module) {
             enableReadOnly: true
         });
 
+        var initialDistance = 0,
+            lastDistance = 0;
+
         return {
             init: function() {
                 this._zoomValue = 100;
@@ -160,6 +163,41 @@ define(function(require, exports, module) {
                 'zoom': ZoomCommand
             },
             events: {
+                'normal.beforetouchstart': function(e) {
+                    const touches = e.originEvent.touches;
+                    if (touches && touches.length === 2) {
+                        initialDistance = Math.hypot(
+                            touches[0].pageX - touches[1].pageX,
+                            touches[0].pageY - touches[1].pageY
+                        );
+                    }
+                },
+
+                'normal.beforetouchmove': function(e) {
+                    const touches = e.originEvent.touches;
+                    if (touches && touches.length === 2) {
+                        lastDistance = Math.hypot(
+                            touches[0].pageX - touches[1].pageX,
+                            touches[0].pageY - touches[1].pageY
+                        );
+                    }
+                },
+
+                'touchend': function() {
+                    var delta = lastDistance / initialDistance;
+                    // delta > 0时说明是在双指操作
+                    if (delta > 0) {
+                        if (delta > 1) {
+                            me.execCommand('zoomin');
+                        } else if (delta < 1) {
+                            me.execCommand('zoomout');
+                        }
+
+                        lastDistance = 0;
+                        initialDistance = 0;
+                    }
+                },
+
                 'normal.mousewheel readonly.mousewheel': function(e) {
                     if (!e.originEvent.ctrlKey && !e.originEvent.metaKey) return;
 
