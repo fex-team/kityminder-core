@@ -7,6 +7,7 @@ define(function(require, exports, module) {
     var Command = require('../core/command');
     var Module = require('../core/module');
     var Renderer = require('../core/render');
+    var browser = require('../core/browser');
 
     var ViewDragger = kity.createClass('ViewDragger', {
         constructor: function(minder) {
@@ -120,7 +121,10 @@ define(function(require, exports, module) {
                         e.originEvent.preventDefault(); // 阻止中键拉动
                     }
                     // 点击未选中的根节点临时开启
-                    if (e.getTargetNode() == this.getRoot() || e.originEvent.button == 2 || e.originEvent.altKey) {
+                    if (e.getTargetNode() == this.getRoot()
+                        || e.originEvent.button == 2
+                        || e.originEvent.altKey
+                        || browser.isMobile()) {
                         lastPosition = e.getPosition('view');
                         isTempDrag = true;
                     }
@@ -134,6 +138,8 @@ define(function(require, exports, module) {
                         e.preventDefault(); // 阻止浏览器的后退事件
                     }
                     if (!isTempDrag) return;
+                    // 双指缩放时避免拖动
+                    if (e.originEvent.touches && e.originEvent.touches.length > 1) return;
                     var offset = kity.Vector.fromPoints(lastPosition, e.getPosition('view'));
                     if (offset.length() > 10) {
                         this.setStatus('hand', true);
