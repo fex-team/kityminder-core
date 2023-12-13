@@ -48,6 +48,7 @@ define(function(require, exports, module) {
     require('./module/clipboard');
     require('./module/dragtree');
     require('./module/expand');
+    require('./module/append');
     require('./module/font');
     require('./module/hyperlink');
     require('./module/image');
