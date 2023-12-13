@@ -71,7 +71,7 @@ define(function(require, exports, module) {
                 'default': 0
             },
             'Win': {
-                '微软雅黑,Microsoft YaHei': -0.15,
+                '微软雅黑,Microsoft YaHei': -0.25,
                 'arial,helvetica,sans-serif': -0.02,
                 'arial black,avant garde': -0.2,
                 'comic sans ms': -0.2,

@@ -1,6 +1,6 @@
 /*!
  * ====================================================
- * @baidu/wk-kityminder-core - v1.5.1 - 2023-12-12
+ * @baidu/wk-kityminder-core - v1.5.1 - 2023-12-13
  * https://github.com/jenkey2011/kityminder-core-fork
  * GitHub: https://github.com/jenkey2011/kityminder-core-fork.git 
  * Copyright (c) 2023 Baidu FEX; Licensed BSD-3-Clause
@@ -7387,7 +7387,7 @@ _p[61] = {
                     default: 0
                 },
                 Win: {
-                    "微软雅黑,Microsoft YaHei": -.15,
+                    "微软雅黑,Microsoft YaHei": -.25,
                     "arial,helvetica,sans-serif": -.02,
                     "arial black,avant garde": -.2,
                     "comic sans ms": -.2,
@@ -8445,11 +8445,6 @@ _p[66] = {
                     return drawSVG();
                 });
             }
-            // else {
-            //     fillBackground(ctx, bgColor.toString());
-            //     return drawSVG();
-            // }
-            // 上面else替换为底部，否则存在代码规范问题
             fillBackground(ctx, bgColor.toString());
             return drawSVG();
         }

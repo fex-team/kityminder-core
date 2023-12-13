@@ -269,11 +269,6 @@ define(function(require, exports, module) {
                 return drawSVG();
             });
         }
-        // else {
-        //     fillBackground(ctx, bgColor.toString());
-        //     return drawSVG();
-        // }
-        // 上面else替换为底部，否则存在代码规范问题
         fillBackground(ctx, bgColor.toString());
         return drawSVG();
     }
