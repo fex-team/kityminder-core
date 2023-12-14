@@ -26,6 +26,13 @@ define(function(require, exports, module) {
             var marqueeMode = false;
             var MARQUEE_MODE_THRESHOLD = 10;
 
+            // 在其他场景可以根据是否处于框选状态来控制某些操作
+            kity.extendClass(Minder, {
+                _isMarqueeMode: function() {
+                    return marqueeMode;
+                }
+            });
+
             return {
                 selectStart: function(e) {
                     // 只接受左键

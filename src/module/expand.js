@@ -214,9 +214,7 @@ define(function(require, exports, module) {
                 var len = utils.countNodes(node) - 1;
                 expander.setState(visible && node.children.length ? node.getData(EXPAND_STATE_DATA) : 'hide', len);
 
-                var vector = node.getLayoutVectorIn().normalize(expander.radius + node.getStyle('stroke-width'));
-                var position = node.getVertexIn().offset(vector.reverse());
-                var x = node.getLayoutBox().width + 16 + position.x;
+                var x = node.getLayoutBox().width + 4;
                 this.expander.setTranslate(x, 0);
             }
         });
