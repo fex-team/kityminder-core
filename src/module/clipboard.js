@@ -85,6 +85,10 @@ define(function(require, exports, module) {
                 });
 
                 km.layout(300);
+            },
+
+            queryState: function(km) {
+                return km.getSelectedNode() && km.getSelectedNode().isRoot() ? -1 : 0;
             }
         });
 

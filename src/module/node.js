@@ -63,8 +63,15 @@ define(function(require, exports, module) {
             km.layout(600);
         },
         queryState: function(km) {
-            var selectedNode = km.getSelectedNode();
-            return selectedNode ? 0 : -1;
+            var nodes = km.getSelectedNodes();
+            if (!nodes.length) return -1;
+            var parent = nodes[0].parent;
+            if (!parent) return -1;
+            for (var i = 1; i < nodes.length; i++) {
+                if(nodes[i].isRoot()) return 0;
+                if (nodes[i].parent != parent) return -1;
+            }
+            return 0;
         }
     });
 
