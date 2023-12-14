@@ -4721,6 +4721,7 @@ _p[45] = {
                         if (!nodes.length) return;
                         for (var i = 0, ni; ni = _clipboardNodes[i]; i++) {
                             for (var j = 0, node; node = nodes[j]; j++) {
+                                node.data.id = utils.uuid("minder_node");
                                 appendChildNode(node, ni.clone());
                             }
                         }
