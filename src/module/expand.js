@@ -186,6 +186,12 @@ define(function(require, exports, module) {
                     pathData = []
                     this.lenNumber.setContent(length);
                     this.lenNumber.setOpacity(1);
+                    if (length > 9) {
+                        this.lenNumber.setSize(9).setX(-this.radius/2 - 2);
+                    }
+                    else {
+                        this.lenNumber.setSize(10).setX(-this.radius/2);
+                    }
                 }
                 this.sign.setPathData(pathData);
             }

@@ -1,6 +1,6 @@
 /*!
  * ====================================================
- * @baidu/wk-kityminder-core - v1.5.3 - 2023-12-14
+ * @baidu/wk-kityminder-core - v1.5.4 - 2023-12-14
  * https://github.com/jenkey2011/kityminder-core-fork
  * GitHub: https://github.com/jenkey2011/kityminder-core-fork.git 
  * Copyright (c) 2023 Baidu FEX; Licensed BSD-3-Clause
@@ -3832,16 +3832,16 @@ _p[36] = {
         _p.r(7);
         _p.r(25);
         // 模块依赖
-        _p.r(43);
         _p.r(44);
         _p.r(45);
         _p.r(46);
         _p.r(47);
         _p.r(48);
+        _p.r(43);
         _p.r(49);
-        _p.r(51);
         _p.r(50);
         _p.r(52);
+        _p.r(51);
         _p.r(53);
         _p.r(54);
         _p.r(55);
@@ -3855,23 +3855,24 @@ _p[36] = {
         _p.r(63);
         _p.r(64);
         _p.r(65);
-        _p.r(69);
         _p.r(66);
-        _p.r(68);
+        _p.r(70);
         _p.r(67);
+        _p.r(69);
+        _p.r(68);
         _p.r(41);
         _p.r(37);
         _p.r(38);
         _p.r(39);
         _p.r(40);
         _p.r(42);
-        _p.r(76);
+        _p.r(77);
+        _p.r(80);
         _p.r(79);
         _p.r(78);
-        _p.r(77);
-        _p.r(79);
-        _p.r(81);
         _p.r(80);
+        _p.r(82);
+        _p.r(81);
         _p.r(0);
         _p.r(1);
         _p.r(2);
@@ -3879,12 +3880,12 @@ _p[36] = {
         _p.r(4);
         _p.r(5);
         _p.r(6);
-        _p.r(70);
-        _p.r(74);
         _p.r(71);
-        _p.r(73);
-        _p.r(72);
         _p.r(75);
+        _p.r(72);
+        _p.r(74);
+        _p.r(73);
+        _p.r(76);
         module.exports = kityminder;
     }
 };
@@ -4329,8 +4330,68 @@ _p[42] = {
     }
 };
 
-//src/module/arrange.js
+//src/module/append.js
+/**
+ * @file Appender
+ * @author Gavin
+ */
 _p[43] = {
+    value: function(require, exports, module) {
+        var kity = _p.r(18);
+        var utils = _p.r(34);
+        var Module = _p.r(21);
+        var Renderer = _p.r(28);
+        var Appender = kity.createClass("Appender", {
+            base: kity.Group,
+            constructor: function(node) {
+                var strokeColor = node.getStyle("selected-stroke");
+                var gap = 2;
+                var r = this.radius = 6;
+                this.callBase();
+                this.outline = new kity.Circle(r).stroke(strokeColor).fill("white");
+                this.line = [ new kity.Line(-r + gap, 0, r - gap, 0).stroke(strokeColor), new kity.Line(0, -r + gap, 0, r - gap).stroke(strokeColor) ];
+                this.addShapes([ this.outline ].concat(this.line));
+                this.setId(utils.uuid("node_appender"));
+                this.setStyle("cursor", "pointer");
+                this.bind(node);
+            },
+            bind: function(node) {
+                this.on("click", function(e) {
+                    node.getMinder().execCommand("AppendChildNode", "输入文字");
+                });
+            }
+        });
+        var AppenderRenderer = kity.createClass("AppenderRenderer", {
+            base: Renderer,
+            create: function(node) {
+                if (node.isRoot()) return;
+                this.appender = new Appender(node);
+                node.getRenderContainer().prependShape(this.appender);
+                node.appenderRenderer = this;
+                this.node = node;
+                return this.appender;
+            },
+            shouldRender: function(node) {
+                return !node.isRoot() && node.isSelected() && !node.getMinder()._isMarqueeMode();
+            },
+            update: function(appender, node) {
+                if (!node.parent) return;
+                var x = node.getLayoutBox().width + 4;
+                this.appender.setTranslate(x, 0);
+            }
+        });
+        Module.register("Appender", function() {
+            return {
+                renderers: {
+                    outside: AppenderRenderer
+                }
+            };
+        });
+    }
+};
+
+//src/module/arrange.js
+_p[44] = {
     value: function(require, exports, module) {
         var kity = _p.r(18);
         var MinderNode = _p.r(22);
@@ -4468,7 +4529,7 @@ _p[43] = {
 };
 
 //src/module/basestyle.js
-_p[44] = {
+_p[45] = {
     value: function(require, exports, module) {
         var kity = _p.r(18);
         var utils = _p.r(34);
@@ -4476,7 +4537,7 @@ _p[44] = {
         var MinderNode = _p.r(22);
         var Command = _p.r(10);
         var Module = _p.r(21);
-        var TextRenderer = _p.r(62);
+        var TextRenderer = _p.r(63);
         Module.register("basestylemodule", function() {
             var km = this;
             function getNodeDataOrStyle(node, name) {
@@ -4629,7 +4690,7 @@ _p[44] = {
 };
 
 //src/module/clipboard.js
-_p[45] = {
+_p[46] = {
     value: function(require, exports, module) {
         var kity = _p.r(18);
         var utils = _p.r(34);
@@ -4782,7 +4843,7 @@ _p[45] = {
 };
 
 //src/module/dragtree.js
-_p[46] = {
+_p[47] = {
     value: function(require, exports, module) {
         var kity = _p.r(18);
         var utils = _p.r(34);
@@ -5123,7 +5184,7 @@ _p[46] = {
 };
 
 //src/module/expand.js
-_p[47] = {
+_p[48] = {
     value: function(require, exports, module) {
         var kity = _p.r(18);
         var utils = _p.r(34);
@@ -5286,6 +5347,11 @@ _p[47] = {
                         pathData = [];
                         this.lenNumber.setContent(length);
                         this.lenNumber.setOpacity(1);
+                        if (length > 9) {
+                            this.lenNumber.setSize(9).setX(-this.radius / 2 - 2);
+                        } else {
+                            this.lenNumber.setSize(10).setX(-this.radius / 2);
+                        }
                     }
                     this.sign.setPathData(pathData);
                 }
@@ -5308,9 +5374,7 @@ _p[47] = {
                     var visible = node.parent.isExpanded();
                     var len = utils.countNodes(node) - 1;
                     expander.setState(visible && node.children.length ? node.getData(EXPAND_STATE_DATA) : "hide", len);
-                    var vector = node.getLayoutVectorIn().normalize(expander.radius + node.getStyle("stroke-width"));
-                    var position = node.getVertexIn().offset(vector.reverse());
-                    var x = node.getLayoutBox().width + 16 + position.x;
+                    var x = node.getLayoutBox().width + 4;
                     this.expander.setTranslate(x, 0);
                 }
             });
@@ -5403,7 +5467,7 @@ _p[47] = {
 };
 
 //src/module/font.js
-_p[48] = {
+_p[49] = {
     value: function(require, exports, module) {
         var kity = _p.r(18);
         var utils = _p.r(34);
@@ -5411,7 +5475,7 @@ _p[48] = {
         var MinderNode = _p.r(22);
         var Command = _p.r(10);
         var Module = _p.r(21);
-        var TextRenderer = _p.r(62);
+        var TextRenderer = _p.r(63);
         function getNodeDataOrStyle(node, name) {
             return node.getData(name) || node.getStyle(name);
         }
@@ -5569,7 +5633,7 @@ _p[48] = {
 };
 
 //src/module/hyperlink.js
-_p[49] = {
+_p[50] = {
     value: function(require, exports, module) {
         var kity = _p.r(18);
         var utils = _p.r(34);
@@ -5681,7 +5745,7 @@ _p[49] = {
 };
 
 //src/module/image-viewer.js
-_p[50] = {
+_p[51] = {
     value: function(require, exports, module) {
         var kity = _p.r(18);
         var keymap = _p.r(16);
@@ -5786,7 +5850,7 @@ _p[50] = {
 };
 
 //src/module/image.js
-_p[51] = {
+_p[52] = {
     value: function(require, exports, module) {
         var kity = _p.r(18);
         var utils = _p.r(34);
@@ -5908,7 +5972,7 @@ _p[51] = {
 };
 
 //src/module/keynav.js
-_p[52] = {
+_p[53] = {
     value: function(require, exports, module) {
         var kity = _p.r(18);
         var utils = _p.r(34);
@@ -6063,7 +6127,7 @@ _p[52] = {
  * @author: techird
  * @copyright: Baidu FEX, 2014
  */
-_p[53] = {
+_p[54] = {
     value: function(require, exports, module) {
         var kity = _p.r(18);
         var Command = _p.r(10);
@@ -6138,7 +6202,7 @@ _p[53] = {
 };
 
 //src/module/node.js
-_p[54] = {
+_p[55] = {
     value: function(require, exports, module) {
         var kity = _p.r(18);
         var utils = _p.r(34);
@@ -6295,7 +6359,7 @@ _p[54] = {
  * @author: techird
  * @copyright: Baidu FEX, 2014
  */
-_p[55] = {
+_p[56] = {
     value: function(require, exports, module) {
         var kity = _p.r(18);
         var utils = _p.r(34);
@@ -6393,7 +6457,7 @@ _p[55] = {
 };
 
 //src/module/outline.js
-_p[56] = {
+_p[57] = {
     value: function(require, exports, module) {
         var kity = _p.r(18);
         var utils = _p.r(34);
@@ -6511,7 +6575,7 @@ _p[56] = {
 };
 
 //src/module/priority.js
-_p[57] = {
+_p[58] = {
     value: function(require, exports, module) {
         var kity = _p.r(18);
         var utils = _p.r(34);
@@ -6637,7 +6701,7 @@ _p[57] = {
 };
 
 //src/module/progress.js
-_p[58] = {
+_p[59] = {
     value: function(require, exports, module) {
         var kity = _p.r(18);
         var utils = _p.r(34);
@@ -6762,7 +6826,7 @@ _p[58] = {
 };
 
 //src/module/resource.js
-_p[59] = {
+_p[60] = {
     value: function(require, exports, module) {
         var kity = _p.r(18);
         var utils = _p.r(34);
@@ -7092,7 +7156,7 @@ _p[59] = {
 };
 
 //src/module/select.js
-_p[60] = {
+_p[61] = {
     value: function(require, exports, module) {
         var kity = _p.r(18);
         var utils = _p.r(34);
@@ -7114,6 +7178,12 @@ _p[60] = {
                 //    并不是 mousedown 发生之后就启动框选状态，而是检测到移动了一定的距离（MARQUEE_MODE_THRESHOLD）之后
                 var marqueeMode = false;
                 var MARQUEE_MODE_THRESHOLD = 10;
+                // 在其他场景可以根据是否处于框选状态来控制某些操作
+                kity.extendClass(Minder, {
+                    _isMarqueeMode: function() {
+                        return marqueeMode;
+                    }
+                });
                 return {
                     selectStart: function(e) {
                         // 只接受左键
@@ -7237,7 +7307,7 @@ _p[60] = {
 };
 
 //src/module/style.js
-_p[61] = {
+_p[62] = {
     value: function(require, exports, module) {
         var kity = _p.r(18);
         var utils = _p.r(34);
@@ -7342,7 +7412,7 @@ _p[61] = {
 };
 
 //src/module/text.js
-_p[62] = {
+_p[63] = {
     value: function(require, exports, module) {
         var kity = _p.r(18);
         var utils = _p.r(34);
@@ -7599,7 +7669,7 @@ _p[62] = {
 };
 
 //src/module/view.js
-_p[63] = {
+_p[64] = {
     value: function(require, exports, module) {
         var kity = _p.r(18);
         var utils = _p.r(34);
@@ -7924,7 +7994,7 @@ _p[63] = {
 };
 
 //src/module/zoom.js
-_p[64] = {
+_p[65] = {
     value: function(require, exports, module) {
         var kity = _p.r(18);
         var utils = _p.r(34);
@@ -8129,7 +8199,7 @@ _p[64] = {
 };
 
 //src/protocol/json.js
-_p[65] = {
+_p[66] = {
     value: function(require, exports, module) {
         var data = _p.r(13);
         data.registerProtocol("json", module.exports = {
@@ -8148,7 +8218,7 @@ _p[65] = {
 };
 
 //src/protocol/markdown.js
-_p[66] = {
+_p[67] = {
     value: function(require, exports, module) {
         var data = _p.r(13);
         var LINE_ENDING_SPLITER = /\r\n|\r|\n/;
@@ -8279,7 +8349,7 @@ _p[66] = {
 };
 
 //src/protocol/png.js
-_p[67] = {
+_p[68] = {
     value: function(require, exports, module) {
         var kity = _p.r(18);
         var data = _p.r(13);
@@ -8516,7 +8586,7 @@ _p[67] = {
 };
 
 //src/protocol/svg.js
-_p[68] = {
+_p[69] = {
     value: function(require, exports, module) {
         var data = _p.r(13);
         /**
@@ -8788,7 +8858,7 @@ _p[68] = {
 };
 
 //src/protocol/text.js
-_p[69] = {
+_p[70] = {
     value: function(require, exports, module) {
         var data = _p.r(13);
         var Browser = _p.r(18).Browser;
@@ -9019,7 +9089,7 @@ _p[69] = {
  * @author: techird
  * @copyright: Baidu FEX, 2014
  */
-_p[70] = {
+_p[71] = {
     value: function(require, exports, module) {
         var template = _p.r(32);
         template.register("default", {
@@ -9053,7 +9123,7 @@ _p[70] = {
  * @author: techird
  * @copyright: Baidu FEX, 2014
  */
-_p[71] = {
+_p[72] = {
     value: function(require, exports, module) {
         var template = _p.r(32);
         template.register("filetree", {
@@ -9081,7 +9151,7 @@ _p[71] = {
  * @author: techird
  * @copyright: Baidu FEX, 2014
  */
-_p[72] = {
+_p[73] = {
     value: function(require, exports, module) {
         var template = _p.r(32);
         template.register("fish-bone", {
@@ -9123,7 +9193,7 @@ _p[72] = {
  * @author: techird
  * @copyright: Baidu FEX, 2014
  */
-_p[73] = {
+_p[74] = {
     value: function(require, exports, module) {
         var template = _p.r(32);
         template.register("right", {
@@ -9147,7 +9217,7 @@ _p[73] = {
  * @author: techird
  * @copyright: Baidu FEX, 2014
  */
-_p[74] = {
+_p[75] = {
     value: function(require, exports, module) {
         var template = _p.r(32);
         template.register("structure", {
@@ -9170,7 +9240,7 @@ _p[74] = {
  * @author: along
  * @copyright: bpd729@163.com, 2015
  */
-_p[75] = {
+_p[76] = {
     value: function(require, exports, module) {
         var template = _p.r(32);
         template.register("tianpan", {
@@ -9191,7 +9261,7 @@ _p[75] = {
 };
 
 //src/theme/default.js
-_p[76] = {
+_p[77] = {
     value: function(require, exports, module) {
         var theme = _p.r(33);
         [ "classic", "classic-compact" ].forEach(function(name) {
@@ -9250,7 +9320,7 @@ _p[76] = {
 };
 
 //src/theme/fish.js
-_p[77] = {
+_p[78] = {
     value: function(require, exports, module) {
         var theme = _p.r(33);
         theme.register("fish", {
@@ -9301,7 +9371,7 @@ _p[77] = {
 };
 
 //src/theme/fresh.js
-_p[78] = {
+_p[79] = {
     value: function(require, exports, module) {
         var kity = _p.r(18);
         var theme = _p.r(33);
@@ -9370,7 +9440,7 @@ _p[78] = {
 };
 
 //src/theme/snow.js
-_p[79] = {
+_p[80] = {
     value: function(require, exports, module) {
         var theme = _p.r(33);
         [ "snow", "snow-compact" ].forEach(function(name) {
@@ -9425,7 +9495,7 @@ _p[79] = {
 };
 
 //src/theme/tianpan.js
-_p[80] = {
+_p[81] = {
     value: function(require, exports, module) {
         var theme = _p.r(33);
         [ "tianpan", "tianpan-compact" ].forEach(function(name) {
@@ -9487,7 +9557,7 @@ _p[80] = {
 };
 
 //src/theme/wire.js
-_p[81] = {
+_p[82] = {
     value: function(require, exports, module) {
         var theme = _p.r(33);
         theme.register("wire", {
