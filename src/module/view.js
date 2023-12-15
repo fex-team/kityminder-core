@@ -7,7 +7,6 @@ define(function(require, exports, module) {
     var Command = require('../core/command');
     var Module = require('../core/module');
     var Renderer = require('../core/render');
-    var browser = require('../core/browser');
 
     var ViewDragger = kity.createClass('ViewDragger', {
         constructor: function(minder) {
@@ -124,7 +123,7 @@ define(function(require, exports, module) {
                     if (e.getTargetNode() == this.getRoot()
                         || e.originEvent.button == 2
                         || e.originEvent.altKey
-                        || browser.isMobile()) {
+                        || kity.Browser.isMobile()) {
                         lastPosition = e.getPosition('view');
                         isTempDrag = true;
                     }

@@ -19,6 +19,7 @@ define(function(require, exports, module) {
     kityminder.Minder = require('./core/minder');
     kityminder.Command = require('./core/command');
     kityminder.Node = require('./core/node');
+    require('./core/browser');
     require('./core/option');
     require('./core/animate');
     kityminder.Event = require('./core/event');
