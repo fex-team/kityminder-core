@@ -3,8 +3,7 @@
  * @baidu/wk-kityminder-core - v1.5.7 - 2023-12-15
  * https://github.com/jenkey2011/kityminder-core-fork
  * GitHub: https://github.com/jenkey2011/kityminder-core-fork.git 
- * Copyright (c) 2023 Baidu FEX; Licensed BSD-3-Clause
- * ====================================================
+ * Copyright (c) 2023 Baidu FEX; * ====================================================
  */
 
 (function () {
@@ -37,46 +36,6 @@ var _p = {
     }
 };
 
-//src/connect/arc.js
-/**
- * @fileOverview
- *
- * 圆弧连线
- *
- * @author: techird
- * @copyright: Baidu FEX, 2014
- */
-_p[0] = {
-    value: function(require, exports, module) {
-        var kity = _p.r(18);
-        var connect = _p.r(12);
-        var connectMarker = new kity.Marker().pipe(function() {
-            var r = 7;
-            var dot = new kity.Circle(r - 1);
-            this.addShape(dot);
-            this.setRef(r - 1, 0).setViewBox(-r, -r, r + r, r + r).setWidth(r).setHeight(r);
-            this.dot = dot;
-            this.node.setAttribute("markerUnits", "userSpaceOnUse");
-        });
-        connect.register("arc", function(node, parent, connection, width, color) {
-            var box = node.getLayoutBox(), pBox = parent.getLayoutBox();
-            var start, end, vector;
-            var abs = Math.abs;
-            var pathData = [];
-            var side = box.x > pBox.x ? "right" : "left";
-            node.getMinder().getPaper().addResource(connectMarker);
-            start = new kity.Point(pBox.cx, pBox.cy);
-            end = side == "left" ? new kity.Point(box.right + 2, box.cy) : new kity.Point(box.left - 2, box.cy);
-            vector = kity.Vector.fromPoints(start, end);
-            pathData.push("M", start);
-            pathData.push("A", abs(vector.x), abs(vector.y), 0, 0, vector.x * vector.y > 0 ? 0 : 1, end);
-            connection.setMarker(connectMarker);
-            connectMarker.dot.fill(color);
-            connection.setPathData(pathData);
-        });
-    }
-};
-
 //src/connect/arc_tp.js
 /**
  *
@@ -85,7 +44,7 @@ _p[0] = {
  * @author: along
  * @copyright: bpd729@163.com , 2015
  */
-_p[1] = {
+_p[0] = {
     value: function(require, exports, module) {
         var kity = _p.r(18);
         var connect = _p.r(12);
@@ -138,6 +97,46 @@ _p[1] = {
                 connectMarker.dot.fill(color);
                 nextConnection.setPathData(pathData);
             }
+        });
+    }
+};
+
+//src/connect/arc.js
+/**
+ * @fileOverview
+ *
+ * 圆弧连线
+ *
+ * @author: techird
+ * @copyright: Baidu FEX, 2014
+ */
+_p[1] = {
+    value: function(require, exports, module) {
+        var kity = _p.r(18);
+        var connect = _p.r(12);
+        var connectMarker = new kity.Marker().pipe(function() {
+            var r = 7;
+            var dot = new kity.Circle(r - 1);
+            this.addShape(dot);
+            this.setRef(r - 1, 0).setViewBox(-r, -r, r + r, r + r).setWidth(r).setHeight(r);
+            this.dot = dot;
+            this.node.setAttribute("markerUnits", "userSpaceOnUse");
+        });
+        connect.register("arc", function(node, parent, connection, width, color) {
+            var box = node.getLayoutBox(), pBox = parent.getLayoutBox();
+            var start, end, vector;
+            var abs = Math.abs;
+            var pathData = [];
+            var side = box.x > pBox.x ? "right" : "left";
+            node.getMinder().getPaper().addResource(connectMarker);
+            start = new kity.Point(pBox.cx, pBox.cy);
+            end = side == "left" ? new kity.Point(box.right + 2, box.cy) : new kity.Point(box.left - 2, box.cy);
+            vector = kity.Vector.fromPoints(start, end);
+            pathData.push("M", start);
+            pathData.push("A", abs(vector.x), abs(vector.y), 0, 0, vector.x * vector.y > 0 ? 0 : 1, end);
+            connection.setMarker(connectMarker);
+            connectMarker.dot.fill(color);
+            connection.setPathData(pathData);
         });
     }
 };
@@ -421,10 +420,9 @@ _p[9] = {
     value: function(require, exports, module) {
         var agent = navigator.userAgent.toLowerCase();
         var mobileReg = /iPhone|iPad|iPod|Android/i;
-        module.exports = {
-            isMobile: function() {
-                return mobileReg.test(agent);
-            }
+        kity.Browser = kity.Browser || {};
+        kity.Browser.isMobile = function() {
+            return mobileReg.test(agent);
         };
     }
 };
@@ -3809,6 +3807,7 @@ _p[36] = {
         kityminder.Minder = _p.r(20);
         kityminder.Command = _p.r(10);
         kityminder.Node = _p.r(22);
+        _p.r(9);
         _p.r(23);
         _p.r(8);
         kityminder.Event = _p.r(14);
@@ -3873,8 +3872,8 @@ _p[36] = {
         _p.r(80);
         _p.r(82);
         _p.r(81);
-        _p.r(0);
         _p.r(1);
+        _p.r(0);
         _p.r(2);
         _p.r(3);
         _p.r(4);
@@ -7680,7 +7679,6 @@ _p[64] = {
         var Command = _p.r(10);
         var Module = _p.r(21);
         var Renderer = _p.r(28);
-        var browser = _p.r(9);
         var ViewDragger = kity.createClass("ViewDragger", {
             constructor: function(minder) {
                 this._minder = minder;
@@ -7760,7 +7758,7 @@ _p[64] = {
                         e.originEvent.preventDefault();
                     }
                     // 点击未选中的根节点临时开启
-                    if (e.getTargetNode() == this.getRoot() || e.originEvent.button == 2 || e.originEvent.altKey || browser.isMobile()) {
+                    if (e.getTargetNode() == this.getRoot() || e.originEvent.button == 2 || e.originEvent.altKey || kity.Browser.isMobile()) {
                         lastPosition = e.getPosition("view");
                         isTempDrag = true;
                     }
