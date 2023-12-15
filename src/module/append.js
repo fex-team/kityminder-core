@@ -38,7 +38,6 @@ define(function(require, exports, module) {
         base: Renderer,
 
         create: function(node) {
-            if (node.isRoot()) return;
             this.appender = new Appender(node);
             node.getRenderContainer().prependShape(this.appender);
             node.appenderRenderer = this;
@@ -47,13 +46,14 @@ define(function(require, exports, module) {
         },
 
         shouldRender: function(node) {
-            return !node.isRoot() && node.isSelected() && !node.getMinder()._isMarqueeMode();
+            return node.getMinder().getOption('enableAppenderUI') !== false
+                && node.isSelected()
+                && !node.getMinder()._isMarqueeMode();
         },
 
         update: function(appender, node) {
-            if (!node.parent) return;
-            var x = node.getLayoutBox().width + 4;
-            this.appender.setTranslate(x, 0);
+            var box = node.getContentBox();
+            this.appender.setTranslate(box.width + box.x + 10, 0);
         }
     });
 
