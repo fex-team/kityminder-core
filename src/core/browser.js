@@ -6,9 +6,8 @@
 define(function(require, exports, module) {
     var agent = navigator.userAgent.toLowerCase();
     var mobileReg = /iPhone|iPad|iPod|Android/i;
-    module.exports = {
-        isMobile: function () {
-            return mobileReg.test(agent);
-        }
-    };
+    kity.Browser = kity.Browser || {};
+    kity.Browser.isMobile = function () {
+        return mobileReg.test(agent);
+    }
 });
