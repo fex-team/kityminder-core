@@ -167,7 +167,7 @@ define(function(require, exports, module) {
             }
             this._minder.layout(300);
             this._leaveDragMode();
-            this._minder.fire('contentchange');
+            // this._minder.fire('contentchange');
         },
 
         // 进入拖放模式：

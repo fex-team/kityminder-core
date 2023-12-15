@@ -1,6 +1,6 @@
 /*!
  * ====================================================
- * @baidu/wk-kityminder-core - v1.5.4 - 2023-12-14
+ * @baidu/wk-kityminder-core - v1.5.7 - 2023-12-15
  * https://github.com/jenkey2011/kityminder-core-fork
  * GitHub: https://github.com/jenkey2011/kityminder-core-fork.git 
  * Copyright (c) 2023 Baidu FEX; Licensed BSD-3-Clause
@@ -4974,7 +4974,6 @@ _p[47] = {
                 }
                 this._minder.layout(300);
                 this._leaveDragMode();
-                this._minder.fire("contentchange");
             },
             // 进入拖放模式：
             //    1. 计算拖放源和允许的拖放目标
@@ -6182,7 +6181,10 @@ _p[54] = {
                 });
                 minder.layout(300);
             },
-            enableReadOnly: true
+            enableReadOnly: true,
+            isContentChanged: function() {
+                return false;
+            }
         });
         Module.register("LayoutModule", {
             commands: {

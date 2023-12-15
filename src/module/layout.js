@@ -70,7 +70,11 @@ define(function(require, exports, module) {
             minder.layout(300);
         },
 
-        enableReadOnly: true
+        enableReadOnly: true,
+
+        isContentChanged: function () {
+            return false;
+        }
     });
 
     Module.register('LayoutModule', {
