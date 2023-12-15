@@ -1,0 +1,7 @@
+# Ignore all files in root
+/*
+# Except the ones we want to publish
+!dist/
+!package.json
+!README.md
+!CHANGELOG.md
