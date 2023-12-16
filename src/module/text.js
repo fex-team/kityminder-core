@@ -150,7 +150,6 @@ define(function(require, exports, module) {
             var fontFamily = getDataOrStyle('font-family') || 'default';
 
             var isShadowText = !getDataOrStyle('text') && getDataOrStyle('shadowText');
-            console.log('isShadowText', isShadowText);
             var height = (lineHeight * fontSize) * textArr.length - (lineHeight - 1) * fontSize;
             var yStart = -height / 2;
             var Browser = kity.Browser;

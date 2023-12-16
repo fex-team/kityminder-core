@@ -33,7 +33,6 @@ define(function(require, exports, module) {
             this.initContainers();
 
             if (utils.isString(textOrData)) {
-                console.log('set test === 2');
                 this.setText(textOrData);
             } else if (utils.isObject(textOrData)) {
                 utils.extend(this.data, textOrData);

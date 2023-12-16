@@ -194,7 +194,6 @@ define(function(require, exports, module) {
             node.data = {};
 
             for (var field in data) {
-                // console.log(field, data[field]);
                 node.setData(field, data[field]);
             }
 
@@ -216,7 +215,6 @@ define(function(require, exports, module) {
          * @param {plain} json 要导入的数据
          */
         importJson: function(json) {
-            // console.log('import');
             if (!json) return;
 
             /**
