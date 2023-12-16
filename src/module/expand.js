@@ -82,6 +82,24 @@ define(function(require, exports, module) {
             }
         });
 
+
+        /**
+         * @command ExpandAll
+         * @description 展开当前选中的节点以及其子树
+         */
+        var ExpandAllCommand = kity.createClass('ExpandAllCommand', {
+            base: Command,
+            execute: function(km) {
+                var node = km.getSelectedNode();
+                if (!node) return;
+                node.traverse(function(nodeItem) {
+                    nodeItem.expand();
+                });
+                node.renderTree();
+                km.layout(100);
+            },
+        });
+
         /**
          * @command ExpandToLevel
          * @description 展开脑图到指定的层级
@@ -231,6 +249,7 @@ define(function(require, exports, module) {
         return {
             commands: {
                 'expand': ExpandCommand,
+                'expandAll': ExpandAllCommand,
                 'expandtolevel': ExpandToLevelCommand,
                 'collapse': CollapseCommand
             },
