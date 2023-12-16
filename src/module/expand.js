@@ -181,12 +181,15 @@ define(function(require, exports, module) {
                 pathData = ['M', ax, -ay, 'L', -bx, by, 'L', ax, ay];
                 this.lenNumber.setOpacity(0)
                 if (state == STATE_COLLAPSE) {
-                    console.log(STATE_COLLAPSE, '-8')
                     // pathData.push(['M', 0, 1.5 - this.radius, 'L', 0, this.radius - 1.5]);
                     pathData = []
                     this.lenNumber.setContent(length);
                     this.lenNumber.setOpacity(1);
-                    if (length > 9) {
+                    
+                    if (length > 99) {
+                        this.lenNumber.setContent('...').setSize(10).setX(-this.radius/2 - 1).setY(-3);
+                    }
+                    else if (length > 9) {
                         this.lenNumber.setSize(9).setX(-this.radius/2 - 2);
                     }
                     else {
