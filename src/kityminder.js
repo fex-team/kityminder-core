@@ -9,7 +9,6 @@
 
 
 define(function(require, exports, module) {
-    console.log('debug');
     var kityminder = {
         version: require('./core/minder').version
     };
