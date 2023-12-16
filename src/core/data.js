@@ -138,7 +138,7 @@ define(function(require, exports, module) {
             function importChildren(node, children) {
                 for (var i = 0, l = children.length; i < l; i++) {
                     var childNode = minder.createNode(null, node);
-                    childNode.setData('text', children[i].data.text || '输入文字');
+                    childNode.setData('text', children[i].data.text);
                     importChildren(childNode, children[i].children);
                 }
             }
@@ -194,6 +194,7 @@ define(function(require, exports, module) {
             node.data = {};
 
             for (var field in data) {
+                // console.log(field, data[field]);
                 node.setData(field, data[field]);
             }
 
@@ -215,6 +216,7 @@ define(function(require, exports, module) {
          * @param {plain} json 要导入的数据
          */
         importJson: function(json) {
+            // console.log('import');
             if (!json) return;
 
             /**

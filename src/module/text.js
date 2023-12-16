@@ -149,6 +149,8 @@ define(function(require, exports, module) {
             var fontSize = getDataOrStyle('font-size');
             var fontFamily = getDataOrStyle('font-family') || 'default';
 
+            var isShadowText = !getDataOrStyle('text') && getDataOrStyle('shadowText');
+            console.log('isShadowText', isShadowText);
             var height = (lineHeight * fontSize) * textArr.length - (lineHeight - 1) * fontSize;
             var yStart = -height / 2;
             var Browser = kity.Browser;
@@ -204,8 +206,13 @@ define(function(require, exports, module) {
 
             for (i = 0, text, textShape;
                 (text = textArr[i], textShape = textGroup.getItem(i)); i++) {
-                const finalText = text.replace(/ /g, '') ? text : '输入文字';
-                textShape.setContent(finalText);
+                textShape.setContent(text);
+                if (isShadowText) {
+                    textShape.setOpacity(0.6);
+                }
+                else{
+                    textShape.setOpacity(1);
+                }
                 if (kity.Browser.ie || kity.Browser.edge) {
                     textShape.fixPosition();
                 }
@@ -260,6 +267,9 @@ define(function(require, exports, module) {
         },
         queryValue: function(minder) {
             var node = minder.getSelectedNode();
+            if (!node.data.text && node.data.shadowText) {
+                return ''
+            }
             return node ? node.getText() : null;
         }
     });

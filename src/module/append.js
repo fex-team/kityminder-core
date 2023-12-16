@@ -29,7 +29,7 @@ define(function(require, exports, module) {
 
         bind: function(node) {
             this.on('click', function (e) {
-                node.getMinder().execCommand('AppendChildNode', '输入文字');
+                node.getMinder().execCommand('AppendChildNode', '');
             });
         }
     });

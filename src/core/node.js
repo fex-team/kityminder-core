@@ -33,6 +33,7 @@ define(function(require, exports, module) {
             this.initContainers();
 
             if (utils.isString(textOrData)) {
+                console.log('set test === 2');
                 this.setText(textOrData);
             } else if (utils.isObject(textOrData)) {
                 utils.extend(this.data, textOrData);
@@ -149,7 +150,8 @@ define(function(require, exports, module) {
          * @param {String} text 文本数据
          */
         setText: function(text) {
-            return this.data.text = text || '输入文字';
+            this.data.text = text;
+            return this.data.shadowText = '输入文字';
         },
 
         /**
@@ -157,7 +159,12 @@ define(function(require, exports, module) {
          * @return {String}
          */
         getText: function() {
-            return this.data.text || null;
+            var oriText = this.data.text;
+            if (oriText) {
+                return oriText;
+            }
+            this.data.shadowText = '输入文字';
+            return this.data.shadowText;
         },
 
         /**
