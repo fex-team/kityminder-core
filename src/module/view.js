@@ -93,11 +93,8 @@ define(function(require, exports, module) {
 
             function dragEnd(e) {
                 if (!lastPosition) return;
-                if (!currentPosition) return;
-
 
                 lastPosition = null;
-                currentPosition = null;
 
                 e.stopPropagation();
 
@@ -111,7 +108,11 @@ define(function(require, exports, module) {
                 var paper = dragger._minder.getPaper();
                 paper.setStyle('cursor', dragger._minder.getStatus() == 'hand' ? '-webkit-grab' : 'default');
 
-                dragger._minder.fire('viewchanged');
+                // 真正有拖动才会触发viewchanged
+                if (currentPosition) {
+                    dragger._minder.fire('viewchanged');
+                    currentPosition = null;
+                }
             }
 
             this._minder.on('normal.mousedown normal.touchstart ' +
