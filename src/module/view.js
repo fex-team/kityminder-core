@@ -93,9 +93,11 @@ define(function(require, exports, module) {
 
             function dragEnd(e) {
                 if (!lastPosition) return;
+                if (!currentPosition) return;
 
 
                 lastPosition = null;
+                currentPosition = null;
 
                 e.stopPropagation();
 
