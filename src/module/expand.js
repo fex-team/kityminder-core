@@ -213,7 +213,7 @@ define(function(require, exports, module) {
             },
 
             shouldRender: function(node) {
-                return !node.isRoot();
+                return node.getMinder().getOption('enableExpanderUI') !== false && !node.isRoot();
             },
 
             update: function(expander, node, box) {
@@ -223,8 +223,8 @@ define(function(require, exports, module) {
                 var len = utils.countNodes(node) - 1;
                 expander.setState(visible && node.children.length ? node.getData(EXPAND_STATE_DATA) : 'hide', len);
 
-                var x = node.getLayoutBox().width + 4;
-                this.expander.setTranslate(x, 0);
+                var box = node.getContentBox();
+                this.expander.setTranslate(box.width + box.x + 10, 0);
             }
         });
 
