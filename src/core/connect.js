@@ -63,6 +63,7 @@ define(function(require, exports, module) {
             node._connection = connection;
 
             this._connectContainer.addShape(connection);
+            console.log('create connect');
             this.updateConnect(node);
         },
 
@@ -89,7 +90,7 @@ define(function(require, exports, module) {
 
             var provider = node.getConnectProvider();
 
-            var strokeColor = node.getStyle('connect-color') || 'white',
+            var strokeColor = this._strokeGradient ||  node.getStyle('connect-color') || 'white',
                 strokeWidth = node.getStyle('connect-width') || 2;
 
             connection.stroke(strokeColor, strokeWidth);
@@ -107,6 +108,13 @@ define(function(require, exports, module) {
     Module.register('Connect', {
         init: function() {
             this._connectContainer = new kity.Group().setId(utils.uuid('minder_connect_group'));
+            this._strokeGradient = FRAME_GRAD = new kity.LinearGradient().pipe(function(g) {
+                g.setStartPosition(0, 0);
+                g.setEndPosition(1, 0);
+                g.addStop(0, '#C2CFE9');
+                g.addStop(1, '#F4F5F8');
+            });
+            this.getPaper().addResource(FRAME_GRAD);
             this.getRenderContainer().prependShape(this._connectContainer);
         },
         events: {
