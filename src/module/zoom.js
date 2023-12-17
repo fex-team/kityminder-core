@@ -69,7 +69,8 @@ define(function(require, exports, module) {
                 }
                 timeline = animator.start(minder, duration, 'easeInOutSine');
                 timeline.on('finish', function() {
-                    minder.fire('viewchange');
+                    // minder.fire('viewchange');
+                    minder.fire('viewchanged');
                 });
             }
             minder.fire('zoom', {
