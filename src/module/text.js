@@ -193,7 +193,8 @@ define(function(require, exports, module) {
                 var growth = textLength - textGroupLength;
                 while (growth--) {
                     textShape = new kity.Text()
-                        .setAttr('text-rendering', 'inherit');
+                        .setAttr('text-rendering', 'inherit')
+                        .setStyle('white-space', 'pre');
                     if (kity.Browser.ie || kity.Browser.edge) {
                         textShape.setVerticalAlign('top');
                     } else {
