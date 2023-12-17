@@ -276,9 +276,48 @@ define(function(require, exports, module) {
             enableReadOnly: true
         });
 
+        var movePaper = function (e, minder) {
+            var dx, dy;
+            if (e.ctrlKey || e.shiftKey) return;
+            // 非标准属性，可能在某些浏览器中工作
+            if ('wheelDeltaX' in e) {
+                dx = e.wheelDeltaX || 0;
+                dy = e.wheelDeltaY || 0;
+            }
+            // 标准属性，应该在大多数现代浏览器中工作
+            else if ('deltaX' in e) {
+                dx = -e.deltaX || 0;
+                dy = -e.deltaY || 0;
+            }
+            // 如果以上都不可用，退回到wheelDelta
+            else {
+                dx = 0;
+                dy = e.wheelDelta || 0;
+            }
+
+            minder._viewDragger.move({
+                x: dx / 2.5,
+                y: dy / 2.5
+            });
+
+            clearTimeout(minder._mousewheeltimer);
+            minder._mousewheeltimer = setTimeout(function() {
+                minder.fire('viewchanged');
+            }, 100);
+        }
+
         return {
             init: function() {
                 this._viewDragger = new ViewDragger(this);
+                var me = this;
+                var Browser = kity.Browser;
+                // 兼容火狐触控板滑动
+                if (Browser.gecko) {
+                    this.getPaper().container.addEventListener('wheel', function(e) {
+                        movePaper(e, me);
+                        e.preventDefault();
+                    }, { passive: false });
+                }
             },
             commands: {
                 'hand': ToggleHandCommand,
@@ -289,33 +328,10 @@ define(function(require, exports, module) {
                 statuschange: function(e) {
                     this._viewDragger.setEnabled(e.currentStatus == 'hand');
                 },
+                // 这里是源代码的处理逻辑 如果只是处理滚动 直接监听dom事件即可 不用包装一层minderEvent
+                // 先不管
                 mousewheel: function(e) {
-                    var dx, dy;
-                    e = e.originEvent;
-                    if (e.ctrlKey || e.shiftKey) return;
-                    if ('wheelDeltaX' in e) {
-
-                        dx = e.wheelDeltaX || 0;
-                        dy = e.wheelDeltaY || 0;
-
-                    } else {
-
-                        dx = 0;
-                        dy = e.wheelDelta;
-
-                    }
-
-                    this._viewDragger.move({
-                        x: dx / 2.5,
-                        y: dy / 2.5
-                    });
-
-                    var me = this;
-                    clearTimeout(this._mousewheeltimer);
-                    this._mousewheeltimer = setTimeout(function() {
-                        me.fire('viewchanged');
-                    }, 100);
-
+                    movePaper(e.originEvent, this);
                     e.preventDefault();
                 },
                 'normal.dblclick readonly.dblclick': function(e) {
