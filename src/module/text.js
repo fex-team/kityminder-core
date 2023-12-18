@@ -20,7 +20,7 @@ define(function(require, exports, module) {
             'impact,chicago': -0.15,
             'times new roman': -0.1,
             'arial black,avant garde': -0.17,
-            'default': 0
+            'default': kity.Browser.isMobile() ? -0.2 : 0
         },
         'ie': {
             10: {
