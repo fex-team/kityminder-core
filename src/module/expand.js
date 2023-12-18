@@ -91,7 +91,7 @@ define(function(require, exports, module) {
         var ExpandAllCommand = kity.createClass('ExpandAllCommand', {
             base: Command,
             execute: function(km, fromRoot) {
-                var node = !!fromRoot ? tkm.getRoot() : km.getSelectedNode();
+                var node = !!fromRoot ? km.getRoot() : km.getSelectedNode();
                 if (!node) return;
                 node.traverse(function(nodeItem) {
                     nodeItem.expand();
