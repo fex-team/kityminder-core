@@ -130,6 +130,9 @@ define(function(require, exports, module) {
         this._initEvents();
     });
 
+    var lastTouchTime = 0;
+    var lastTouchX = 0;
+    var lastTouchY = 0;
     kity.extendClass(Minder, {
 
         _initEvents: function() {
@@ -167,6 +170,36 @@ define(function(require, exports, module) {
                 e.wheelDelta = e.originEvent.wheelDelta = e.originEvent.detail * -10;
                 e.wheelDeltaX = e.originEvent.mozMovementX;
                 e.wheelDeltaY = e.originEvent.mozMovementY;
+            }
+
+            // 移动端模使用touchstart拟双击事件
+            // 同时进行点击时长与点击距离判断
+            var touchLen = e.type === 'touchstart' && e.originEvent.touches.length;
+            if (e.type === 'dblclick' && e.originType !== 'touchstart' && kity.Browser.isMobile()) return;
+            if (touchLen === 1) {
+                var currentTime = new Date().getTime();
+                if (currentTime - lastTouchTime < 300) {
+                    var touch = e.originEvent.touches[0];
+                    var deltaX = touch.clientX - lastTouchX;
+                    var deltaY = touch.clientY - lastTouchY;
+                    var distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+
+                    // 触发双击事件
+                    if (distance < 10) {
+                        lastTouchTime = 0;
+                        lastTouchX = 0;
+                        lastTouchY = 0;
+                        e.preventDefault();
+                        e.type = 'dblclick';
+                        e.originType = 'touchstart';
+                        return this._firePharse(e);
+                    }
+                } else {
+                    var touch = e.originEvent.touches[0];
+                    lastTouchX = touch.clientX;
+                    lastTouchY = touch.clientY;
+                    lastTouchTime = currentTime;
+                }
             }
 
             beforeEvent = new MinderEvent('before' + e.type, e, true);
