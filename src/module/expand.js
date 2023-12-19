@@ -86,11 +86,12 @@ define(function(require, exports, module) {
         /**
          * @command ExpandAll
          * @description 展开当前选中的节点以及其子树
+         * @param {boolean} 是否从根节点开始展开，默认是 false
          */
         var ExpandAllCommand = kity.createClass('ExpandAllCommand', {
             base: Command,
-            execute: function(km) {
-                var node = km.getSelectedNode();
+            execute: function(km, fromRoot) {
+                var node = !!fromRoot ? km.getRoot() : km.getSelectedNode();
                 if (!node) return;
                 node.traverse(function(nodeItem) {
                     nodeItem.expand();
