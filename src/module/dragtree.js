@@ -140,7 +140,7 @@ define(function(require, exports, module) {
                 this._minder.layout(-1);
 
                 this._minder.execCommand('movetoparent', this._dragSources, this._dropSucceedTarget);
-
+                this._minder.refresh();
             } else if (this._orderSucceedHint) {
 
                 var hint = this._orderSucceedHint;
