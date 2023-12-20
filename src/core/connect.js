@@ -63,7 +63,7 @@ define(function(require, exports, module) {
             node._connection = connection;
 
             this._connectContainer.addShape(connection);
-            console.log('create connect');
+
             this.updateConnect(node);
         },
 

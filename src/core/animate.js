@@ -27,7 +27,7 @@ define(function(require, exports, module) {
     Minder.prototype.enableAnimation = function() {
         for (var name in animateDefaultOptions) {
             if (animateDefaultOptions.hasOwnProperty(name)) {
-                this.setOption(name, resoredAnimationOptions[name]);
+                this.setOption(name, animateDefaultOptions[name]);
             }
         }
     };
