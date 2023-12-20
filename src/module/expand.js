@@ -184,7 +184,7 @@ define(function(require, exports, module) {
                 });
             },
 
-            setState: function(state, length) {
+            setState: function(state, length, node) {
                 if (state == 'hide') {
                     this.setVisible(false);
                     return;
@@ -196,11 +196,11 @@ define(function(require, exports, module) {
                 var ay = (3.2 / 5) * this.radius;
                 var bx = (1 / 3) * this.radius;
                 var by = 0 * this.radius;
-                
                 pathData = ['M', ax, -ay, 'L', -bx, by, 'L', ax, ay];
                 this.lenNumber.setOpacity(0)
                 if (state == STATE_COLLAPSE) {
-                    // pathData.push(['M', 0, 1.5 - this.radius, 'L', 0, this.radius - 1.5]);
+                    this.addClass('collapse');
+                    node.rc.addClass('collapse');
                     pathData = []
                     this.lenNumber.setContent(length);
                     this.lenNumber.setOpacity(1);
@@ -214,6 +214,9 @@ define(function(require, exports, module) {
                     else {
                         this.lenNumber.setSize(10).setX(-this.radius/2);
                     }
+                } else {
+                    this.removeClass('collapse');
+                    node.rc.removeClass('collapse');
                 }
                 this.sign.setPathData(pathData);
             }
@@ -240,7 +243,7 @@ define(function(require, exports, module) {
 
                 var visible = node.parent.isExpanded();
                 var len = utils.countNodes(node) - 1;
-                expander.setState(visible && node.children.length ? node.getData(EXPAND_STATE_DATA) : 'hide', len);
+                expander.setState(visible && node.children.length ? node.getData(EXPAND_STATE_DATA) : 'hide', len, node);
 
                 var box = node.getContentBox();
                 this.expander.setTranslate(box.width + box.x + 10, 0);

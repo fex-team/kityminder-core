@@ -53,7 +53,7 @@ define(function(require, exports, module) {
             }
 
             var prefix = node.isSelected() ? (node.getMinder().isFocused() ? 'selected-' : 'blur-selected-') : '';
-            node.isSelected() ? outline.addClass('selected') : outline.removeClass('selected')
+            node.isSelected() ? node.rc.addClass('node-selected') && outline.addClass('selected') : node.rc.removeClass('node-selected') && outline.removeClass('selected')
             outline
                 .setPosition(outlineBox.x, outlineBox.y)
                 .setSize(outlineBox.width, outlineBox.height)
