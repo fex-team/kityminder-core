@@ -13,13 +13,25 @@ define(function(require, exports, module) {
 
         constructor: function(node) {
             var strokeColor = node.getStyle('selected-stroke');
-            var gap = 2;
-            var r = this.radius = 6;
+            var conf = this.conf = kity.Browser.isMobile() ? {
+                gap: 6,
+                radius: 10,
+                lineWidth: 2,
+                translate: 11,
+            } : {
+                gap: 2,
+                radius: 6,
+                lineWidth: 1,
+                translate: 10,
+            };
+            var r = this.radius = conf.radius;
+            var gap = conf.gap;
+            var lineWidth = conf.lineWidth;
             this.callBase();
-            this.outline = new kity.Circle(r).stroke(strokeColor).fill('white');
+            this.outline = new kity.Circle(r).stroke(strokeColor, lineWidth).fill('white');
             this.line = [
-                new kity.Line(-r + gap, 0, r - gap, 0).stroke(strokeColor),
-                new kity.Line(0, -r + gap, 0, r - gap).stroke(strokeColor)
+                new kity.Line(-r + gap, 0, r - gap, 0).stroke(strokeColor, lineWidth).setStyle('stroke-linecap', 'round'),
+                new kity.Line(0, -r + gap, 0, r - gap).stroke(strokeColor, lineWidth).setStyle('stroke-linecap', 'round')
             ];
             this.addShapes([this.outline].concat(this.line));
             this.setId(utils.uuid('node_appender'));
@@ -53,7 +65,7 @@ define(function(require, exports, module) {
 
         update: function(appender, node) {
             var box = node.getContentBox();
-            this.appender.setTranslate(box.width + box.x + 10, 0);
+            this.appender.setTranslate(box.width + box.x + this.appender.conf.translate, 0);
         }
     });
 
