@@ -99,7 +99,20 @@ define(function(require, exports, module) {
         var svgContainer = document.createElement('div');
         /* bca-disable */
         svgContainer.innerHTML = svgXml;
+
+        // 创建一个 style 元素 方便直接 css 操作
+        var style = document.createElement('style');
+        style.innerHTML = 'g[id^="node_expander"], g[id^="node_appender"] {display: none;}';
+
         var svgDom = svgContainer.querySelector('svg');
+
+        // 插入 style 元素到 SVG DOM 中
+        if (svgDom.firstChild) {
+            svgDom.insertBefore(style, svgDom.firstChild);
+        } else {
+            svgDom.appendChild(style);
+        }
+
         svgDom.setAttribute('width', renderBox.width * scale + 1);
         svgDom.setAttribute('height', renderBox.height * scale + 1);
         svgDom.setAttribute('style', 'font-family: Arial, "Microsoft Yahei","Heiti SC";');
