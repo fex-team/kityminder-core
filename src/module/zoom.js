@@ -78,6 +78,19 @@ define(function(require, exports, module) {
             });
         }
 
+        function zoomMinderDirectly(minder, value) {
+            var zoom = minder.getOption('zoom');
+            var min = zoom[0], max = zoom[zoom.length - 1];
+            var scale = Math.max(min, Math.min(value, max));
+            if (scale === minder._zoomValue)  return;
+            minder.zoom(scale);
+            minder._zoomValue = scale;
+            minder.fire('viewchang');
+            minder.fire('zoom', {
+                zoom: scale
+            });
+        }
+
         /**
          * @command Zoom
          * @description 缩放当前的视野到一定的比例（百分比）
@@ -147,8 +160,9 @@ define(function(require, exports, module) {
             enableReadOnly: true
         });
 
-        var initialDistance = 0,
-            lastDistance = 0;
+        var lastDistance = 0,
+            initialDistance = 0,
+            initialZommValue = 0;
 
         return {
             init: function() {
@@ -167,6 +181,7 @@ define(function(require, exports, module) {
                 'normal.beforetouchstart': function(e) {
                     const touches = e.originEvent.touches;
                     if (touches && touches.length === 2) {
+                        initialZommValue = this.getZoomValue();
                         initialDistance = Math.hypot(
                             touches[0].pageX - touches[1].pageX,
                             touches[0].pageY - touches[1].pageY
@@ -181,46 +196,29 @@ define(function(require, exports, module) {
                             touches[0].pageX - touches[1].pageX,
                             touches[0].pageY - touches[1].pageY
                         );
+
+                        var zoom = lastDistance / initialDistance;
+                        var scale = Math.round(initialZommValue * zoom);
+                        zoomMinderDirectly(this, scale);
                     }
                 },
 
                 'touchend': function() {
-                    var delta = lastDistance / initialDistance;
-                    // delta > 0时说明是在双指操作
-                    if (delta > 0) {
-                        if (delta > 1) {
-                            me.execCommand('zoomin');
-                        } else if (delta < 1) {
-                            me.execCommand('zoomout');
-                        }
-
-                        lastDistance = 0;
-                        initialDistance = 0;
+                    if (lastDistance) {
+                        this.fire('viewchanged');
                     }
+                    lastDistance = 0;
+                    initialDistance = 0;
+                    initialZommValue = 0;
                 },
 
                 'normal.mousewheel readonly.mousewheel': function(e) {
                     if (!e.originEvent.ctrlKey && !e.originEvent.metaKey) return;
-
-                    var delta = e.originEvent.wheelDelta;
-                    var me = this;
-                    // 稀释
-                    if (Math.abs(delta) > 100) {
-                        clearTimeout(this._wheelZoomTimeout);
-                    } else {
-                        return;
-                    }
-
-                    this._wheelZoomTimeout = setTimeout(function() {
-                        var value;
-                        var lastValue = me.getPaper()._zoom || 1;
-                        if (delta > 0) {
-                            me.execCommand('zoomin');
-                        } else if (delta < 0) {
-                            me.execCommand('zoomout');
-                        }
-                    }, 100);
-                    
+                    var delta = e.originEvent.deltaY;
+                    var step = Math.abs(delta) > 0 ? Math.abs(Math.round(delta)) : 1;
+                    var curZoom = this.getZoomValue();
+                    var scale = delta < 0 ? curZoom + step : curZoom - step;
+                    zoomMinderDirectly(this, scale);
                     e.originEvent.preventDefault();
                 }
             },
