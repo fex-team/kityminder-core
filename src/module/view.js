@@ -309,15 +309,6 @@ define(function(require, exports, module) {
         return {
             init: function() {
                 this._viewDragger = new ViewDragger(this);
-                var me = this;
-                var Browser = kity.Browser;
-                // 兼容火狐触控板滑动
-                if (Browser.gecko) {
-                    this.getPaper().container.addEventListener('wheel', function(e) {
-                        movePaper(e, me);
-                        e.preventDefault();
-                    }, { passive: false });
-                }
             },
             commands: {
                 'hand': ToggleHandCommand,

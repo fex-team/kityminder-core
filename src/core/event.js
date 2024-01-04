@@ -147,6 +147,21 @@ define(function(require, exports, module) {
         _bindEvents: function() {
             /* jscs:disable maximumLineLength */
             this._paper.on('click dblclick mousedown contextmenu mouseup mousemove mouseover mousewheel DOMMouseScroll touchstart touchmove touchend dragenter dragleave drop', this._firePharse.bind(this));
+            // 火狐浏览器 mousewheel 事件兼容
+            var Browser = kity.Browser;
+            var me = this;
+            if (Browser.gecko) {
+                this._paper.container.addEventListener('wheel', function(e) {
+                    // 事件包装
+                    var evt = {
+                        originEvent: e,
+                        targetShape: {},
+                        type: 'mousewheel',
+                    };
+                    me._firePharse(evt);
+                    e.preventDefault();
+                }, { passive: false });
+            }
             if (window) {
                 window.addEventListener('resize', this._firePharse.bind(this));
             }
