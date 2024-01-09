@@ -5,6 +5,12 @@ define(function(require, exports, module) {
     var Command = require('../core/command');
     var Module = require('../core/module');
 
+    // 拖拽相关事件 目前只有拖拽中 拖拽开始和结束暂时不需要 预留
+    function dragEvent(minder, name) {
+        minder.fire(name);
+    }
+    var dragEventThrottled = utils.throttle(dragEvent, 300);
+
     // 矩形的变形动画定义
     var MoveToParentCommand = kity.createClass('MoveToParentCommand', {
         base: Command,
@@ -119,6 +125,7 @@ define(function(require, exports, module) {
             } else {
                 this._renderOrderHint(this._orderSucceedHint = null);
             }
+            dragEventThrottled(this._minder, 'dragmove');
         },
 
         dragEnd: function() {
