@@ -88,7 +88,8 @@ define(function(require, exports, module) {
                 },
                 queryValue: function(km) {
                     if (km.getSelectedNodes().length == 1) {
-                        return km.getSelectedNodes()[0].getData('background');
+                        var nodes = km.getSelectedNodes();
+                        return nodes[0].getData('background') || km.getStyle(nodes[0].type+'-background', nodes[0]) || km.getStyle('background', nodes[0]);
                     }
                     return 'mixed';
                 }
