@@ -78,4 +78,35 @@ define(function(require, exports) {
 
     exports.countNodes = countNodes;
 
+    // 节流函数 (Throttle)
+    function throttle(func, wait) {
+        var timeout;
+        return function() {
+            var context = this, args = arguments;
+            if (!timeout) {
+                timeout = setTimeout(function() {
+                    timeout = null;
+                }, wait);
+                func.apply(context, args);
+            }
+        };
+    }
+
+    // 防抖函数 (Debounce)
+    function debounce(func, wait, immediate) {
+        var timeout;
+        return function() {
+            var context = this, args = arguments;
+            var later = function() {
+                timeout = null;
+                if (!immediate) func.apply(context, args);
+            };
+            var callNow = immediate && !timeout;
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+            if (callNow) func.apply(context, args);
+        };
+    }
+    exports.throttle = throttle;
+    exports.debounce = debounce;
 });
