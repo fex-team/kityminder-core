@@ -82,7 +82,8 @@ define(function(require, exports, module) {
             var zoom = minder.getOption('zoom');
             var min = zoom[0], max = zoom[zoom.length - 1];
             var scale = Math.max(min, Math.min(value, max));
-            if (scale === minder._zoomValue)  return;
+            if (isNaN(scale)) return;
+            if (scale === minder._zoomValue) return;
             minder.zoom(scale);
             minder._zoomValue = scale;
             minder.fire('viewchang');
