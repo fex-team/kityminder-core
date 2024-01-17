@@ -15,14 +15,14 @@ define(function(require, exports, module) {
             var strokeColor = node.getStyle('selected-stroke');
             var conf = this.conf = kity.Browser.isMobile() ? {
                 gap: 6,
+                left: 0, // 距离左侧节点距离
                 radius: 10,
                 lineWidth: 2,
-                translate: 11,
             } : {
                 gap: 2,
+                left: 3,
                 radius: 6,
                 lineWidth: 1,
-                translate: 10,
             };
             var r = this.radius = conf.radius;
             var gap = conf.gap;
@@ -65,7 +65,10 @@ define(function(require, exports, module) {
 
         update: function(appender, node) {
             var box = node.getContentBox();
-            this.appender.setTranslate(box.width + box.x + this.appender.conf.translate, 0);
+            var r = appender.conf.radius,
+                l = appender.conf.left,
+                lw = appender.conf.lineWidth;
+            this.appender.setTranslate(box.width + box.x + r + l + lw / 2 + .5, 0);
         }
     });
 
