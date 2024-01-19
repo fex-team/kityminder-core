@@ -143,7 +143,10 @@ define(function(require, exports, module) {
 
             var nodeText = node.getText();
             var textArr = nodeText ? nodeText.split('\n') : [' '];
-
+            // 非chrome浏览器 换行操作最后一个 会添加'' 需要移除
+            if (textArr[textArr.length - 1] === '') {
+                textArr.pop();
+            }
             var lineHeight = node.getStyle('line-height');
 
             var fontSize = getDataOrStyle('font-size');
