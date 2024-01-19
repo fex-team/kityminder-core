@@ -164,7 +164,9 @@ define(function(require, exports, module) {
             parentMap = {},
             lines = local.split(LINE_ENDING_SPLITER),
             line, level, node;
-
+        if (lines[lines.length - 1] === '') {
+            lines.pop();
+        }
         function addChild(parent, child) {
             var children = parent.children || (parent.children = []);
             children.push(child);
@@ -172,7 +174,7 @@ define(function(require, exports, module) {
 
         for (var i = 0; i < lines.length; i++) {
             line = lines[i];
-            if (isEmpty(line)) continue;
+            // if (isEmpty(line)) continue;
 
             level = getLevel(line);
             node = getNode(line);
