@@ -132,7 +132,7 @@ define(function(require, exports, module) {
          * @Editor: Naixor
          * @Date: 2015.9.20
          */
-        if (km.supportClipboardEvent && !kity.Browser.gecko) {
+        if (km.supportClipboardEvent) {
             var Copy = function (e) {
                 this.fire('beforeCopy', e);
             }
