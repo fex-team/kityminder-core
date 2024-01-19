@@ -98,10 +98,12 @@ define(function(require, exports, module) {
 
     kity.extendClass(Minder, {
         applyPatches: function(patches) {
+            this.fire('patchstarted');
             for (var i = 0; i < patches.length; i++) {
                 applyPatch(this, patches[i]);
             }
 
+            this.fire('patchfinshed');
             this.fire('contentchange');
             return this;
         }
