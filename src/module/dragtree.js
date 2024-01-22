@@ -173,6 +173,7 @@ define(function(require, exports, module) {
             }
             this._minder.layout(300);
             this._leaveDragMode();
+            dragEvent(this._minder, 'dragmoveend');
             // this._minder.fire('contentchange');
         },
 
