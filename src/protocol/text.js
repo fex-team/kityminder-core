@@ -36,6 +36,21 @@ define(function(require, exports, module) {
     }
 
     /**
+     * 将换行符转换为真正的换行
+     * @param {string} nodeText 
+     * @returns strign
+     */
+    function encodeWrapWithWrap(nodeText) {
+        if (!nodeText) {
+            return '';
+        }
+        // 将字面的 '\n' 替换为真正的换行符
+        nodeText = nodeText.replace(/\\n/g, '\n');
+        nodeText = nodeText.replace(/\\\\n/g, '\\n');
+        return nodeText;
+    }
+
+    /**
      * 对节点text中的换行符进行处理
      * @method encodeWrap
      * @param  {String}   nodeText MinderNode.data.text
@@ -128,7 +143,7 @@ define(function(require, exports, module) {
         var local = '';
         level = level || 0;
         local += repeat('\t', level);
-        local += encodeWrap(json.data.text) + LINE_ENDING;
+        local += encodeWrapWithWrap(json.data.text) + LINE_ENDING;
         if (json.children) {
             json.children.forEach(function(child) {
                 local += encode(child, level + 1);
@@ -227,11 +242,11 @@ define(function(require, exports, module) {
         encode: function(json) {
             return encode(json.root, 0);
         },
-
+        
         decode: function(local) {
             return decode(local);
         },
-
+        
         Node2Text: function(node) {
             return Node2Text(node);
         }
