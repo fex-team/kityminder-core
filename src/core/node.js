@@ -260,7 +260,8 @@ define(function(require, exports, module) {
             var cloned = new MinderNode();
 
             cloned.data = utils.clone(this.data);
-
+            // 复制的时候 给当前的节点生成一个新的id
+            cloned.data.id = utils.guid();
             this.children.forEach(function(child) {
                 cloned.appendChild(child.clone());
             });
