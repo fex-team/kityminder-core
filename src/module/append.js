@@ -13,16 +13,11 @@ define(function(require, exports, module) {
 
         constructor: function(node) {
             var strokeColor = node.getStyle('selected-stroke');
-            var conf = this.conf = kity.Browser.isMobile() ? {
+            var conf = this.conf = {
                 gap: 6,
                 left: 0, // 距离左侧节点距离
                 radius: 10,
                 lineWidth: 2,
-            } : {
-                gap: 2,
-                left: 3,
-                radius: 6,
-                lineWidth: 1,
             };
             var r = this.radius = conf.radius;
             var gap = conf.gap;
