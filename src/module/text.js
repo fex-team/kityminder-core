@@ -128,6 +128,14 @@ define(function(require, exports, module) {
         },
     };
 
+    Minder.registerInitHook(function(option) {
+        this.setDefaultOptions({
+            // 文本最大宽度，超过该宽度则会自动换行
+            textMaxWidth: null
+        });
+    });
+
+    var measureTextShape = null;
     var TextRenderer = kity.createClass('TextRenderer', {
         base: Renderer,
 
@@ -141,7 +149,46 @@ define(function(require, exports, module) {
                 return node.getData(name) || node.getStyle(name);
             }
 
+            function calcTextWidth(text) {
+                if (!measureTextShape) {
+                    measureTextShape = new kity.Text();
+                    measureTextShape.setOpacity(0);
+                    measureTextShape.setPosition(-999, -999);
+                    node.getMinder().getPaper().node.appendChild(measureTextShape.node);
+                }
+
+                ['font-size', 'font-family', 'font-weight'].forEach(function (name) {
+                    measureTextShape.setStyle(name, getDataOrStyle(name));
+                });
+
+                measureTextShape.setContent(text);
+                return measureTextShape.getBoundaryBox().width;
+            }
+
+            function splitWithMaxLength(text, maxLength) {
+                if (!utils.isNumber(maxLength)) return text;
+                var j = 0;
+                var newText = '';
+                node.setData('autoLineBreak', false);
+                if (calcTextWidth(text) >= maxLength) {
+                    node.setData('autoLineBreak', true);
+                    for (var i = j + 1, len = text.length; i <= len; i++) {
+                        var textFragment = text.slice(j, i);
+                        var textWidth = calcTextWidth(textFragment);
+                        if (textFragment && textWidth >= maxLength) {
+                            newText += (text.slice(j, i - 1) + '\n');
+                            j = i - 1;
+                        }
+                    }
+                }
+
+                newText += text.slice(j);
+                return newText;
+            }
+
+            var textMaxWidth = node.getMinder().getOption('textMaxWidth');
             var nodeText = node.getText();
+                nodeText = splitWithMaxLength(nodeText, textMaxWidth);
             var textArr = nodeText ? nodeText.split('\n') : [' '];
             // 非chrome浏览器 换行操作最后一个 会添加'' 需要移除
             if (textArr[textArr.length - 1] === '') {
@@ -239,7 +286,8 @@ define(function(require, exports, module) {
                     rBox = rBox.merge(new kity.Box(0, y, bbox.height && bbox.width || 1, fontSize));
                 });
 
-                var nBox = new kity.Box(r(rBox.x), r(rBox.y), r(rBox.width), r(rBox.height));
+                var width = utils.isNumber(textMaxWidth) && node.getData('autoLineBreak') ? textMaxWidth : r(rBox.width);
+                var nBox = new kity.Box(r(rBox.x), r(rBox.y), width, r(rBox.height));
 
                 node._currentTextGroupBox = nBox;
                 return nBox;
