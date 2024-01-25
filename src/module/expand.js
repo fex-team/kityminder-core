@@ -212,7 +212,7 @@ define(function(require, exports, module) {
                     node.rc.addClass('collapse');
                     pathData = []
                     this.lenNumber.setContent(length);
-                    this.lenNumber.setOpacity(1);
+                    this.lenNumber.setOpacity(0.888);
 
                     if (length > 99) {
                         this.lenNumber.setContent('...').setSize(14).setX(-r/2 - 1).setY(-3);
