@@ -188,8 +188,11 @@ define(function(require, exports, module) {
 
             var textMaxWidth = node.getMinder().getOption('textMaxWidth');
             var nodeText = node.getText();
-                nodeText = splitWithMaxLength(nodeText, textMaxWidth);
             var textArr = nodeText ? nodeText.split('\n') : [' '];
+            textArr = kity.Utils.flatten(textArr.map(function (text) {
+                const newText = splitWithMaxLength(text, textMaxWidth);
+                return newText.split('\n');
+            }));
             // 非chrome浏览器 换行操作最后一个 会添加'' 需要移除
             if (textArr[textArr.length - 1] === '') {
                 textArr.pop();
