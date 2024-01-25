@@ -91,3 +91,30 @@
 .km-image-viewer .km-image-viewer-close {
     background-position: 0 -44px;
 }
+
+
+.km-view .collapse.node-selected [id^=node_appender] {
+    display: none !important;
+}
+
+.km-view .node-selected [id^=node_expander]:not(.collapse),
+.km-view .state-input:not(.state-collapse) [id^=node_expander]
+{
+    display: none !important;
+}
+
+.km-view .selected [id^=node_expander] {
+    opacity: 0;
+}
+
+.km-view [id^=node_expander] {
+    opacity: 0;
+}
+
+.km-view .collapse {
+    opacity: 1 !important;
+}
+
+.km-view g[id^=minder_node]:hover g[id^=node_expander] {
+    opacity: 1;
+}
