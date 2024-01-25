@@ -42,6 +42,7 @@ define(function(require, exports, module) {
     kityminder.Promise = require('./core/promise');
     require('./core/_boxv');
     require('./core/patch');
+    require('./core/state');
 
     // 模块依赖
     require('./module/arrange');

@@ -22,6 +22,7 @@ define(function(require, exports, module) {
              */
             expand: function() {
                 this.setData(EXPAND_STATE_DATA, STATE_EXPAND);
+                this.toggleCollapse(0);
                 return this;
             },
 
@@ -30,6 +31,7 @@ define(function(require, exports, module) {
              */
             collapse: function() {
                 this.setData(EXPAND_STATE_DATA, STATE_COLLAPSE);
+                this.toggleCollapse(1);
                 return this;
             },
 
