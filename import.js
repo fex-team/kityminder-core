@@ -23,6 +23,7 @@
         'src/core/readonly.js',
         'src/core/layout.js',
         'src/core/theme.js',
+        'src/core/state.js',
         
         'src/core/compatibility.js',
         'src/core/render.js',

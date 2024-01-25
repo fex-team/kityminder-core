@@ -22,6 +22,7 @@ define(function(require, exports, module) {
              */
             expand: function() {
                 this.setData(EXPAND_STATE_DATA, STATE_EXPAND);
+                this.toggleCollapse(0);
                 return this;
             },
 
@@ -30,6 +31,7 @@ define(function(require, exports, module) {
              */
             collapse: function() {
                 this.setData(EXPAND_STATE_DATA, STATE_COLLAPSE);
+                this.toggleCollapse(1);
                 return this;
             },
 
@@ -210,7 +212,7 @@ define(function(require, exports, module) {
                     node.rc.addClass('collapse');
                     pathData = []
                     this.lenNumber.setContent(length);
-                    this.lenNumber.setOpacity(1);
+                    this.lenNumber.setOpacity(0.888);
 
                     if (length > 99) {
                         this.lenNumber.setContent('...').setSize(14).setX(-r/2 - 1).setY(-3);
