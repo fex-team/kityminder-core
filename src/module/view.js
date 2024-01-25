@@ -326,9 +326,10 @@ define(function(require, exports, module) {
                     e.preventDefault();
                 },
                 'normal.dblclick readonly.dblclick': function(e) {
-                    if (e.kityEvent.targetShape instanceof kity.Paper) {
-                        this.execCommand('camera', this.getRoot(), 800);
-                    }
+                    // 双击定位根节点 暂时移除
+                    // if (e.kityEvent.targetShape instanceof kity.Paper) {
+                    //     this.execCommand('camera', this.getRoot(), 800);
+                    // }
                 },
                 'paperrender finishInitHook': function() {
                     if (!this.getRenderTarget()) {
