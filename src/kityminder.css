@@ -98,7 +98,9 @@
 }
 
 .km-view .node-selected [id^=node_expander]:not(.collapse),
-.km-view .state-input:not(.state-collapse) [id^=node_expander]
+.km-view .state-input:not(.state-collapse) [id^=node_expander],
+.km-view .state-input [id^=node_outline],
+.km-view .state-input [id^=node_text]
 {
     display: none !important;
 }
