@@ -12,7 +12,7 @@ define(function(require, exports, module) {
     var connect = require('../core/connect');
 
     connect.register('bezier', function(node, parent, connection) {
-
+        console.log('===sss====2');
         // 连线起点和终点
         var po = parent.getLayoutVertexOut(),
             pi = node.getLayoutVertexIn();

@@ -109,4 +109,176 @@ define(function(require, exports) {
     }
     exports.throttle = throttle;
     exports.debounce = debounce;
+
+    /**
+     * 生成向量。
+     *
+     * @param {number} [x=0]
+     * @param {number} [y=0]
+     */
+    function Vec2(x, y) {
+        if(x && typeof x === 'object') {
+            y = x.y;
+            x = x.x;
+        }
+        this.x = x || 0;
+        this.y = y || 0;
+    }
+
+    var bezierLength = {
+        p: function(x, y) {
+            return new Vec2(x, y)
+        },
+        /**
+         *  返回两个向量的差。
+         * @method pSub
+         * @param {Vec2} v1
+         * @param {Vec2} v2
+         * @return {Vec2}
+         * @example
+         */
+        pSub: function(v1, v2) {
+            return this.p(v1.x - v2.x, v1.y - v2.y);
+        },
+        /**
+         *  两个向量之间进行点乘。
+         * @method pDot
+         * @param {Vec2} v1
+         * @param {Vec2} v2
+         * @return {Number}
+         * @example
+         */
+        pDot: function(v1, v2) {
+            return v1.x * v2.x + v1.y * v2.y;
+        },
+        /**
+         *  返回指定向量长度的平方。
+         * @method pLengthSQ
+         * @param  {Vec2} v
+         * @return {Number}
+         * @example
+         * cc.pLengthSQ(cc.v2(20, 20)); // 800;
+         */
+        pLengthSQ: function(v) {
+            return this.pDot(v, v);
+        },
+
+        /**
+         *  返回两个点之间距离的平方。
+         * @method pDistanceSQ
+         * @param {Vec2} point1
+         * @param {Vec2} point2
+         * @return {Number}
+         * @example
+         * var point1 = v2(20, 20);
+         * var point2 = v2(5, 5);
+         * pDistanceSQ(point1, point2); // 450;
+         */
+        pDistanceSQ: function(point1, point2) {
+            return this.pLengthSQ(this.pSub(point1, point2));
+        },
+        /**
+         * 
+         *
+         * @param {*} cp
+         * @param {*} t
+         * @returns
+         */
+        pointOnCubicBezier: function(cp, t) {
+            var ax, bx, cx;
+            var ay, by, cy;
+            var tSquared, tCubed;
+            var result = {}
+
+            /*計算多項式係數*/
+
+            cx = 3.0 * (cp[1].x - cp[0].x);
+            bx = 3.0 * (cp[2].x - cp[1].x) - cx;
+            ax = cp[3].x - cp[0].x - cx - bx;
+
+            cy = 3.0 * (cp[1].y - cp[0].y);
+            by = 3.0 * (cp[2].y - cp[1].y) - cy;
+            ay = cp[3].y - cp[0].y - cy - by;
+
+            /*計算位於參數值t的曲線點*/
+
+            tSquared = t * t;
+            tCubed = tSquared * t;
+
+            result.x = (ax * tCubed) + (bx * tSquared) + (cx * t) + cp[0].x;
+            result.y = (ay * tCubed) + (by * tSquared) + (cy * t) + cp[0].y;
+
+            return result
+        },
+        /**
+         * !#en Test line and line
+         * !#zh 线段与线段的交点
+         * @method lineLine
+         * @param {Vec2} a1 - The start point of the first line
+         * @param {Vec2} a2 - The end point of the first line
+         * @param {Vec2} b1 - The start point of the second line
+         * @param {Vec2} b2 - The end point of the second line
+         * @return {boolean}
+         */
+        lineLine: function(a1, a2, b1, b2) {
+            var result;
+            var ua_t = (b2.x - b1.x) * (a1.y - b1.y) - (b2.y - b1.y) * (a1.x - b1.x);
+            var ub_t = (a2.x - a1.x) * (a1.y - b1.y) - (a2.y - a1.y) * (a1.x - b1.x);
+            var u_b = (b2.y - b1.y) * (a2.x - a1.x) - (b2.x - b1.x) * (a2.y - a1.y);
+            if(u_b != 0) {
+                var ua = ua_t / u_b;
+                var ub = ub_t / u_b;
+                if(0 <= ua && ua <= 1 && 0 <= ub && ub <= 1) {
+                    result = (new Vec2(a1.x + ua * (a2.x - a1.x), a1.y + ua * (a2.y - a1.y)));
+                } else {}
+            } else {
+                if(ua_t == 0 || ub_t == 0) {} else {}
+            }
+            return result;
+
+        },
+
+        /**
+         * !#en Test line and rect
+         * !#zh 矩形与线段的交点
+         * @method lineRect
+         * @param {Vec2} a1 - The start point of the line
+         * @param {Vec2} a2 - The end point of the line
+         * @param {Rect} b - The rect
+         * @return {boolean}
+         */
+        lineRect: function(a1, a2, b) {
+            var points = ''
+            var r0 = new Vec2(b.x, b.y);
+            var r1 = new Vec2(b.x, b.yMax);
+            var r2 = new Vec2(b.xMax, b.yMax);
+            var r3 = new Vec2(b.xMax, b.y);
+
+            if(this.lineLine(a1, a2, r0, r1))
+                points = this.lineLine(a1, a2, r0, r1)
+
+            else if(this.lineLine(a1, a2, r1, r2))
+                points = this.lineLine(a1, a2, r1, r2)
+
+            else if(this.lineLine(a1, a2, r2, r3))
+                points = this.lineLine(a1, a2, r2, r3)
+
+            else if(this.lineLine(a1, a2, r3, r0))
+                points = this.lineLine(a1, a2, r3, r0)
+
+
+            if(!points) {
+                var rn = kity.Vector.fromPoints(a1, a2);
+                var points = bezierLength.lineRect(a1, {
+                    x: a2.x + rn.x+1,
+                    y: a2.y + rn.y+1
+                }, b);
+            }
+            return points;
+        }
+    }
+
+    exports.lineToRect = function(a1,a2,r){
+        return bezierLength.lineRect(a1,a2,r);
+    }
 });
