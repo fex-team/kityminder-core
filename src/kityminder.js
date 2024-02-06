@@ -70,6 +70,8 @@ define(function(require, exports, module) {
     require('./module/text');
     require('./module/view');
     require('./module/zoom');
+    require('./module/relation');
+    require('./module/relation-control');
 
     require('./protocol/json');
     require('./protocol/text');

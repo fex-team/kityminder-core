@@ -56,6 +56,12 @@ define(function(require, exports) {
         return str.replace(/[\u200b\t\r\n]/g, '');
     };
 
+    exports.camelCaseToKebabCase = function(str) {
+        return str.replace(/([a-z\d])([A-Z]+)/g, function(match, lowerCase, upperCase) {
+            return lowerCase + '-' + upperCase.toLowerCase();
+        }).toLowerCase();
+    };
+
     exports.each(['String', 'Function', 'Array', 'Number', 'RegExp', 'Object'], function(v) {
         var toString = Object.prototype.toString;
         exports['is' + v] = function(obj) {

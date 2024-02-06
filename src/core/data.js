@@ -66,8 +66,15 @@ define(function(require, exports, module) {
                 return exported;
             }
 
+            function exportRelation(relations) {
+                return relations.map(function (relation) {
+                    return Object.assign({}, relation.data);
+                });
+            }
+
             var json = {
-                root: exportNode(this.getRoot())
+                root: exportNode(this.getRoot()),
+                relations: exportRelation(this._relations || []),
             };
 
             json.template = this.getTemplate();
@@ -233,6 +240,7 @@ define(function(require, exports, module) {
 
             this.importNode(this._root, json.root);
 
+            this.setRelations(json.relations || null);
             this.setTemplate(json.template || 'default');
             this.setTheme(json.theme || null);
             this.refresh();
