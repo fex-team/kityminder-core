@@ -157,9 +157,9 @@ define(function(require, exports, module) {
                     node.getMinder().getPaper().node.appendChild(measureTextShape.node);
                 }
 
-                ['font-size', 'font-family', 'font-weight'].forEach(function (name) {
-                    measureTextShape.setStyle(name, getDataOrStyle(name));
-                });
+                measureTextShape.setStyle('font-size', getDataOrStyle('font-size') + 'px');
+                measureTextShape.setStyle('font-family', getDataOrStyle('font-family'));
+                measureTextShape.setStyle('font-weight', getDataOrStyle('font-weight'));
 
                 measureTextShape.setContent(text);
                 return measureTextShape.getBoundaryBox().width;
@@ -170,12 +170,12 @@ define(function(require, exports, module) {
                 var j = 0;
                 var newText = '';
                 node.setData('autoLineBreak', false);
-                if (calcTextWidth(text) >= maxLength) {
+                if (calcTextWidth(text) > maxLength) {
                     node.setData('autoLineBreak', true);
                     for (var i = j + 1, len = text.length; i <= len; i++) {
                         var textFragment = text.slice(j, i);
                         var textWidth = calcTextWidth(textFragment);
-                        if (textFragment && textWidth >= maxLength) {
+                        if (textFragment && textWidth > maxLength) {
                             newText += (text.slice(j, i - 1) + '\n');
                             j = i - 1;
                         }
