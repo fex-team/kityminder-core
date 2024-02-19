@@ -29,6 +29,7 @@ define(function(require, exports, module) {
                 renderTarget.classList.remove('focus');
                 this.renderNodeBatch(this.getSelectedNodes());
             }
+            this.removeAllSelectedNodes();
             this.fire('blur');
             return this;
         },
