@@ -92,13 +92,16 @@ define(function(require, exports, module) {
 
     require('./connect/arc');
     require('./connect/arc_tp');
+    require('./connect/arc-line');
     require('./connect/bezier');
+    require('./connect/bezier-line');
     require('./connect/fish-bone-master');
     require('./connect/l');
     require('./connect/poly');
     require('./connect/under');
 
     require('./template/default');
+    require('./template/normal');
     require('./template/structure');
     require('./template/filetree');
     require('./template/right');
