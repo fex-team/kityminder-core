@@ -12,7 +12,6 @@ define(function(require, exports, module) {
     var connect = require('../core/connect');
 
     connect.register('bezier', function(node, parent, connection) {
-
         // 连线起点和终点
         var po = parent.getLayoutVertexOut(),
             pi = node.getLayoutVertexIn();
