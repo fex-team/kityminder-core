@@ -40,8 +40,11 @@
 
         /* 连线 */
         'src/connect/bezier.js',
+        'src/connect/bezier-line.js',
         'src/connect/poly.js',
         'src/connect/arc.js',
+        'src/connect/arc_tp.js',
+        'src/connect/arc-line.js',
         'src/connect/under.js',
         'src/connect/l.js',
         'src/connect/fish-bone-master.js',
@@ -59,6 +62,7 @@
         'src/template/filetree.js',
         'src/template/right.js',
         'src/template/fish-bone.js',
+        'src/template/normal.js',
 
         /* 模块 */
         'src/module/node.js',

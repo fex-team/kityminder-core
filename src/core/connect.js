@@ -89,14 +89,14 @@ define(function(require, exports, module) {
             connection.setVisible(true);
 
             var provider = node.getConnectProvider();
-
-            var strokeColor = this._strokeGradient ||  node.getStyle('connect-color') || 'white',
-                strokeWidth = node.getStyle('connect-width') || 2;
-
+            var connectType = node.getConnect();
+            var LinearGradientList = ['s-round'];
+            var strokeColor = LinearGradientList.indexOf(connectType) > -1
+                ? this._strokeGradient
+                : node.getStyle('connect-color') || 'white';
+            var strokeWidth = node.getStyle('connect-width') || 2;
             connection.stroke(strokeColor, strokeWidth);
-
             provider(node, parent, connection, strokeWidth, strokeColor);
-
             if (strokeWidth % 2 === 0) {
                 connection.setTranslate(0.5, 0.5);
             } else {
