@@ -183,6 +183,37 @@ define(function(require, exports, module) {
         }
     });
 
+/**
+ * 移动视野到指定节点
+ *
+ * @param {kityminder} km 
+ * @param {kityminder.MinderNode} nodes 
+ */
+function moveToNodesCenter(km, nodes) {
+    if (!Array.isArray(nodes)) {
+        // 确保是数组，以便统一处理
+        nodes = [nodes];
+    }
+    var viewport = km.getPaper().getViewPort();
+    var dxArr = [], dyArr = [];
+
+    nodes.forEach(function(node) {
+        var offset = node.getRenderContainer().getRenderBox('view');
+        dxArr.push(viewport.center.x - offset.x - offset.width / 2);
+        dyArr.push(viewport.center.y - offset.y - offset.height / 2);
+    });
+
+    // 对于单个节点，数组中只有一个元素，不会影响计算结果。
+    dxArr.sort();
+    dyArr.sort();
+    var dx = dxArr[0] + (dxArr[dxArr.length - 1] - dxArr[0]) / 2;
+    var dy = dyArr[0] + (dyArr[dyArr.length - 1] - dyArr[0]) / 2;
+    var dragger = km._viewDragger;
+    // var duration = km.getOption('viewAnimationDuration');
+    var duration = 100;
+    dragger.move(new kity.Point(dx, dy), duration);
+}
+
     Module.register('View', function() {
 
         var km = this;
@@ -223,20 +254,31 @@ define(function(require, exports, module) {
         var CameraCommand = kity.createClass('CameraCommand', {
             base: Command,
             execute: function(km, focusNode) {
-
-                focusNode = focusNode || km.getRoot();
-                var viewport = km.getPaper().getViewPort();
-                var offset = focusNode.getRenderContainer().getRenderBox('view');
-                var dx = viewport.center.x - offset.x - offset.width / 2,
-                    dy = viewport.center.y - offset.y;
-                var dragger = km._viewDragger;
-
-                var duration = km.getOption('viewAnimationDuration');
-                dragger.move(new kity.Point(dx, dy), duration);
+                var node = focusNode || km.getRoot();
+                moveToNodesCenter(km, node);
                 this.setContentChanged(false);
             },
             enableReadOnly: true
         });
+
+        /**
+         * @command showselection
+         * @description 将选取拉到视野中间
+         * @param {number} duration 设置视野移动的动画时长（单位 ms），设置为 0 不使用动画
+         * @state
+         *   0: 始终可用
+         */
+        var ShowSelectionCommand = kity.createClass('ShowSelectionCommand', {
+            base: Command,
+            execute: function(km) {
+                var selectedNodes = km.getSelectedNodes();
+                if (selectedNodes.length === 0) return;
+                moveToNodesCenter(km, selectedNodes);
+                this.setContentChanged(false);
+            },
+            enableReadOnly: true
+        });
+
 
         /**
          * @command Move
@@ -313,7 +355,8 @@ define(function(require, exports, module) {
             commands: {
                 'hand': ToggleHandCommand,
                 'camera': CameraCommand,
-                'move': MoveCommand
+                'move': MoveCommand,
+                'showselection': ShowSelectionCommand,
             },
             events: {
                 statuschange: function(e) {
