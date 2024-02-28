@@ -1,7 +1,7 @@
 define(function(require, exports, module) {
     var kity = require('../core/kity');
     var utils = require('../core/utils');
-
+    var rainbowColors = require('../core/config').rainbowColors;
     var Minder = require('../core/minder');
     var MinderNode = require('../core/node');
     var Command = require('../core/command');
@@ -54,11 +54,16 @@ define(function(require, exports, module) {
 
             var prefix = node.isSelected() ? (node.getMinder().isFocused() ? 'selected-' : 'blur-selected-') : '';
             node.isSelected() ? node.rc.addClass('node-selected') && outline.addClass('selected') : node.rc.removeClass('node-selected') && outline.removeClass('selected')
+            var fillColor = node.getData('background') || node.getStyle(prefix + 'background') || node.getStyle('background');
+            if (node.getType() === 'main' && node.getStyle('rainbow-branch')) {
+                var idx = node.getIndex();
+                fillColor = rainbowColors[idx % rainbowColors.length];
+            }
             outline
                 .setPosition(outlineBox.x, outlineBox.y)
                 .setSize(outlineBox.width, outlineBox.height)
                 .setRadius(radius)
-                .fill(node.getData('background') || node.getStyle(prefix + 'background') || node.getStyle('background'))
+                .fill(fillColor)
                 .stroke(node.getStyle(prefix + 'stroke' || node.getStyle('stroke')),
                 node.getStyle(prefix + 'stroke-width'));
 

@@ -4,7 +4,9 @@ define(function(require, exports, module) {
     var Module = require('./module');
     var Minder = require('./minder');
     var MinderNode = require('./node');
-
+    var config = require('./config');
+    var rainbowColors = config.rainbowColors;
+    var mainRainbowColors = config.mainRainbowColors;
     // 连线提供方
     var _connectProviders = {};
 
@@ -49,6 +51,27 @@ define(function(require, exports, module) {
         }
     });
 
+    var gradientCache = {}; // 用于缓存生成的渐变
+
+    function createGradient(id, colors, paper, c1) {
+        // 如果缓存中已经有了，直接返回
+        if (gradientCache[id]) {
+            return gradientCache[id];
+        }
+        // 创建新的渐变
+        var gradient = new kity.LinearGradient().pipe(function(g) {
+            g.setStartPosition(0, 0);
+            g.setEndPosition(1, 0);
+            colors.forEach(function(color, index) {
+                // g.addStop(index / (colors.length - 1), color);
+                g.addStop(index === 0 ? c1 : '1', color);
+            });
+        });
+        paper.addResource(gradient); // 添加到画布资源中
+        gradientCache[id] = gradient; // 加入缓存
+        return gradient;
+    }
+
     kity.extendClass(Minder, {
 
         getConnectContainer: function() {
@@ -87,14 +110,48 @@ define(function(require, exports, module) {
                 return;
             }
             connection.setVisible(true);
-
+            
             var provider = node.getConnectProvider();
             var connectType = node.getConnect();
-            var LinearGradientList = ['s-round'];
-            var strokeColor = LinearGradientList.indexOf(connectType) > -1
-                ? this._strokeGradient
-                : node.getStyle('connect-color') || 'white';
-            var strokeWidth = node.getStyle('connect-width') || 2;
+
+            // 默认纯色
+            var strokeColor = node.getStyle('connect-color') || 'white';
+
+            // 创建渐变色引用
+            var isRoot = parent.isRoot();
+
+            // TODO: 方法拆一下 单个函数代码太多了
+            // 获取颜色
+            var isRainbow = node.getStyle('rainbow-branch');
+            var gradientColors = isRoot ? node.getStyle('connect-gradients') : node.getStyle('sub-connect-gradients');
+            if (isRainbow) {
+                var idx = node.getMainIndex();
+                var i = idx % rainbowColors.length;
+                gradientColors = node.getType() ==='main'
+                    ? [
+                        node.getStyle('connect-color') || 'white',
+                        rainbowColors[i]
+                    ]
+                    : [
+                        rainbowColors[i],
+                        mainRainbowColors[i]
+                    ]
+            }
+
+            if (gradientColors && gradientColors.length === 2) {
+                // 生成渐变ID，确保唯一性
+                var gradientId = gradientColors.join('-');
+                var reverseGradientId = gradientColors.slice().reverse().join('-');
+                var paper = this.getPaper();
+                var c1 = isRainbow ? '0' : '80%';
+                // 生成渐变，考虑正反两种情况
+                strokeColor = createGradient(gradientId, gradientColors, paper, c1);
+                var reverseStrokeColor = createGradient(reverseGradientId, gradientColors.slice().reverse(), paper);
+            }
+
+            var strokeWidth = isRoot
+                ? node.getStyle('connect-width') || 2
+                : node.getStyle('sub-connect-width') || 1;
             connection.stroke(strokeColor, strokeWidth);
             provider(node, parent, connection, strokeWidth, strokeColor);
             if (strokeWidth % 2 === 0) {
