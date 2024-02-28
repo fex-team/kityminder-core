@@ -16,6 +16,7 @@ define(function(require, exports, module) {
     // 核心导出，大写的部分导出类，小写的部分简单 require 一下
     // 这里顺序是有讲究的，调整前先弄清楚依赖关系。
     require('./core/utils');
+    require('./core/config');
     kityminder.Minder = require('./core/minder');
     kityminder.Command = require('./core/command');
     kityminder.Node = require('./core/node');

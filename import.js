@@ -9,6 +9,7 @@
         /* 核心代码 */
         'src/core/kityminder.js',
         'src/core/utils.js',
+        'src/core/config.js',
 
         'src/core/command.js',
         'src/core/node.js',

@@ -83,6 +83,27 @@ define(function(require, exports, module) {
         },
 
         /**
+         * 返回主节点下标 一般用于彩虹分支
+         * @returns {number} 主节点下标 
+         */
+        getMainIndex: function() {
+            if (this.isRoot()) {
+                return -1;
+            }
+
+            if (this.getType() === 'main') {
+                return this.getIndex();
+            }
+
+            var parent = this.parent;
+            while (parent.getType() !== 'main') {
+                parent = parent.parent;
+            }
+
+            return parent.getIndex();
+        },
+
+        /**
          * 获得节点的深度
          */
         getLevel: function() {
