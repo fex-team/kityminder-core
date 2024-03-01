@@ -61,6 +61,7 @@ define(function(require, exports, module) {
     require('./module/node');
     require('./module/note');
     require('./module/outline');
+    require('./module/underline');
     require('./module/priority');
     require('./module/progress');
     require('./module/resource');
@@ -96,6 +97,7 @@ define(function(require, exports, module) {
     require('./connect/arc-line');
     require('./connect/bezier');
     require('./connect/bezier-line');
+    require('./connect/bezier-line-under');
     require('./connect/fish-bone-master');
     require('./connect/l');
     require('./connect/poly');

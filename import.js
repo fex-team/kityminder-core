@@ -42,6 +42,7 @@
         /* 连线 */
         'src/connect/bezier.js',
         'src/connect/bezier-line.js',
+        'src/connect/bezier-line-under.js',
         'src/connect/poly.js',
         'src/connect/arc.js',
         'src/connect/arc_tp.js',
@@ -70,6 +71,7 @@
         'src/module/text.js',
         'src/module/expand.js',
         'src/module/outline.js',
+        'src/module/underline.js',
         'src/module/history.js',
         'src/module/progress.js',
         'src/module/priority.js',
