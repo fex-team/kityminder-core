@@ -125,16 +125,18 @@ define(function(require, exports, module) {
             },
             'events': {
                 'mousedown': function(e) {
-
+                    // 事件触发点是否选中节点
                     var downNode = e.getTargetNode();
+                    // 事件触发点是否选中联系线
+                    var relationDownNode = e.getTargetRelationNode();
 
                     // 没有点中节点：
                     //     清除选中状态，并且标记选区开始位置
                     if (!downNode) {
                         this.removeAllSelectedNodes();
-                        marqueeActivator.selectStart(e);
-
-                        this.setStatus('normal');
+                        if (!relationDownNode) {
+                            marqueeActivator.selectStart(e);
+                        }
                     }
 
                     // 点中了节点，并且按了 shift 键：
@@ -156,6 +158,19 @@ define(function(require, exports, module) {
                         lastDownNode = downNode;
                         lastDownPosition = e.getPosition();
                     }
+
+                    if (!relationDownNode){
+                        this.removeAllRelationSelected();
+                    }
+                    else if (e.isShortcutKey('Ctrl')) {
+                        this.toggleRelationSelect(relationDownNode);
+                    }
+                    else if (!relationDownNode.isSelected()) {
+                        this.selectRelation(relationDownNode, true);
+                    }
+                    else if (!this.isRelationSingleSelect()) {
+                        this.selectRelation(relationDownNode, true);
+                    }
                 },
                 'mousemove': marqueeActivator.selectMove,
                 'mouseup': function(e) {
@@ -172,6 +187,16 @@ define(function(require, exports, module) {
                     // 清理一下选择状态
                     marqueeActivator.selectEnd(e);
                 },
+
+                // 双击进入编辑状态
+                'normal.dblclick': function dblclick(e) {
+                    if (e.kityEvent.targetShape instanceof kity.Text || e.kityEvent.targetShape instanceof kity.Rect) {
+                        if (e.getTargetRelationNode()) {
+                            e.getTargetRelationNode().turnEdit();
+                        }
+                    }
+                },
+
                 //全选操作
                 'normal.keydown': function(e) {
 

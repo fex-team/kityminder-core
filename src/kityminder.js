@@ -44,6 +44,9 @@ define(function(require, exports, module) {
     require('./core/_boxv');
     require('./core/patch');
     require('./core/state');
+    require('./core/bezier');
+    require('./core/relation');
+    require('./core/relationRender');
 
     // 模块依赖
     require('./module/arrange');
@@ -71,7 +74,6 @@ define(function(require, exports, module) {
     require('./module/view');
     require('./module/zoom');
     require('./module/relation');
-    require('./module/relation-control');
 
     require('./protocol/json');
     require('./protocol/text');

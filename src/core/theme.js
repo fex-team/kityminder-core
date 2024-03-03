@@ -5,6 +5,7 @@ define(function(require, exports, module) {
     var MinderNode = require('./node');
     var Module = require('./module');
     var Command = require('./command');
+    var MinderRelation = require('./relation');
 
     var cssLikeValueMatcher = {
         left: function(value) {
@@ -135,6 +136,12 @@ define(function(require, exports, module) {
     });
 
     kity.extendClass(MinderNode, {
+        getStyle: function(name) {
+            return this.getMinder().getNodeStyle(this, name);
+        }
+    });
+
+    kity.extendClass(MinderRelation, {
         getStyle: function(name) {
             return this.getMinder().getNodeStyle(this, name);
         }

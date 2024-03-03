@@ -4,9 +4,11 @@ define(function(require, exports, module) {
     var utils = require('./utils');
     var Minder = require('./minder');
     var MinderNode = require('./node');
+    var MinderRelation = require('./relation');
 
     Minder.registerInitHook(function() {
         this._initSelection();
+        this._initRelationSelection();
     });
 
     // 选区管理
@@ -141,6 +143,115 @@ define(function(require, exports, module) {
             var minder = this.getMinder();
             return minder && minder.getSelectedNodes().indexOf(this) != -1;
         }
+    });
+
+    kity.extendClass(MinderRelation, {
+        isSelected: function() {
+            var minder = this.getMinder();
+            return minder && minder.getSelectedRelations().indexOf(this) != -1
+        }
+    });
+
+    // 关联线选择
+    kity.extendClass(Minder, {
+        _initRelationSelection: function() {
+            this._selectedRelation = [];
+        },
+
+        renderChangedRelationSelection: function(last) {
+            var current = this.getSelectedRelations();
+            var changed = [];
+
+            current.forEach(function(relation) {
+                if (last.indexOf(relation) === -1) {
+                    changed.push(relation);
+                }
+            });
+
+            last.forEach(function(relation) {
+                if (current.indexOf(relation) == -1) {
+                    changed.push(relation);
+                }
+            });
+
+            if (changed.length) {
+                this._interactChange();
+                this.fire('selectionchange');
+            }
+
+            while(changed.length) {
+                changed.shift().render();
+            }
+        },
+
+        removeAllRelationSelected: function() {
+            var me = this;
+            var last = this._selectedRelation.splice(0);
+            this._selectedRelation = [];
+            this.renderChangedRelationSelection(last);
+            return this.fire('selectionclear');
+        },
+
+        removeSelectedRelations:function(relations){
+            var me = this;
+            var last = this._selectedRelation.slice(0);
+            relations = utils.isArray(relations) ? relations : [relations];
+
+            relations.forEach(function(relation) {
+                var index;
+                if ((index = me._selectedRelation.indexOf(relation)) === -1) return;
+                me._selectedRelation.splice(index, 1);
+            });
+
+            this.renderChangedRelationSelection(last);
+            return this;
+        },
+
+        selectRelation: function(relations, isSingleSelect) {
+            var lastSelect = this.getSelectedRelations().slice(0);
+
+            if (isSingleSelect) {
+                this._selectedRelation = [];
+            }
+
+            var me = this;
+            relations = utils.isArray(relations) ? relations : [relations];
+            relations.forEach(function(relation) {
+                if (me._selectedRelation.indexOf(relation) !== -1) return;
+                me._selectedRelation.unshift(relation);
+            });
+
+            this.renderChangedRelationSelection(lastSelect);
+            return this;
+        },
+
+        selectRelationById: function(ids, isSingleSelect) {
+            ids = utils.isArray(ids) ? ids : [ids];
+            var relations = this.getRelationsById(ids);
+            return this.selectRelation(relations, isSingleSelect);
+        },
+
+        getSelectedRelations: function() {
+            return this._selectedRelation;
+        },
+
+        getSelectedRelation:function(){
+            return this.getSelectedRelations()[0] || null;
+        },
+
+        toggleRelationSelect: function(relation) {
+            if (utils.isArray(relation)) {
+                relation.forEach(this.toggleRelationSelect.bind(this));
+            } else {
+                if (relation.isSelected()) this.removeSelectedRelations(relation);
+                else this.selectRelation(relation);
+            }
+            return this;
+        },
+
+        isRelationSingleSelect: function() {
+            return this._selectedRelation.length == 1;
+        },
     });
 
 });

@@ -284,6 +284,107 @@ define(function(require, exports) {
         }
     }
 
+    // 求联系线 开始点+结束点+控制点
+    exports.bezierPoint = function(relation, pos) {
+        var fromNode = relation.getFromNode();
+        var toNode = relation.getToNode() || pos || {x:0, y:0};
+        var fromBox = fromNode.getLayoutBox();
+        var toBox;
+        var fromController, toController;
+        var xRatio = 0.5,
+            yRatio = 0.3;
+        var fromPoint, toPoint;
+        var fromCenter = {
+            x: fromBox.cx,
+            y: fromBox.cy,
+        }
+        var markerWidth = 8,
+            markerHeight = 8;
+        var toCenter = {};
+        if (toNode.__KityClassName == 'MinderNode') {
+            toBox = toNode.getLayoutBox();
+            toCenter = {
+                x: toBox.cx,
+                y: toBox.cy,
+            }
+        } else {
+            toCenter = {
+                x: toNode.x,
+                y: toNode.y,
+            }
+        }
+
+        var vector = kity.Vector.fromPoints(fromCenter, toCenter);
+        if (!relation.data.controller0 || (!relation.data.controller0.x || !relation.data.controller0.y)) {
+            fromController = {
+                x: fromCenter.x + vector.x * xRatio,
+                y: fromCenter.y + vector.y * yRatio,
+            }
+        } else {
+            fromController = relation.data.controller0;
+        }
+        if (!relation.data.controller1 || (!relation.data.controller1.x || !relation.data.controller1.y)) {
+            toController = {
+                x: toCenter.x - vector.x * xRatio,
+                y: toCenter.y - vector.y * yRatio,
+            }
+        } else {
+            toController = relation.data.controller1;
+        }
+
+        fromPoint = bezierLength.lineRect({
+            x: fromCenter.x,
+            y: fromCenter.y
+        }, fromController, {
+            x: fromCenter.x - fromBox.width / 2 - markerWidth,
+            y: fromCenter.y - fromBox.height / 2 - markerHeight,
+            xMax: fromCenter.x + fromBox.width / 2 + markerWidth,
+            yMax: fromCenter.y + fromBox.height / 2 + markerHeight,
+        });
+
+        if(toNode.__KityClassName == 'MinderNode') {
+            toPoint = bezierLength.lineRect({
+                x: toCenter.x,
+                y: toCenter.y
+            }, toController, {
+                x: toCenter.x - toBox.width / 2 - markerWidth,
+                y: toCenter.y - toBox.height / 2 - markerHeight,
+                xMax: toCenter.x + toBox.width / 2 + markerWidth,
+                yMax: toCenter.y + toBox.height / 2 + markerHeight,
+            });
+        } else {
+            toPoint = {
+                x: toCenter.x - Math.sign(vector.x) * 5,
+                y: toCenter.y - Math.sign(vector.y) * 5,
+            };
+        }
+
+        return {
+            from: fromPoint,
+            to: toPoint,
+            fromController: fromController,
+            toController: toController,
+        }
+    };
+
+    // 工具方法， 检测贝塞尔曲线上的点的控制点和顶点是否重叠在一起
+    // 参数distance控制了点之间的最小距离， 如果不大于该距离， 则认为是重叠的
+    // 返回值有： 0： 无重叠， 1： forward重叠， 2： backward重叠
+    exports.checkOverlapping = function(bezierPoint, distance) {
+        var forward = bezierPoint.getForward(),
+            backward = bezierPoint.getBackward(),
+            vertex = bezierPoint.getVertex();
+        if(kity.Vector.fromPoints(forward, vertex).length() <= distance) {
+            // forward重叠
+            return 1;
+        } else if(kity.Vector.fromPoints(backward, vertex).length() <= distance) {
+            // backward重叠
+            return 2;
+        }
+        // 无重叠
+        return 0;
+    };
+
     exports.lineToRect = function(a1,a2,r){
         return bezierLength.lineRect(a1,a2,r);
     }

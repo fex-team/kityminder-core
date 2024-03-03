@@ -74,7 +74,7 @@ define(function(require, exports, module) {
 
             var json = {
                 root: exportNode(this.getRoot()),
-                relations: exportRelation(this._relations || []),
+                relations: exportRelation(this.getRelations()),
             };
 
             json.template = this.getTemplate();
@@ -213,6 +213,17 @@ define(function(require, exports, module) {
         },
 
         /**
+         * @method importRelation()
+         * @description 根据纯json数据生成关系线
+         */
+        importRelation: function(data) {
+            var me = this;
+            (data || []).forEach(function(item) {
+                me.createRelation(item);
+            });
+        },
+
+        /**
          * @method importJson()
          * @for Minder
          * @description 导入脑图数据，数据为 JSON 对象，具体的数据字段形式请参考 [Data](data) 章节。
@@ -239,8 +250,7 @@ define(function(require, exports, module) {
             json = compatibility(json);
 
             this.importNode(this._root, json.root);
-
-            this.setRelations(json.relations || null);
+            this.importRelation(json.relations);
             this.setTemplate(json.template || 'default');
             this.setTheme(json.theme || null);
             this.refresh();

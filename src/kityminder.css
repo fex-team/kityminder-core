@@ -19,10 +19,6 @@
     cursor: zoom-in;
 }
 
-.km-view .relation-matching {
-    pointer-events: none;
-}
-
 .km-image-viewer {
     position: fixed;
     z-index: 99999;

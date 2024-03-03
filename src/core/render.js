@@ -3,6 +3,7 @@ define(function(require, exports, module) {
     var kity = require('./kity');
     var Minder = require('./minder');
     var MinderNode = require('./node');
+    var MinderRelation = require('./relation');
 
     var Renderer = kity.createClass('Renderer', {
         constructor: function(node) {
@@ -52,8 +53,16 @@ define(function(require, exports, module) {
             return this._renderShape || null;
         },
 
+        getSelectShape: function(shape) {
+            return this._renderSelect || null;
+        },
+
         setRenderShape: function(shape) {
             this._renderShape = shape;
+        },
+
+        setSelectShape: function(shape) {
+            this._renderSelect = shape;
         }
     });
 
@@ -164,15 +173,31 @@ define(function(require, exports, module) {
 
             renderNode: function(node) {
                 var rendererClasses = this._rendererClasses;
+                var ifRelation = (node.__proto__.constructor.__KityClassName == 'MinderRelation');
+                if(ifRelation) {
+                    rendererClasses = {
+                        center: this._rendererClasses['center'],
+                        outline: this._rendererClasses['outline']
+                    };
+                } else {
+                    rendererClasses = this._rendererClasses;
+                }
+
                 var i, latestBox, renderer;
 
                 if (!node._renderers) {
                     createRendererForNode(node, rendererClasses);
                 }
 
-                this.fire('beforerender', {
-                    node: node
-                });
+                if (ifRelation) {
+                    this.fire('beforeRelationRender', {
+                        node: node
+                    });
+                } else {
+                    this.fire('beforerender', {
+                        node: node
+                    });
+                }
 
                 node._contentBox = new kity.Box();
 
@@ -188,6 +213,18 @@ define(function(require, exports, module) {
                                 node.getRenderContainer().prependShape(renderer.getRenderShape());
                             } else {
                                 node.getRenderContainer().appendShape(renderer.getRenderShape());
+                            }
+                        }
+
+                        if (!renderer.getSelectShape() && !ifRelation) {
+                            if (renderer.__KityClassName == 'OutlineRenderer') {
+                                renderer.setSelectShape(renderer.createSelect(node));
+                                if (renderer.bringToSelect) {
+                                    node.getRenderContainer().prependShape(renderer.getSelectShape());
+                                }
+                                else {
+                                    node.getRenderContainer().appendShape(renderer.getSelectShape());
+                                }
                             }
                         }
 
@@ -213,9 +250,16 @@ define(function(require, exports, module) {
 
                 });
 
-                this.fire('noderender', {
-                    node: node
-                });
+                if (ifRelation) {
+                    this.fire('relationRender', {
+                        node: node
+                    });
+                }
+                else {
+                    this.fire('noderender', {
+                        node: node
+                    });
+                }
             }
         };
     }
@@ -256,6 +300,14 @@ define(function(require, exports, module) {
             return ctm.transformBox(contentBox);
         }
     });
+
+    kity.extendClass(MinderRelation, {
+        updateText: function(){
+            this.getMinder().renderNode(this);
+            this.setTextPosition();
+            return this;
+        },
+    })
 
     module.exports = Renderer;
 });
