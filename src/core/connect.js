@@ -152,7 +152,7 @@ define(function(require, exports, module) {
             var strokeWidth = isRoot
                 ? node.getStyle('connect-width') || 2
                 : node.getStyle('sub-connect-width') || 1;
-            connection.stroke(strokeColor, strokeWidth);
+            connection.stroke(node.getLayoutPointPreview().x > 0 ? strokeColor : reverseStrokeColor, strokeWidth);
             provider(node, parent, connection, strokeWidth, strokeColor);
             if (strokeWidth % 2 === 0) {
                 connection.setTranslate(0.5, 0.5);
