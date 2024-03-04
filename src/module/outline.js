@@ -21,6 +21,16 @@ define(function(require, exports, module) {
             return outline;
         },
 
+        createSelect: function(node){
+            var selectReact = new kity.Rect()
+                .setId(utils.uuid('node_select'));
+            this.bringToSelect = true;
+
+            node._selectReact = selectReact;
+
+            return selectReact;
+        },
+
         update: function(outline, node, box) {
 
             var shape = node.getStyle('shape');

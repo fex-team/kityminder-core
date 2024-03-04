@@ -84,6 +84,25 @@ define(function(require, exports, module) {
         },
 
         /**
+         * @method getTargetRelationNode()
+         * @for MinderEvent
+         * @description 当发生的事件是鼠标事件时，获取事件位置命中的联系线节点
+         *
+         * @grammar getTargetNode() => {relationNode}
+         */
+        getTargetRelationNode: function() {
+            var findShape = this.kityEvent && this.kityEvent.targetShape;
+            var relation;
+            if (!findShape) return null;
+            while (!findShape.relationNode && findShape.container) {
+                findShape = findShape.container;
+            }
+            relation = findShape.relationNode;
+            if (relation && findShape.getOpacity() < 1) return null;
+            return relation || null;
+        },
+
+        /**
          * @method stopPropagation()
          * @for MinderEvent
          * @description 当发生的事件是鼠标事件时，获取事件位置命中的脑图节点

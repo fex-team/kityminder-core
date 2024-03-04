@@ -49,6 +49,17 @@ define(function(require, exports, module) {
             patch.index = index;
             patch.node = node;
         }
+        else if(changed === 'relations'){
+            if (path.length < 2) {
+                changed = 'relation';
+            }
+
+            var index;
+            index = path.shift() || 0;
+            node = minder._relationContainer.items[index];
+            patch.index = index;
+            patch.node = node;
+        }
 
         var express = patch.express = [changed, patch.op].join('.');
 
@@ -91,6 +102,60 @@ define(function(require, exports, module) {
                     node.render();
                 }
                 minder.layout();
+                break;
+            case 'relations.add':
+            case 'relations.remove':
+            case 'relations.replace':
+                var data = patch.node.relationNode.data;
+                var field= data;
+                var node = patch.node.relationNode;
+                if (path.length > 0) {
+                    while (field) {
+                        var item = path.shift();
+                        if (path.length > 0) {
+                            field = field[item];
+                        }
+                        else {
+                            if (item === 'from') {
+                                patch.node.relationNode.data.from = patch.value;
+                            }
+                            else if (item =='to') {
+                                if (!patch.value) {
+                                    minder.removeRelationNode(node);
+                                }
+                                else {
+                                    patch.node.relationNode.data.to = patch.value;
+                                }
+                            }
+                            else{
+                                field[item] = patch.value;
+                            }
+                            break;
+                        }
+                    }
+                }
+                break;
+            case 'relation.remove':
+                if (!patch.node) return;
+                minder.removeRelationNode(patch.node.relationNode);
+                break;
+            case 'relation.add':
+                var patchValue=[];
+                if (utils.isArray(patch.value)) {
+                    patchValue = patchValue.concat(patch.value);
+                }
+                else {
+                    patchValue.push(patch.value);
+                }
+                patchValue.forEach(function(relation) {
+                    if (minder.getRelationById(relation.id)) {
+                        return;
+                    }
+                    else{
+                        minder.importRelation(relation);
+                    }
+                });
+                break;
         }
 
         minder.fire('patch', { 'patch' : patch } );
