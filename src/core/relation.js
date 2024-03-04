@@ -55,7 +55,7 @@ define(function(require, exports, module) {
             return this.rc;
         },
 
-        getRenderContainer: function(){
+        getRenderContainer: function() {
             return this.textGroup;
         },
 
@@ -135,12 +135,16 @@ define(function(require, exports, module) {
             return this;
         },
 
-        getRenderBox: function(rendererType,refer) {
-            // 继承minderNode的方法
-            var renderer = rendererType && minderNode.getRenderer.call(this,rendererType)
+        getRenderBox: function(rendererType, refer) {
+            rendererType = rendererType || 'TextRenderer';
+            var renderer = rendererType && minderNode.getRenderer.call(this, rendererType);
             var contentBox = renderer ? renderer.contentBox : this.getContentBox();
             var ctm = kity.Matrix.getCTM(this.getRenderContainer(), refer || 'paper');
             return ctm.transformBox(contentBox);
+        },
+
+        getRenderer: function() {
+            return null;
         },
 
         update: function() {

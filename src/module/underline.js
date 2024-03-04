@@ -25,7 +25,7 @@ define(function(require, exports, module) {
         },
 
          shouldRender: function(node) {
-            return node.getStyle('underline-width');
+            return node.__KityClassName === 'MinderNode' && node.getStyle('underline-width');
         },
 
         update: function(underline, node, box) {

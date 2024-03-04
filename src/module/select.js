@@ -188,15 +188,6 @@ define(function(require, exports, module) {
                     marqueeActivator.selectEnd(e);
                 },
 
-                // 双击进入编辑状态
-                'normal.dblclick': function dblclick(e) {
-                    if (e.kityEvent.targetShape instanceof kity.Text || e.kityEvent.targetShape instanceof kity.Rect) {
-                        if (e.getTargetRelationNode()) {
-                            e.getTargetRelationNode().turnEdit();
-                        }
-                    }
-                },
-
                 //全选操作
                 'normal.keydown': function(e) {
 

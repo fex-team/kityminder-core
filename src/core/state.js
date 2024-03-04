@@ -4,6 +4,7 @@
 define(function(require, exports, module) {
     var kity = require('./kity');
     var MinderNode = require('./node');
+    var MinderRelation = require('./relation');
 
     var STATE_INPUT_CLASS = 'state-input';
     var SSTATE_COLLAPSE_CLASS = 'state-collapse';
@@ -29,6 +30,21 @@ define(function(require, exports, module) {
                 }
                 this._isCollapse = false;
                 this.rc.removeClass(SSTATE_COLLAPSE_CLASS);
+                return this;
+            }
+        };
+    })());
+
+    kity.extendClass(MinderRelation, (function() {
+        return {
+            toggleInput: function(isInput) {
+                if (isInput) {
+                    this._isInput = true;
+                    this.rc.addClass(STATE_INPUT_CLASS);
+                    return this;
+                }
+                this._isInput = false;
+                this.rc.removeClass(STATE_INPUT_CLASS);
                 return this;
             }
         };
